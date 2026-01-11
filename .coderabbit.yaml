@@ -1,0 +1,17 @@
+language: en
+
+reviews:
+  profile: assertive
+  high_level_summary: true
+  poem: false
+  review_status: true
+
+  auto_review:
+    enabled: true
+
+  path_filters:
+    - "!target/**"
+    - "!node_modules/**"
+
+chat:
+  auto_reply: true
