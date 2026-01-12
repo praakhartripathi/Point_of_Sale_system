@@ -20,7 +20,7 @@ public class UserServiceImpl implements UserService {
     public User createUser(User user) throws Exception {
         User existingUser = userRepository.findByEmail(user.getEmail());
         if (existingUser != null) {
-            throw new Exception("User already exists with email: " + user.getEmail());
+            throw new Exception("Email is already used with another account");
         }
 
         User createdUser = new User();

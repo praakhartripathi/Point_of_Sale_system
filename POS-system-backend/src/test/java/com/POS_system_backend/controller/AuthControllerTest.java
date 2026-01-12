@@ -1,6 +1,8 @@
 package com.POS_system_backend.controller;
 
 import com.POS_system_backend.configuration.JwtProvider;
+import com.POS_system_backend.dto.LoginRequest;
+import com.POS_system_backend.dto.SignupRequest;
 import com.POS_system_backend.entity.User;
 import com.POS_system_backend.entity.enums.UserRole;
 import com.POS_system_backend.service.UserService;
@@ -21,8 +23,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -60,6 +60,12 @@ class AuthControllerTest {
 
     @Test
     void createUserHandler_ShouldReturnJwt_WhenSignupIsSuccessful() throws Exception {
+        SignupRequest signupRequest = new SignupRequest();
+        signupRequest.setEmail("test@example.com");
+        signupRequest.setPassword("password");
+        signupRequest.setFullName("Test User");
+        signupRequest.setRole(UserRole.ROLE_USER);
+
         User user = new User();
         user.setEmail("test@example.com");
         user.setPassword("password");
@@ -71,7 +77,7 @@ class AuthControllerTest {
 
         mockMvc.perform(post("/api/auth/signup")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(user)))
+                .content(objectMapper.writeValueAsString(signupRequest)))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.jwt").value("jwt_token"))
                 .andExpect(jsonPath("$.message").value("Signup Success"))
@@ -91,9 +97,9 @@ class AuthControllerTest {
         UserDetails userDetails = new org.springframework.security.core.userdetails.User(
                 email, "encodedPassword", Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER")));
 
-        Map<String, String> loginRequest = new HashMap<>();
-        loginRequest.put("email", email);
-        loginRequest.put("password", password);
+        LoginRequest loginRequest = new LoginRequest();
+        loginRequest.setEmail(email);
+        loginRequest.setPassword(password);
 
         when(customUserImpl.loadUserByUsername(email)).thenReturn(userDetails);
         when(passwordEncoder.matches(password, "encodedPassword")).thenReturn(true);

@@ -1,6 +1,9 @@
 package com.POS_system_backend.controller;
 
 import com.POS_system_backend.configuration.JwtProvider;
+import com.POS_system_backend.dto.AuthResponse;
+import com.POS_system_backend.dto.LoginRequest;
+import com.POS_system_backend.dto.SignupRequest;
 import com.POS_system_backend.entity.User;
 import com.POS_system_backend.service.UserService;
 import com.POS_system_backend.service.impl.CustomUserImpl;
@@ -17,9 +20,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.HashMap;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -38,7 +38,14 @@ public class AuthController {
     private JwtProvider jwtProvider;
 
     @PostMapping("/signup")
-    public ResponseEntity<Map<String, String>> createUserHandler(@RequestBody User user) throws Exception {
+    public ResponseEntity<AuthResponse> createUserHandler(@RequestBody SignupRequest signupRequest) throws Exception {
+        User user = new User();
+        user.setFullName(signupRequest.getFullName());
+        user.setEmail(signupRequest.getEmail());
+        user.setPassword(signupRequest.getPassword());
+        user.setPhone(signupRequest.getPhone());
+        user.setRole(signupRequest.getRole());
+
         User createdUser = userService.createUser(user);
 
         Authentication authentication = new UsernamePasswordAuthenticationToken(createdUser.getEmail(), createdUser.getPassword());
@@ -46,18 +53,15 @@ public class AuthController {
 
         String token = jwtProvider.generateToken(authentication);
 
-        Map<String, String> authResponse = new HashMap<>();
-        authResponse.put("jwt", token);
-        authResponse.put("message", "Signup Success");
-        authResponse.put("role", String.valueOf(createdUser.getRole()));
+        AuthResponse authResponse = new AuthResponse(token, "Signup Success", String.valueOf(createdUser.getRole()));
 
         return new ResponseEntity<>(authResponse, HttpStatus.CREATED);
     }
 
     @PostMapping("/signin")
-    public ResponseEntity<Map<String, String>> signin(@RequestBody Map<String, String> loginRequest) throws Exception {
-        String username = loginRequest.get("email");
-        String password = loginRequest.get("password");
+    public ResponseEntity<AuthResponse> signin(@RequestBody LoginRequest loginRequest) throws Exception {
+        String username = loginRequest.getEmail();
+        String password = loginRequest.getPassword();
 
         Authentication authentication = authenticate(username, password);
         SecurityContextHolder.getContext().setAuthentication(authentication);
@@ -66,10 +70,7 @@ public class AuthController {
         
         User user = userService.findUserByEmail(username);
 
-        Map<String, String> authResponse = new HashMap<>();
-        authResponse.put("jwt", token);
-        authResponse.put("message", "Signin Success");
-        authResponse.put("role", String.valueOf(user.getRole()));
+        AuthResponse authResponse = new AuthResponse(token, "Signin Success", String.valueOf(user.getRole()));
 
         return new ResponseEntity<>(authResponse, HttpStatus.OK);
     }
