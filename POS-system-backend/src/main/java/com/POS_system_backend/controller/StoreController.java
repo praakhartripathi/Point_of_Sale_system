@@ -64,4 +64,29 @@ public class StoreController {
         List<Store> stores = storeService.getStoresByEmployee(employeeId);
         return new ResponseEntity<>(stores, HttpStatus.OK);
     }
+
+    @PostMapping("/{storeId}/employees/{employeeId}")
+    public ResponseEntity<String> addEmployeeToStoreHandler(@PathVariable Long storeId, @PathVariable Long employeeId) throws Exception {
+        storeService.addEmployeeToStore(storeId, employeeId);
+        return new ResponseEntity<>("Employee added to store successfully", HttpStatus.OK);
+    }
+
+    @GetMapping("/{storeId}/employees")
+    public ResponseEntity<List<User>> getStoreEmployeesHandler(@PathVariable Long storeId) throws Exception {
+        List<User> employees = storeService.getStoreEmployees(storeId);
+        return new ResponseEntity<>(employees, HttpStatus.OK);
+    }
+
+    @PostMapping("/{storeId}/branches")
+    public ResponseEntity<Store> createBranchHandler(@PathVariable Long storeId, @RequestBody StoreRequest req, @RequestHeader("Authorization") String jwt) throws Exception {
+        User user = userService.findUserByJwtToken(jwt);
+        Store branch = storeService.createBranch(storeId, req, user);
+        return new ResponseEntity<>(branch, HttpStatus.CREATED);
+    }
+
+    @GetMapping("/{storeId}/branches")
+    public ResponseEntity<List<Store>> getStoreBranchesHandler(@PathVariable Long storeId) throws Exception {
+        List<Store> branches = storeService.getStoreBranches(storeId);
+        return new ResponseEntity<>(branches, HttpStatus.OK);
+    }
 }

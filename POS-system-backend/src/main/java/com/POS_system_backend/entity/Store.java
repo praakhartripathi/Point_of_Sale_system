@@ -31,6 +31,13 @@ public class Store {
     @OneToMany
     private List<User> employees = new ArrayList<>();
 
+    @ManyToOne
+    @JoinColumn(name = "parent_store_id")
+    private Store parentStore;
+
+    @OneToMany(mappedBy = "parentStore")
+    private List<Store> branches = new ArrayList<>();
+
     private LocalDateTime createdAt;
 
     private LocalDateTime updatedAt;

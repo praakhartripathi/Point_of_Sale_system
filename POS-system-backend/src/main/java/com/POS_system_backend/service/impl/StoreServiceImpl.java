@@ -5,6 +5,7 @@ import com.POS_system_backend.entity.Store;
 import com.POS_system_backend.entity.User;
 import com.POS_system_backend.repository.StoreRepository;
 import com.POS_system_backend.service.StoreService;
+import com.POS_system_backend.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +17,9 @@ public class StoreServiceImpl implements StoreService {
 
     @Autowired
     private StoreRepository storeRepository;
+
+    @Autowired
+    private UserService userService;
 
     @Override
     public Store createStore(StoreRequest req, User user) {
@@ -71,5 +75,44 @@ public class StoreServiceImpl implements StoreService {
     @Override
     public List<Store> getStoresByEmployee(Long employeeId) {
         return storeRepository.findByEmployeeId(employeeId);
+    }
+
+    @Override
+    public void addEmployeeToStore(Long storeId, Long employeeId) throws Exception {
+        Store store = findStoreById(storeId);
+        User employee = userService.findUserById(employeeId);
+        
+        if (!store.getEmployees().contains(employee)) {
+            store.getEmployees().add(employee);
+            storeRepository.save(store);
+        }
+    }
+
+    @Override
+    public List<User> getStoreEmployees(Long storeId) throws Exception {
+        Store store = findStoreById(storeId);
+        return store.getEmployees();
+    }
+
+    @Override
+    public List<Store> getStoreBranches(Long storeId) throws Exception {
+        Store store = findStoreById(storeId);
+        return store.getBranches();
+    }
+
+    @Override
+    public Store createBranch(Long parentStoreId, StoreRequest req, User user) throws Exception {
+        Store parentStore = findStoreById(parentStoreId);
+        
+        Store branch = new Store();
+        branch.setBrand(req.getBrand());
+        branch.setDescription(req.getDescription());
+        branch.setStoreType(req.getStoreType());
+        branch.setStatus(req.getStatus());
+        branch.setContact(req.getContact());
+        branch.setStoreAdmin(user);
+        branch.setParentStore(parentStore);
+        
+        return storeRepository.save(branch);
     }
 }
