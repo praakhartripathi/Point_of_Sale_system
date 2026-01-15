@@ -1,6 +1,35 @@
-import React from "react";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { signin } from "../api/auth";
 
 const SignIn = () => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const navigate = useNavigate();
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setError("");
+
+    try {
+      const data = await signin({ email, password });
+
+      console.log("Sign in successful:", data);
+      if (data.token) {
+        localStorage.setItem("token", data.token);
+        navigate("/dashboard");
+      }
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-background flex items-center justify-center px-4 text-foreground">
       <div className="w-full max-w-md">
@@ -20,6 +49,13 @@ const SignIn = () => {
 
         {/* Card */}
         <div className="bg-card text-card-foreground rounded-xl shadow-lg p-6 border">
+          {error && (
+            <div className="mb-4 p-3 bg-red-100 border border-red-200 text-red-700 rounded-lg text-sm">
+              {error}
+            </div>
+          )}
+
+          <form onSubmit={handleSubmit}>
           {/* Email */}
           <div className="mb-4">
             <label className="block text-sm font-medium mb-1">
@@ -29,8 +65,11 @@ const SignIn = () => {
               <span className="text-muted-foreground">📧</span>
               <input
                 type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 placeholder="email@example.com"
                 className="bg-transparent w-full outline-none text-sm placeholder:text-muted-foreground/50"
+                required
               />
             </div>
           </div>
@@ -43,11 +82,20 @@ const SignIn = () => {
             <div className="flex items-center gap-2 bg-muted/50 px-3 py-2 rounded-lg border focus-within:ring-2 focus-within:ring-primary/20 transition-all">
               <span className="text-muted-foreground">🔒</span>
               <input
-                type="password"
+                type={showPassword ? "text" : "password"}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••"
                 className="bg-transparent w-full outline-none text-sm placeholder:text-muted-foreground/50"
+                required
               />
-              <span className="cursor-pointer text-muted-foreground hover:text-foreground transition-colors">👁</span>
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="cursor-pointer text-muted-foreground hover:text-foreground transition-colors focus:outline-none"
+              >
+                {showPassword ? "🙈" : "👁"}
+              </button>
             </div>
           </div>
 
@@ -63,9 +111,10 @@ const SignIn = () => {
           </div>
 
           {/* Sign In Button */}
-          <button className="w-full bg-primary text-primary-foreground py-2 rounded-lg font-medium hover:bg-primary/90 transition">
-            Sign In
+          <button type="submit" disabled={loading} className="w-full bg-primary text-primary-foreground py-2 rounded-lg font-medium hover:bg-primary/90 transition disabled:opacity-70">
+            {loading ? "Signing In..." : "Sign In"}
           </button>
+          </form>
 
           {/* Divider */}
           <div className="flex items-center gap-2 my-5 text-muted-foreground text-sm">
@@ -75,10 +124,16 @@ const SignIn = () => {
           </div>
 
           {/* Demo Account */}
-          <div className="bg-muted rounded-lg p-4 text-center text-sm">
-            <p className="font-medium">Demo Account:</p>
-            <p className="text-muted-foreground">Email: demo@pospro.com</p>
-            <p className="text-muted-foreground">Password: demo123</p>
+          <div 
+            className="bg-muted rounded-lg p-4 text-center text-sm cursor-pointer hover:bg-muted/80 transition-colors"
+            onClick={() => {
+              setEmail("john.doe@example.com");
+              setPassword("password123");
+            }}
+          >
+            <p className="font-medium">Demo Account (Click to fill):</p>
+            <p className="text-muted-foreground">Email: john.doe@example.com</p>
+            <p className="text-muted-foreground">Password: password123</p>
           </div>
         </div>
       </div>
