@@ -50,8 +50,9 @@ class UserTest {
         String phone = "1234567890";
         UserRole role = UserRole.ROLE_USER;
         LocalDateTime now = LocalDateTime.now();
+        Branch branch = null;
 
-        User user = new User(id, fullName, email, password, phone, role, now, now, now);
+        User user = new User(id, fullName, email, password, phone, role, branch, now, now, now);
 
         assertEquals(id, user.getId());
         assertEquals(fullName, user.getFullName());
@@ -72,9 +73,9 @@ class UserTest {
 
     @Test
     void testEqualsAndHashCode() {
-        User user1 = new User(1L, "John", "john@test.com", "pass", "123", UserRole.ROLE_USER, null, null, null);
-        User user2 = new User(1L, "John", "john@test.com", "pass", "123", UserRole.ROLE_USER, null, null, null);
-        User user3 = new User(2L, "Jane", "jane@test.com", "pass", "456", UserRole.ROLE_ADMIN, null, null, null);
+        User user1 = new User(1L, "John", "john@test.com", "pass", "123", UserRole.ROLE_USER, null, null, null, null);
+        User user2 = new User(1L, "John", "john@test.com", "pass", "123", UserRole.ROLE_USER, null, null, null, null);
+        User user3 = new User(2L, "Jane", "jane@test.com", "pass", "456", UserRole.ROLE_ADMIN, null, null, null, null);
 
         assertEquals(user1, user2);
         assertNotEquals(user1, user3);

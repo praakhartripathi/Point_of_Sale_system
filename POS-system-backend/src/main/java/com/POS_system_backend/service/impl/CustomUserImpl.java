@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CustomUserImpl implements UserDetailsService {
@@ -23,11 +24,13 @@ public class CustomUserImpl implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findByEmail(username);
+        Optional<User> userOptional = userRepository.findByEmail(username);
 
-        if (user == null) {
+        if (userOptional.isEmpty()) {
             throw new UsernameNotFoundException("User not found with email: " + username);
         }
+
+        User user = userOptional.get();
 
         List<GrantedAuthority> authorities = new ArrayList<>();
         authorities.add(new SimpleGrantedAuthority(user.getRole().toString()));

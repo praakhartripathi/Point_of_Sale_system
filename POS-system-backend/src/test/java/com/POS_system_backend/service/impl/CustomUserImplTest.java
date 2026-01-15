@@ -11,6 +11,8 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
+import java.util.Optional;
+
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -35,7 +37,7 @@ class CustomUserImplTest {
         user.setPassword("password");
         user.setRole(UserRole.ROLE_USER);
 
-        when(userRepository.findByEmail(email)).thenReturn(user);
+        when(userRepository.findByEmail(email)).thenReturn(Optional.of(user));
 
         UserDetails userDetails = customUserImpl.loadUserByUsername(email);
 
@@ -51,7 +53,7 @@ class CustomUserImplTest {
     @Test
     void loadUserByUsername_ShouldThrowException_WhenUserDoesNotExist() {
         String email = "nonexistent@example.com";
-        when(userRepository.findByEmail(email)).thenReturn(null);
+        when(userRepository.findByEmail(email)).thenReturn(Optional.empty());
 
         assertThrows(UsernameNotFoundException.class, () -> {
             customUserImpl.loadUserByUsername(email);

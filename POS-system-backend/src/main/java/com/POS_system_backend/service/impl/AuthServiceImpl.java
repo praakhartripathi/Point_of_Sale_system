@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class AuthServiceImpl implements AuthService {
 
@@ -18,8 +20,8 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public User createUser(User user) throws Exception {
-        User existingUser = userRepository.findByEmail(user.getEmail());
-        if (existingUser != null) {
+        Optional<User> existingUser = userRepository.findByEmail(user.getEmail());
+        if (existingUser.isPresent()) {
             throw new Exception("Email is already used with another account");
         }
 
@@ -35,11 +37,11 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public User findUserByEmail(String email) throws Exception {
-        User user = userRepository.findByEmail(email);
-        if (user == null) {
+        Optional<User> user = userRepository.findByEmail(email);
+        if (user.isEmpty()) {
             throw new Exception("User not found with email: " + email);
         }
-        return user;
+        return user.get();
     }
 
     @Override
