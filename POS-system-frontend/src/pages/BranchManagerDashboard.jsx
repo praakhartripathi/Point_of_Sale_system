@@ -1,6 +1,9 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import OrdersView from "../component/OrdersView";
+import RefundsView from "../component/RefundsView";
+import TransactionsView from "../component/TransactionsView";
+import InventoryView from "../component/InventoryView";
 
 const BranchManagerDashboard = ({ theme, setTheme }) => {
   const navigate = useNavigate();
@@ -256,6 +259,12 @@ const BranchManagerDashboard = ({ theme, setTheme }) => {
           </>
         ) : activeView === "ORDERS" ? (
           <OrdersView />
+        ) : activeView === "REFUNDS" ? (
+          <RefundsView />
+        ) : activeView === "TRANSACTIONS" ? (
+          <TransactionsView />
+        ) : activeView === "INVENTORY" ? (
+          <InventoryView />
         ) : (
           <div className="bg-white dark:bg-gray-800 p-12 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 text-center transition-colors duration-200">
             <div className="inline-flex p-4 bg-gray-100 dark:bg-gray-700 rounded-full mb-4 text-gray-400">
@@ -425,7 +434,12 @@ const RecentOrders = () => {
     <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 transition-colors duration-200">
       <div className="flex justify-between items-center mb-6">
         <h3 className="font-bold text-gray-800 dark:text-white">Recent Orders</h3>
-        <button className="text-blue-600 dark:text-blue-400 text-sm font-medium hover:underline">View All</button>
+        <div className="flex items-center gap-3">
+          <button onClick={() => window.location.reload()} className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full text-gray-500 transition-colors">
+            <RefreshCw className="w-4 h-4" />
+          </button>
+          <button className="text-blue-600 dark:text-blue-400 text-sm font-medium hover:underline">View All</button>
+        </div>
       </div>
       <div className="overflow-x-auto">
         <table className="w-full text-left border-collapse">
@@ -496,5 +510,6 @@ const TrendingUp = (props) => <svg xmlns="http://www.w3.org/2000/svg" viewBox="0
 const TrendingDown = (props) => <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}><polyline points="23 18 13.5 8.5 8.5 13.5 1 6"/><polyline points="17 18 23 18 23 12"/></svg>;
 const Smartphone = (props) => <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}><rect width="14" height="20" x="5" y="2" rx="2" ry="2"/><path d="M12 18h.01"/></svg>;
 const Banknote = (props) => <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}><rect width="20" height="12" x="2" y="6" rx="2"/><circle cx="12" cy="12" r="2"/><path d="M6 12h.01M18 12h.01"/></svg>;
+const RefreshCw = (props) => <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M3 21v-5h5"/></svg>;
 
 export default BranchManagerDashboard;
