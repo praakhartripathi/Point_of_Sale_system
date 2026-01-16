@@ -9,6 +9,7 @@ const InventoryView = () => {
   const fileInputRef = useRef(null);
   const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
   const [addedCategories, setAddedCategories] = useState([]);
+  const [productToEdit, setProductToEdit] = useState(null);
 
   const [inventory, setInventory] = useState([
     { id: 1, name: "Men's Cotton Shirt", sku: "SHIRT-001", category: "Apparel", stock: 124, price: 1200, status: "In Stock" },
@@ -46,6 +47,15 @@ const InventoryView = () => {
     setInventory([...inventory, newProduct]);
   };
 
+  const handleProductUpdated = (updatedProduct) => {
+    setInventory(inventory.map(item => item.id === updatedProduct.id ? updatedProduct : item));
+  };
+
+  const handleEditClick = (product) => {
+    setProductToEdit(product);
+    setIsModalOpen(true);
+  };
+
   const handleCategoryAdded = (newCategory) => {
     setAddedCategories([...addedCategories, newCategory]);
   };
@@ -61,7 +71,7 @@ const InventoryView = () => {
         </div>
         <div className="flex flex-col sm:flex-row items-center gap-3 w-full xl:w-auto">
           <div className="flex items-center gap-2 w-full sm:w-auto">
-            <button onClick={() => setIsModalOpen(true)} className="flex items-center justify-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium w-full sm:w-auto">
+            <button onClick={() => { setProductToEdit(null); setIsModalOpen(true); }} className="flex items-center justify-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium w-full sm:w-auto">
               <Plus className="w-4 h-4" /> Add Inventory
             </button>
             <button onClick={() => setIsCategoryModalOpen(true)} className="flex items-center justify-center gap-2 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors text-sm font-medium w-full sm:w-auto">
@@ -126,7 +136,7 @@ const InventoryView = () => {
                   </span>
                 </td>
                 <td className="py-3 px-4 text-right">
-                  <button className="text-blue-600 hover:underline text-xs font-medium">Edit</button>
+                  <button onClick={() => handleEditClick(item)} className="text-blue-600 hover:underline text-xs font-medium">Edit</button>
                 </td>
               </tr>
             ))}
@@ -143,6 +153,8 @@ const InventoryView = () => {
         isOpen={isModalOpen} 
         onClose={() => setIsModalOpen(false)} 
         onProductAdded={handleProductAdded} 
+        productToEdit={productToEdit}
+        onProductUpdated={handleProductUpdated}
       />
 
       <AddCategoryModal 

@@ -49,6 +49,26 @@ const OrderDetailsModal = ({ isOpen, onClose, order }) => {
             </div>
           </div>
           
+          <div className="mt-6 border-t border-gray-100 dark:border-gray-700 pt-4">
+            <h4 className="text-sm font-medium text-gray-900 dark:text-white mb-3">Items Purchased</h4>
+            <div className="bg-gray-50 dark:bg-gray-900 rounded-lg p-4 space-y-3 max-h-48 overflow-y-auto">
+              {order.items && order.items.map((item, index) => (
+                <div key={index} className="flex justify-between items-center text-sm">
+                  <div className="flex items-center gap-2">
+                    <span className="w-6 h-6 flex items-center justify-center bg-white dark:bg-gray-800 rounded-full text-xs font-medium text-gray-500 dark:text-gray-400 border border-gray-200 dark:border-gray-700">
+                      {item.qty}
+                    </span>
+                    <span className="text-gray-700 dark:text-gray-300">{item.name}</span>
+                  </div>
+                  <span className="font-medium text-gray-900 dark:text-white">₹{item.price * item.qty}</span>
+                </div>
+              ))}
+              {(!order.items || order.items.length === 0) && (
+                <p className="text-sm text-gray-500 dark:text-gray-400 text-center py-2">No items available</p>
+              )}
+            </div>
+          </div>
+
           <div className="flex gap-3 mt-6">
             <button onClick={onClose} className="flex-1 px-4 py-2 border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors font-medium">
               Close

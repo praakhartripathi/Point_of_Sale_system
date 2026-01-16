@@ -7,13 +7,13 @@ const OrdersView = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const orders = [
-    { id: "#ORD-8852", customer: "Rohan Mehta", cashier: "Rahul Sharma", amount: 1250, paymentMode: "UPI", status: "Completed" },
-    { id: "#ORD-8851", customer: "Sita Verma", cashier: "Priya Patel", amount: 450, paymentMode: "Cash", status: "Completed" },
-    { id: "#ORD-8850", customer: "Amit Singh", cashier: "Rahul Sharma", amount: 2800, paymentMode: "Card", status: "Refunded" },
-    { id: "#ORD-8849", customer: "Priya Shah", cashier: "Sneha Gupta", amount: 920, paymentMode: "UPI", status: "Completed" },
-    { id: "#ORD-8848", customer: "Vikram Das", cashier: "Amit Kumar", amount: 150, paymentMode: "Cash", status: "Completed" },
-    { id: "#ORD-8847", customer: "Neha Gupta", cashier: "Priya Patel", amount: 3400, paymentMode: "Card", status: "Completed" },
-    { id: "#ORD-8846", customer: "Arjun Reddy", cashier: "Rahul Sharma", amount: 780, paymentMode: "UPI", status: "Completed" },
+    { id: "#ORD-8852", customer: "Rohan Mehta", cashier: "Rahul Sharma", amount: 1250, paymentMode: "UPI", status: "Completed", items: [{ name: "Cotton Shirt", qty: 1, price: 1200 }, { name: "Socks", qty: 1, price: 50 }] },
+    { id: "#ORD-8851", customer: "Sita Verma", cashier: "Priya Patel", amount: 450, paymentMode: "Cash", status: "Completed", items: [{ name: "Ceramic Mug", qty: 2, price: 225 }] },
+    { id: "#ORD-8850", customer: "Amit Singh", cashier: "Rahul Sharma", amount: 2800, paymentMode: "Card", status: "Refunded", items: [{ name: "Running Shoes", qty: 1, price: 2800 }] },
+    { id: "#ORD-8849", customer: "Priya Shah", cashier: "Sneha Gupta", amount: 920, paymentMode: "UPI", status: "Completed", items: [{ name: "Notebook", qty: 5, price: 100 }, { name: "Pen Set", qty: 1, price: 420 }] },
+    { id: "#ORD-8848", customer: "Vikram Das", cashier: "Amit Kumar", amount: 150, paymentMode: "Cash", status: "Completed", items: [{ name: "Key Chain", qty: 1, price: 150 }] },
+    { id: "#ORD-8847", customer: "Neha Gupta", cashier: "Priya Patel", amount: 3400, paymentMode: "Card", status: "Completed", items: [{ name: "Wireless Earbuds", qty: 1, price: 3400 }] },
+    { id: "#ORD-8846", customer: "Arjun Reddy", cashier: "Rahul Sharma", amount: 780, paymentMode: "UPI", status: "Completed", items: [{ name: "Graphic T-Shirt", qty: 2, price: 390 }] },
   ];
 
   const filteredOrders = orders.filter(order => 
