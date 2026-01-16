@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import OrdersView from "../component/OrdersView";
 
 const BranchManagerDashboard = ({ theme, setTheme }) => {
   const navigate = useNavigate();
@@ -241,74 +242,20 @@ const BranchManagerDashboard = ({ theme, setTheme }) => {
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
               {/* Daily Sales Trend */}
-              <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 transition-colors duration-200">
-                <div className="flex justify-between items-center mb-6">
-                  <h3 className="font-bold text-gray-800 dark:text-white">Daily Sales Trend</h3>
-                  <select className="bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 text-gray-700 dark:text-gray-200 text-sm rounded-lg p-2 outline-none">
-                    <option>Last 7 Days</option>
-                    <option>Last 30 Days</option>
-                  </select>
-                </div>
-                <div className="flex items-end justify-between h-64 gap-2">
-                  {[45, 60, 35, 70, 55, 80, 65].map((height, i) => (
-                    <div key={i} className="flex-1 flex flex-col items-center gap-2 group cursor-pointer">
-                      <div className="w-full bg-blue-100 dark:bg-blue-900/30 rounded-t-lg h-full flex items-end relative">
-                        <div 
-                          className="w-full bg-blue-600 dark:bg-blue-500 rounded-t-lg transition-all duration-500 group-hover:bg-blue-700 dark:group-hover:bg-blue-400 relative"
-                          style={{ height: `${height}%` }}
-                        >
-                          {/* Tooltip */}
-                          <div className="absolute -top-10 left-1/2 -translate-x-1/2 bg-gray-900 text-white text-xs py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-10 pointer-events-none shadow-lg">
-                            ₹{(height * 250).toLocaleString()}
-                            <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-gray-900"></div>
-                          </div>
-                        </div>
-                      </div>
-                      <span className="text-xs text-gray-500 dark:text-gray-400 font-medium">
-                        {['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'][i]}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-              </div>
+              <DailySalesTrendChart />
 
               {/* Product Performance */}
-              <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 transition-colors duration-200">
-                <div className="flex justify-between items-center mb-6">
-                  <h3 className="font-bold text-gray-800 dark:text-white">Top Products</h3>
-                  <button className="text-blue-600 dark:text-blue-400 text-sm font-medium hover:underline">View All</button>
-                </div>
-                <div className="overflow-x-auto">
-                  <table className="w-full text-left border-collapse">
-                    <thead>
-                      <tr className="text-xs text-gray-500 dark:text-gray-400 border-b border-gray-100 dark:border-gray-700">
-                        <th className="pb-3 font-medium">Product</th>
-                        <th className="pb-3 font-medium">Category</th>
-                        <th className="pb-3 font-medium text-right">Sales</th>
-                        <th className="pb-3 font-medium text-right">Revenue</th>
-                      </tr>
-                    </thead>
-                    <tbody className="text-sm">
-                      {[
-                        { name: "Men's Cotton Shirt", category: "Apparel", sales: 124, revenue: 148800 },
-                        { name: "Wireless Earbuds", category: "Electronics", sales: 85, revenue: 212500 },
-                        { name: "Organic Green Tea", category: "Grocery", sales: 245, revenue: 61250 },
-                        { name: "Running Shoes", category: "Footwear", sales: 56, revenue: 168000 },
-                        { name: "Smart Watch Gen 5", category: "Electronics", sales: 32, revenue: 159680 },
-                      ].map((product, i) => (
-                        <tr key={i} className="border-b border-gray-50 dark:border-gray-700/50 last:border-0 hover:bg-gray-50 dark:hover:bg-gray-700/30 transition-colors">
-                          <td className="py-3 text-gray-900 dark:text-white font-medium">{product.name}</td>
-                          <td className="py-3 text-gray-500 dark:text-gray-400">{product.category}</td>
-                          <td className="py-3 text-gray-900 dark:text-white text-right">{product.sales}</td>
-                          <td className="py-3 text-gray-900 dark:text-white text-right">₹{product.revenue.toLocaleString()}</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              </div>
+              <ProductPerformanceChart />
+            </div>
+
+            {/* Cashier Performance & Recent Orders */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+              <CashierPerformance />
+              <RecentOrders />
             </div>
           </>
+        ) : activeView === "ORDERS" ? (
+          <OrdersView />
         ) : (
           <div className="bg-white dark:bg-gray-800 p-12 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 text-center transition-colors duration-200">
             <div className="inline-flex p-4 bg-gray-100 dark:bg-gray-700 rounded-full mb-4 text-gray-400">
@@ -319,6 +266,199 @@ const BranchManagerDashboard = ({ theme, setTheme }) => {
           </div>
         )}
       </main>
+    </div>
+  );
+};
+
+const DailySalesTrendChart = () => {
+  const data = [
+    { day: "Mon", amount: 12500, height: 45 },
+    { day: "Tue", amount: 15000, height: 60 },
+    { day: "Wed", amount: 9800, height: 35 },
+    { day: "Thu", amount: 18500, height: 70 },
+    { day: "Fri", amount: 14200, height: 55 },
+    { day: "Sat", amount: 22000, height: 80 },
+    { day: "Sun", amount: 19500, height: 65 },
+  ];
+
+  return (
+    <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 transition-colors duration-200">
+      <div className="flex justify-between items-center mb-6">
+        <h3 className="font-bold text-gray-800 dark:text-white">Daily Sales Trend</h3>
+        <select className="bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 text-gray-700 dark:text-gray-200 text-sm rounded-lg p-2 outline-none">
+          <option>Last 7 Days</option>
+          <option>Last 30 Days</option>
+        </select>
+      </div>
+      <div className="flex justify-between h-64 gap-2">
+        {data.map((item, i) => (
+          <div key={i} className="flex-1 flex flex-col items-center gap-2 group cursor-pointer">
+            <div className="w-full bg-blue-100 dark:bg-blue-900/30 rounded-t-lg flex-1 flex items-end relative">
+              <div 
+                className="w-full bg-blue-600 dark:bg-blue-500 rounded-t-lg transition-all duration-500 group-hover:bg-blue-700 dark:group-hover:bg-blue-400 relative"
+                style={{ height: `${item.height}%` }}
+              >
+                <div className="absolute -top-10 left-1/2 -translate-x-1/2 bg-gray-900 text-white text-xs py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-10 pointer-events-none shadow-lg">
+                  ₹{item.amount.toLocaleString()}
+                  <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-gray-900"></div>
+                </div>
+              </div>
+            </div>
+            <span className="text-xs text-gray-500 dark:text-gray-400 font-medium">
+              {item.day}
+            </span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+const ProductPerformanceChart = () => {
+  const data = [
+    { name: "Men's Cotton Shirt", value: 124, color: "#3B82F6" },
+    { name: "Wireless Earbuds", value: 85, color: "#8B5CF6" },
+    { name: "Organic Green Tea", value: 245, color: "#10B981" },
+    { name: "Running Shoes", value: 56, color: "#F59E0B" },
+    { name: "Smart Watch", value: 32, color: "#EF4444" },
+  ];
+  const total = data.reduce((sum, item) => sum + item.value, 0);
+
+  return (
+    <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 transition-colors duration-200 flex flex-col">
+      <div className="flex justify-between items-center mb-6">
+        <h3 className="font-bold text-gray-800 dark:text-white">Product Performance</h3>
+        <button className="text-blue-600 dark:text-blue-400 text-sm font-medium hover:underline">View Details</button>
+      </div>
+      <div className="flex-1 flex items-center justify-center">
+        <div className="flex flex-col sm:flex-row items-center gap-8 w-full">
+          <div className="relative w-48 h-48 shrink-0">
+            <svg viewBox="0 0 100 100" className="transform -rotate-90 w-full h-full">
+              {data.map((item, i) => {
+                const startAngle = data.slice(0, i).reduce((sum, prev) => sum + (prev.value / total) * 360, 0);
+                const angle = (item.value / total) * 360;
+                const x1 = 50 + 50 * Math.cos((Math.PI * startAngle) / 180);
+                const y1 = 50 + 50 * Math.sin((Math.PI * startAngle) / 180);
+                const x2 = 50 + 50 * Math.cos((Math.PI * (startAngle + angle)) / 180);
+                const y2 = 50 + 50 * Math.sin((Math.PI * (startAngle + angle)) / 180);
+                const largeArcFlag = angle > 180 ? 1 : 0;
+                const pathData = `M 50 50 L ${x1} ${y1} A 50 50 0 ${largeArcFlag} 1 ${x2} ${y2} Z`;
+                return <path d={pathData} fill={item.color} key={i} className="hover:opacity-90 transition-opacity cursor-pointer" />;
+              })}
+              <circle cx="50" cy="50" r="35" className="fill-white dark:fill-gray-800" />
+            </svg>
+            <div className="absolute inset-0 flex items-center justify-center flex-col pointer-events-none">
+              <span className="text-xs text-gray-500 dark:text-gray-400">Total</span>
+              <span className="text-xl font-bold text-gray-900 dark:text-white">{total}</span>
+            </div>
+          </div>
+          <div className="flex-1 space-y-3 w-full">
+            {data.map((item, i) => (
+              <div key={i} className="flex items-center justify-between text-sm">
+                <div className="flex items-center gap-2">
+                  <div className="w-3 h-3 rounded-full" style={{ backgroundColor: item.color }}></div>
+                  <span className="text-gray-600 dark:text-gray-300 truncate">{item.name}</span>
+                </div>
+                <span className="font-bold text-gray-900 dark:text-white">{Math.round((item.value / total) * 100)}%</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const CashierPerformance = () => {
+  const cashiers = [
+    { name: "Rahul Sharma", sales: 45200, orders: 124, status: "Active" },
+    { name: "Priya Patel", sales: 38500, orders: 98, status: "Active" },
+    { name: "Amit Kumar", sales: 32100, orders: 85, status: "Break" },
+    { name: "Sneha Gupta", sales: 28400, orders: 76, status: "Offline" },
+  ];
+
+  return (
+    <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 transition-colors duration-200">
+      <div className="flex justify-between items-center mb-6">
+        <h3 className="font-bold text-gray-800 dark:text-white">Cashier Performance</h3>
+        <button className="text-blue-600 dark:text-blue-400 text-sm font-medium hover:underline">View All</button>
+      </div>
+      <div className="space-y-4">
+        {cashiers.map((cashier, i) => (
+          <div key={i} className="flex items-center justify-between p-3 hover:bg-gray-50 dark:hover:bg-gray-700/30 rounded-lg transition-colors">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-full bg-gray-100 dark:bg-gray-700 flex items-center justify-center text-gray-600 dark:text-gray-300 font-bold text-sm">
+                {cashier.name.split(" ").map(n => n[0]).join("")}
+              </div>
+              <div>
+                <p className="font-medium text-gray-900 dark:text-white text-sm">{cashier.name}</p>
+                <p className="text-xs text-gray-500 dark:text-gray-400">{cashier.orders} Orders</p>
+              </div>
+            </div>
+            <div className="text-right">
+              <p className="font-bold text-gray-900 dark:text-white text-sm">₹{cashier.sales.toLocaleString()}</p>
+              <span className={`text-xs px-2 py-0.5 rounded-full ${
+                cashier.status === "Active" ? "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400" :
+                cashier.status === "Break" ? "bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400" :
+                "bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400"
+              }`}>
+                {cashier.status}
+              </span>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+const RecentOrders = () => {
+  const orders = [
+    { id: "#ORD-8852", customer: "Rohan Mehta", time: "10:42 AM", amount: 1250, status: "Completed" },
+    { id: "#ORD-8851", customer: "Sita Verma", time: "10:38 AM", amount: 450, status: "Completed" },
+    { id: "#ORD-8850", customer: "Amit Singh", time: "10:35 AM", amount: 2800, status: "Refunded" },
+    { id: "#ORD-8849", customer: "Priya Shah", time: "10:30 AM", amount: 920, status: "Completed" },
+    { id: "#ORD-8848", customer: "Vikram Das", time: "10:25 AM", amount: 150, status: "Completed" },
+  ];
+
+  return (
+    <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 transition-colors duration-200">
+      <div className="flex justify-between items-center mb-6">
+        <h3 className="font-bold text-gray-800 dark:text-white">Recent Orders</h3>
+        <button className="text-blue-600 dark:text-blue-400 text-sm font-medium hover:underline">View All</button>
+      </div>
+      <div className="overflow-x-auto">
+        <table className="w-full text-left border-collapse">
+          <thead>
+            <tr className="text-xs text-gray-500 dark:text-gray-400 border-b border-gray-100 dark:border-gray-700">
+              <th className="pb-3 font-medium">Order ID</th>
+              <th className="pb-3 font-medium">Customer</th>
+              <th className="pb-3 font-medium">Time</th>
+              <th className="pb-3 font-medium">Amount</th>
+              <th className="pb-3 font-medium text-right">Status</th>
+            </tr>
+          </thead>
+          <tbody className="text-sm">
+            {orders.map((order, i) => (
+              <tr key={i} className="border-b border-gray-50 dark:border-gray-700/50 last:border-0 hover:bg-gray-50 dark:hover:bg-gray-700/30 transition-colors">
+                <td className="py-3 text-gray-900 dark:text-white font-medium">{order.id}</td>
+                <td className="py-3 text-gray-700 dark:text-gray-300">{order.customer}</td>
+                <td className="py-3 text-gray-500 dark:text-gray-400">{order.time}</td>
+                <td className="py-3 text-gray-900 dark:text-white">₹{order.amount}</td>
+                <td className="py-3 text-right">
+                  <span className={`text-xs px-2 py-1 rounded-full font-medium ${
+                    order.status === "Completed" ? "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400" :
+                    order.status === "Refunded" ? "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400" :
+                    "bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400"
+                  }`}>
+                    {order.status}
+                  </span>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 };
