@@ -138,8 +138,14 @@ com.POS_system_backend
     ```
 
 2.  **Configure Database**
-    *   Update `src/main/resources/application.properties` with your MySQL credentials.
-    *   Alternatively, the project is configured to use H2 in-memory database by default for dev/test if no profile is active (check dependencies).
+    *   The application is configured to use environment variables for database connection.
+    *   Set the following environment variables:
+        *   `MYSQLHOST`: Database host
+        *   `MYSQLPORT`: Database port
+        *   `MYSQL_DATABASE`: Database name
+        *   `MYSQLUSER`: Database username
+        *   `MYSQLPASSWORD`: Database password
+    *   Alternatively, update `src/main/resources/application.properties` with your credentials directly for local development.
 
 3.  **Build the project**
     ```bash
@@ -150,7 +156,7 @@ com.POS_system_backend
     ```bash
     ./mvnw spring-boot:run
     ```
-    The server will start on `http://localhost:5000` (or configured port).
+    The server will start on `http://localhost:8080` (or configured port).
 
 ## 🧪 Testing
 
@@ -158,7 +164,7 @@ You can test the APIs using **cURL** or **Postman**.
 
 **Example: Create Product**
 ```bash
-curl -X POST http://localhost:5000/api/products \
+curl -X POST http://localhost:8080/api/products \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer <YOUR_JWT_TOKEN>" \
   -d '{

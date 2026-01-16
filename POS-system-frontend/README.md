@@ -1,64 +1,66 @@
-# POS Pro - Point of Sale System Frontend
+# POS Pro - Frontend
 
-A modern, role-based Point of Sale (POS) web application interface built with React, Vite, and Tailwind CSS. Designed to mimic professional retail billing systems with a focus on speed and usability.
+A modern, responsive Point of Sale (POS) system frontend built with React and Tailwind CSS. This application provides a comprehensive interface for managing retail operations, including inventory, sales, employees, and reporting.
 
-## 🚀 Features
+## Features
 
-### 🔐 Role-Based Access Control (RBAC)
-Secure login system that redirects users to specific dashboards based on their assigned role:
-- **Super Admin**: System-wide control center.
-- **Admin**: User management and reporting.
-- **Branch Manager**: Branch performance and operations.
-- **Store Manager**: Inventory and staff overview.
-- **Cashier**: Dedicated POS terminal interface.
-- **User**: Customer loyalty and order history.
+### 📦 Inventory Management
+- Real-time stock tracking with status indicators (In Stock, Low Stock, Out of Stock)
+- Product categorization and search
+- CSV import functionality for bulk updates
+- Add and edit product details seamlessly
 
-### 🛒 Cashier POS Terminal
-A high-fidelity, full-screen POS interface designed for efficiency:
-- **Keyboard Shortcuts**:
-  - `F1`: Focus Search / Scan Barcode
-  - `F2`: Discount Options (Mockup)
-  - `F3`: Customer Selection (Mockup)
-  - `Ctrl + Enter`: Proceed to Payment
-- **Real-time Search**: Filter products instantly by name or category.
-- **Cart Management**: Add items, update quantities, and remove items with automatic tax calculation.
-- **Dark Mode**: Fully supported dark theme for low-light environments.
+### ️ Order & Sales Management
+- Comprehensive order history view
+- Support for multiple payment modes (UPI, Card, Cash)
+- Digital receipt generation and printing
+- Transaction status tracking
 
-### 🎨 UI/UX
-- **Responsive Design**: Built with Tailwind CSS for a clean, modern look.
-- **Theme Support**: Light, Dark, and System preference toggles.
-- **Landing Page**: Includes Home, Pricing, Testimonials, and Contact pages.
+### 🔄 Refunds & Returns
+- Dedicated interface for managing refund requests
+- Track refund reasons and processing status
+- Link refunds to specific orders and customers
 
-## 🛠️ Tech Stack
+### 👥 Employee Management
+- Manage staff profiles and contact details
+- Role-based designations (Manager, Cashier, Staff, Admin)
+- Track active status and join dates
 
-- **Framework**: React (Vite)
+### 📊 Shift Reports
+- Detailed shift summaries for cashiers
+- Sales analytics and payment method breakdowns
+- Top-selling items reporting
+- Print-friendly layout for physical records
+
+### 🎨 User Interface
+- Clean, modern design
+- Built-in Dark Mode support
+- Responsive layout for various screen sizes
+
+## Tech Stack
+
+- **Frontend Framework**: React
 - **Styling**: Tailwind CSS
-- **Routing**: React Router DOM
-- **State Management**: React Hooks (useState, useEffect, useRef)
+- **Icons**: Custom SVG implementation
 
-## 📦 Installation & Setup
+## Getting Started
 
-1. **Clone the repository**
+### Prerequisites
+- Node.js (v14 or higher recommended)
+- npm or yarn
+
+### Installation
+
+1. Clone the repository
+2. Navigate to the project directory:
    ```bash
-   git clone <repository-url>
    cd POS-system-frontend
    ```
-
-2. **Install Dependencies**
+3. Install dependencies:
    ```bash
    npm install
    ```
-
-3. **Run Development Server**
+4. Start the development server:
    ```bash
-   npm run dev
+   npm start
    ```
-
-4. **Build for Production**
-   ```bash
-   npm run build
-   ```
-
-## 🔑 Default Roles for Testing
-The application handles the following role strings from the backend:
-- `ROLE_SUPERADMIN`, `ROLE_ADMIN`, `ROLE_BRANCH_MANAGER`, `ROLE_STORE_MANAGER`, `ROLE_CASHIER`, `ROLE_USER`
