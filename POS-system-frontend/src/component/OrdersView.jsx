@@ -1,7 +1,10 @@
 import React, { useState } from "react";
+import OrderDetailsModal from "./OrderDetailsModal";
 
 const OrdersView = () => {
   const [searchTerm, setSearchTerm] = useState("");
+  const [selectedOrder, setSelectedOrder] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const orders = [
     { id: "#ORD-8852", customer: "Rohan Mehta", cashier: "Rahul Sharma", amount: 1250, paymentMode: "UPI", status: "Completed" },
@@ -78,7 +81,7 @@ const OrdersView = () => {
                   </span>
                 </td>
                 <td className="py-3 px-4 text-right">
-                  <button className="p-2 text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg transition-colors" title="View Bill">
+                  <button onClick={() => { setSelectedOrder(order); setIsModalOpen(true); }} className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 transition-colors">
                     <FileText className="w-4 h-4" />
                   </button>
                 </td>
@@ -92,6 +95,12 @@ const OrdersView = () => {
             </div>
         )}
       </div>
+
+      <OrderDetailsModal 
+        isOpen={isModalOpen} 
+        onClose={() => setIsModalOpen(false)} 
+        order={selectedOrder} 
+      />
     </div>
   );
 };
