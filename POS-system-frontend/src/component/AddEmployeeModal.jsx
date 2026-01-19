@@ -6,7 +6,8 @@ const AddEmployeeModal = ({ isOpen, onClose, onEmployeeAdded, employeeToEdit, on
     role: "Staff",
     email: "",
     phone: "",
-    status: "Active"
+    status: "Active",
+    branch: "Main Branch"
   });
 
   useEffect(() => {
@@ -18,7 +19,8 @@ const AddEmployeeModal = ({ isOpen, onClose, onEmployeeAdded, employeeToEdit, on
         role: "Staff",
         email: "",
         phone: "",
-        status: "Active"
+        status: "Active",
+        branch: "Main Branch"
       });
     }
   }, [employeeToEdit, isOpen]);
@@ -49,7 +51,7 @@ const AddEmployeeModal = ({ isOpen, onClose, onEmployeeAdded, employeeToEdit, on
           alert("Employee added successfully!");
         }
         onClose();
-        setFormData({ name: "", role: "Staff", email: "", phone: "", status: "Active" });
+        setFormData({ name: "", role: "Staff", email: "", phone: "", status: "Active", branch: "Main Branch" });
       } else {
         alert(`Failed to ${employeeToEdit ? "update" : "add"} employee.`);
       }
@@ -110,6 +112,15 @@ const AddEmployeeModal = ({ isOpen, onClose, onEmployeeAdded, employeeToEdit, on
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Phone Number</label>
             <input required type="tel" value={formData.phone} onChange={(e) => setFormData({...formData, phone: e.target.value})} className="w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="e.g. 9876543210" />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Branch</label>
+            <select value={formData.branch} onChange={(e) => setFormData({...formData, branch: e.target.value})} className="w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+              <option value="Main Branch">Main Branch</option>
+              <option value="Surat East Branch">Surat East Branch</option>
+              <option value="Ahmedabad West Branch">Ahmedabad West Branch</option>
+            </select>
           </div>
 
           <div className="flex gap-3 mt-6">
