@@ -4,18 +4,16 @@ services:
     container_name: pos-backend
     ports:
       - "5000:5000"
+    env_file:
+      - .env
     environment:
       - SPRING_DATASOURCE_URL=jdbc:mysql://db:3306/pos_db?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true
       - SPRING_DATASOURCE_USERNAME=pos_user
       - SPRING_DATASOURCE_PASSWORD=password
       - SPRING_JPA_HIBERNATE_DDL_AUTO=update
-      - SPRING_DEVTOOLS_RESTART_ENABLED=true
+      # Removed SPRING_DEVTOOLS_RESTART_ENABLED as we are running the JAR now
       - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
       - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}
-    volumes:
-      - .:/app
-    working_dir: /app
-    command: ./mvnw spring-boot:run
     depends_on:
       - db
     networks:
