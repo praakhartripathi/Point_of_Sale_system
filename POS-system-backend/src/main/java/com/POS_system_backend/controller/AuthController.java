@@ -3,8 +3,10 @@ package com.POS_system_backend.controller;
 import com.POS_system_backend.configuration.JwtProvider;
 import com.POS_system_backend.dto.*;
 import com.POS_system_backend.entity.User;
+import com.POS_system_backend.entity.enums.UserRole;
 import com.POS_system_backend.service.AuthService;
 import com.POS_system_backend.service.impl.CustomUserImpl;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,10 +16,11 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
+import org.springframework.web.bind.annotation.*;
+
+import java.io.IOException;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -83,6 +86,46 @@ public class AuthController {
     public ResponseEntity<String> forgotPassword(@RequestBody ForgotPasswordRequest request) throws Exception {
         authService.forgotPassword(request.getEmail());
         return new ResponseEntity<>("Password reset link sent to your email", HttpStatus.OK);
+    }
+
+    @GetMapping("/oauth2/success")
+    public void oauth2Success(OAuth2AuthenticationToken oauth2Token, HttpServletResponse response) throws Exception {
+        if (oauth2Token == null) {
+            response.sendRedirect("http://localhost:5173/login?error=unauthorized");
+            return;
+        }
+
+        Map<String, Object> attributes = oauth2Token.getPrincipal().getAttributes();
+        String email = (String) attributes.get("email");
+        String name = (String) attributes.get("name");
+
+        User user;
+        try {
+            user = authService.findUserByEmail(email);
+        } catch (Exception e) {
+            // User not found, create a new one
+            user = new User();
+            user.setEmail(email);
+            user.setFullName(name);
+            user.setPassword(passwordEncoder.encode("OAUTH2_DEFAULT_PASSWORD")); // Set a dummy password
+            user.setRole(UserRole.ROLE_USER); // Default role
+            user = authService.createUser(user);
+        }
+
+        // Authenticate the user in our system
+        UserDetails userDetails = customUserImpl.loadUserByUsername(email);
+        Authentication authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+
+        String token = jwtProvider.generateToken(authentication);
+        
+        // Redirect to React Frontend with Token
+        response.sendRedirect("http://localhost:5173/oauth/callback?token=" + token + "&role=" + user.getRole());
+    }
+
+    @GetMapping("/oauth2/failure")
+    public void oauth2Failure(HttpServletResponse response) throws IOException {
+        response.sendRedirect("http://localhost:5173/login?error=oauth_failed");
     }
 
     private Authentication authenticate(String username, String password) {

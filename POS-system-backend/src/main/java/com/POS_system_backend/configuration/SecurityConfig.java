@@ -26,6 +26,7 @@ public class SecurityConfig {
             .sessionManagement(management -> management.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(authorize -> authorize
                 .requestMatchers("/api/auth/**").permitAll()
+                .requestMatchers("/login/oauth2/**").permitAll()
                 .requestMatchers("/h2-console/**").permitAll()
                 .requestMatchers("/api/superadmin/**").hasRole("SUPERADMIN")
                 .requestMatchers("/api/admin/**").hasAnyRole("ADMIN", "SUPERADMIN")
@@ -33,6 +34,11 @@ public class SecurityConfig {
                 .requestMatchers("/api/categories/**").hasAnyRole("STORE_MANAGER", "BRANCH_MANAGER", "ADMIN", "SUPERADMIN", "CASHIER")
                 .requestMatchers("/api/stores/**").hasAnyRole("STORE_MANAGER", "BRANCH_MANAGER", "ADMIN", "SUPERADMIN")
                 .anyRequest().authenticated()
+            )
+            .oauth2Login(oauth2 -> oauth2
+                .loginPage("/login/oauth2/code/google")
+                .defaultSuccessUrl("/api/auth/oauth2/success", true)
+                .failureUrl("/api/auth/oauth2/failure")
             )
             .headers(headers -> headers.frameOptions(frameOptions -> frameOptions.disable()))
             .addFilterBefore(new JwtValidator(), BasicAuthenticationFilter.class);
