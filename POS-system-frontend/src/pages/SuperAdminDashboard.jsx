@@ -490,26 +490,47 @@ const PlansView = () => {
 };
 
 const RequestsView = () => {
-  const requests = [
-    { id: 101, store: "Urban Cafe", owner: "Amit Patel", email: "amit@urbancafe.com", date: "2 hours ago", status: "Pending" },
-    { id: 102, store: "Daily Needs", owner: "Sarah Khan", email: "sarah@dailyneeds.com", date: "5 hours ago", status: "Pending" },
-    { id: 103, store: "Gadget World", owner: "Rahul Roy", email: "rahul@gadgetworld.com", date: "1 day ago", status: "Reviewing" },
-  ];
+  const [requests, setRequests] = useState(() => {
+    const localData = JSON.parse(localStorage.getItem('demoRequests') || '[]');
+    const mockData = [
+      { id: 101, store: "Urban Cafe", owner: "Amit Patel", email: "amit@urbancafe.com", date: "2 hours ago", status: "Pending", type: "Registration" },
+      { id: 102, store: "Daily Needs", owner: "Sarah Khan", email: "sarah@dailyneeds.com", date: "5 hours ago", status: "Pending", type: "Registration" },
+      { id: 103, store: "Gadget World", owner: "Rahul Roy", email: "rahul@gadgetworld.com", date: "1 day ago", status: "Reviewing", type: "Registration" },
+    ];
+    // Combine local demo requests with mock registration requests
+    return [...localData, ...mockData];
+  });
+
+  const handleStatusChange = (id, newStatus) => {
+    const updatedRequests = requests.map(req => 
+      req.id === id ? { ...req, status: newStatus } : req
+    );
+    setRequests(updatedRequests);
+
+    // Update localStorage for demo requests
+    const demoRequests = updatedRequests.filter(r => r.type === "Demo Access");
+    localStorage.setItem('demoRequests', JSON.stringify(demoRequests));
+
+    if (newStatus === "Approved") {
+      alert(`Request approved! Temporary access credentials sent to user.`);
+    }
+  };
 
   return (
     <div className="max-w-7xl mx-auto space-y-6">
       <div>
         <h2 className="text-2xl font-bold text-gray-900">Pending Requests</h2>
-        <p className="text-gray-500 mt-1 text-sm">Review and approve new store registration requests</p>
+        <p className="text-gray-500 mt-1 text-sm">Review store registrations and demo access requests</p>
       </div>
 
       <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
         <table className="w-full text-left text-sm">
           <thead className="bg-gray-50 text-gray-500 font-medium border-b border-gray-200">
             <tr>
-              <th className="px-6 py-4">Store Details</th>
-              <th className="px-6 py-4">Owner</th>
-              <th className="px-6 py-4">Requested On</th>
+              <th className="px-6 py-4">Request Type</th>
+              <th className="px-6 py-4">Store / Company</th>
+              <th className="px-6 py-4">Requester</th>
+              <th className="px-6 py-4">Date</th>
               <th className="px-6 py-4">Status</th>
               <th className="px-6 py-4 text-right">Actions</th>
             </tr>
@@ -517,6 +538,13 @@ const RequestsView = () => {
           <tbody className="divide-y divide-gray-200">
             {requests.map((req) => (
               <tr key={req.id} className="hover:bg-gray-50 transition-colors">
+                <td className="px-6 py-4">
+                  <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                    req.type === "Demo Access" ? "bg-purple-50 text-purple-700 border border-purple-100" : "bg-blue-50 text-blue-700 border border-blue-100"
+                  }`}>
+                    {req.type || "Registration"}
+                  </span>
+                </td>
                 <td className="px-6 py-4">
                   <div className="font-medium text-gray-900">{req.store}</div>
                   <div className="text-xs text-gray-500">ID: #{req.id}</div>
@@ -527,19 +555,34 @@ const RequestsView = () => {
                 </td>
                 <td className="px-6 py-4 text-gray-500">{req.date}</td>
                 <td className="px-6 py-4">
-                  <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-orange-50 text-orange-700 border border-orange-100">
+                  <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border ${
+                    req.status === "Pending" ? "bg-orange-50 text-orange-700 border-orange-100" :
+                    req.status === "Approved" ? "bg-green-50 text-green-700 border-green-100" :
+                    req.status === "Rejected" ? "bg-red-50 text-red-700 border-red-100" :
+                    "bg-gray-50 text-gray-700 border-gray-100"
+                  }`}>
                     {req.status}
                   </span>
                 </td>
                 <td className="px-6 py-4 text-right">
-                  <div className="flex items-center justify-end gap-2">
-                    <button className="px-3 py-1.5 bg-green-600 text-white text-xs font-medium rounded-lg hover:bg-green-700 transition-colors">
-                      Approve
-                    </button>
-                    <button className="px-3 py-1.5 bg-white border border-gray-200 text-gray-700 text-xs font-medium rounded-lg hover:bg-gray-50 transition-colors">
-                      Reject
-                    </button>
-                  </div>
+                  {req.status === "Pending" || req.status === "Reviewing" ? (
+                    <div className="flex items-center justify-end gap-2">
+                      <button 
+                        onClick={() => handleStatusChange(req.id, "Approved")}
+                        className="px-3 py-1.5 bg-green-600 text-white text-xs font-medium rounded-lg hover:bg-green-700 transition-colors"
+                      >
+                        Approve
+                      </button>
+                      <button 
+                        onClick={() => handleStatusChange(req.id, "Rejected")}
+                        className="px-3 py-1.5 bg-white border border-gray-200 text-gray-700 text-xs font-medium rounded-lg hover:bg-gray-50 transition-colors"
+                      >
+                        Reject
+                      </button>
+                    </div>
+                  ) : (
+                    <span className="text-xs text-gray-400 italic">Action taken</span>
+                  )}
                 </td>
               </tr>
             ))}
