@@ -15,21 +15,21 @@ const Navbar = ({ theme, setTheme }) => {
         <div className="hidden md:flex items-center gap-6 text-sm font-medium">
           {/* Features Dropdown */}
           <div className="relative group">
-            <button className="flex items-center gap-1 hover:text-primary transition-colors">
+            <button type="button" className="flex items-center gap-1 hover:text-primary transition-colors">
               Features
               <ChevronDown className="h-4 w-4" />
             </button>
             <div className="absolute left-0 top-full hidden w-48 pt-2 group-hover:block">
-              <div className="rounded-md border bg-popover p-2 text-popover-foreground shadow-md">
-                <a href="#" className="block rounded-sm px-3 py-2 hover:bg-accent hover:text-accent-foreground">
+              <div className="rounded-md border bg-white dark:bg-gray-800 p-2 text-popover-foreground shadow-md">
+                <Link to="/features/point-of-sale" className="block rounded-sm px-3 py-2 hover:bg-accent hover:text-accent-foreground">
                   Point of Sale
-                </a>
-                <a href="#" className="block rounded-sm px-3 py-2 hover:bg-accent hover:text-accent-foreground">
+                </Link>
+                <Link to="/features/inventory" className="block rounded-sm px-3 py-2 hover:bg-accent hover:text-accent-foreground">
                   Inventory
-                </a>
-                <a href="#" className="block rounded-sm px-3 py-2 hover:bg-accent hover:text-accent-foreground">
+                </Link>
+                <Link to="/features/analytics" className="block rounded-sm px-3 py-2 hover:bg-accent hover:text-accent-foreground">
                   Analytics
-                </a>
+                </Link>
               </div>
             </div>
           </div>
@@ -43,21 +43,21 @@ const Navbar = ({ theme, setTheme }) => {
 
           {/* Resources Dropdown */}
           <div className="relative group">
-            <button className="flex items-center gap-1 hover:text-primary transition-colors">
+            <button type="button" className="flex items-center gap-1 hover:text-primary transition-colors">
               Resources
               <ChevronDown className="h-4 w-4" />
             </button>
             <div className="absolute left-0 top-full hidden w-48 pt-2 group-hover:block">
-              <div className="rounded-md border bg-popover p-2 text-popover-foreground shadow-md">
-                <a href="#" className="block rounded-sm px-3 py-2 hover:bg-accent hover:text-accent-foreground">
+              <div className="rounded-md border bg-white dark:bg-gray-800 p-2 text-popover-foreground shadow-md">
+                <Link to="/blog" className="block rounded-sm px-3 py-2 hover:bg-accent hover:text-accent-foreground">
                   Blog
-                </a>
-                <a href="#" className="block rounded-sm px-3 py-2 hover:bg-accent hover:text-accent-foreground">
+                </Link>
+                <Link to="/guides" className="block rounded-sm px-3 py-2 hover:bg-accent hover:text-accent-foreground">
                   Guides
-                </a>
-                <a href="#" className="block rounded-sm px-3 py-2 hover:bg-accent hover:text-accent-foreground">
+                </Link>
+                <Link to="/support" className="block rounded-sm px-3 py-2 hover:bg-accent hover:text-accent-foreground">
                   Support
-                </a>
+                </Link>
               </div>
             </div>
           </div>
