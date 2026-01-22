@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import submitDemoRequest from '../services/demoService';
+import submitDemoRequest from '../service/demoService';
 
 const RequestDemo = () => {
   const navigate = useNavigate();

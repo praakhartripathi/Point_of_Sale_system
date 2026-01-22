@@ -1,6 +1,7 @@
 package com.POS_system_backend.entity;
 
 import com.POS_system_backend.entity.enums.UserRole;
+import com.POS_system_backend.entity.enums.UserStatus;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
@@ -18,6 +19,8 @@ class UserTest {
         String password = "password123";
         String phone = "1234567890";
         UserRole role = UserRole.ROLE_USER;
+        UserStatus status = UserStatus.ACTIVE;
+        String profileImage = "http://image.url";
         LocalDateTime now = LocalDateTime.now();
 
         user.setId(id);
@@ -26,6 +29,8 @@ class UserTest {
         user.setPassword(password);
         user.setPhone(phone);
         user.setRole(role);
+        user.setStatus(status);
+        user.setProfileImage(profileImage);
         user.setCreatedAt(now);
         user.setUpdatedAt(now);
         user.setLastLoginAt(now);
@@ -36,6 +41,8 @@ class UserTest {
         assertEquals(password, user.getPassword());
         assertEquals(phone, user.getPhone());
         assertEquals(role, user.getRole());
+        assertEquals(status, user.getStatus());
+        assertEquals(profileImage, user.getProfileImage());
         assertEquals(now, user.getCreatedAt());
         assertEquals(now, user.getUpdatedAt());
         assertEquals(now, user.getLastLoginAt());
@@ -48,18 +55,23 @@ class UserTest {
         String email = "john@example.com";
         String password = "password123";
         String phone = "1234567890";
+        String profileImage = "http://image.url";
         UserRole role = UserRole.ROLE_USER;
+        UserStatus status = UserStatus.ACTIVE;
         LocalDateTime now = LocalDateTime.now();
         Branch branch = null;
+        Store store = null;
 
-        User user = new User(id, fullName, email, password, phone, role, branch, now, now, now);
+        User user = new User(id, fullName, email, password, phone, profileImage, role, status, store, branch, now, now, now);
 
         assertEquals(id, user.getId());
         assertEquals(fullName, user.getFullName());
         assertEquals(email, user.getEmail());
         assertEquals(password, user.getPassword());
         assertEquals(phone, user.getPhone());
+        assertEquals(profileImage, user.getProfileImage());
         assertEquals(role, user.getRole());
+        assertEquals(status, user.getStatus());
         assertEquals(now, user.getCreatedAt());
         assertEquals(now, user.getUpdatedAt());
         assertEquals(now, user.getLastLoginAt());
@@ -73,9 +85,9 @@ class UserTest {
 
     @Test
     void testEqualsAndHashCode() {
-        User user1 = new User(1L, "John", "john@test.com", "pass", "123", UserRole.ROLE_USER, null, null, null, null);
-        User user2 = new User(1L, "John", "john@test.com", "pass", "123", UserRole.ROLE_USER, null, null, null, null);
-        User user3 = new User(2L, "Jane", "jane@test.com", "pass", "456", UserRole.ROLE_ADMIN, null, null, null, null);
+        User user1 = new User(1L, "John", "john@test.com", "pass", "123", "img", UserRole.ROLE_USER, UserStatus.ACTIVE, null, null, null, null, null);
+        User user2 = new User(1L, "John", "john@test.com", "pass", "123", "img", UserRole.ROLE_USER, UserStatus.ACTIVE, null, null, null, null, null);
+        User user3 = new User(2L, "Jane", "jane@test.com", "pass", "456", "img", UserRole.ROLE_ADMIN, UserStatus.ACTIVE, null, null, null, null, null);
 
         assertEquals(user1, user2);
         assertNotEquals(user1, user3);

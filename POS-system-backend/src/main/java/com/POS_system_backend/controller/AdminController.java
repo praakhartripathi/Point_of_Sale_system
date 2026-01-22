@@ -1,6 +1,6 @@
 package com.POS_system_backend.controller;
 
-import com.POS_system_backend.entity.DemoRequest;
+import com.POS_system_backend.dto.StoreRequest;
 import com.POS_system_backend.service.DemoRequestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,8 +19,8 @@ public class AdminController {
     private DemoRequestService demoRequestService;
 
     @GetMapping("/demo-requests")
-    public ResponseEntity<List<DemoRequest>> getAllDemoRequests() {
-        List<DemoRequest> demoRequests = demoRequestService.getAllDemoRequests();
+    public ResponseEntity<List<StoreRequest.DemoRequest>> getAllDemoRequests() {
+        List<StoreRequest.DemoRequest> demoRequests = demoRequestService.getAllDemoRequests();
         return new ResponseEntity<>(demoRequests, HttpStatus.OK);
     }
 

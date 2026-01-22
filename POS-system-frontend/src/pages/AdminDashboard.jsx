@@ -5,7 +5,7 @@ import BranchesView from "../view/BranchesView";
 import ProductsView from "../view/ProductsView";
 import CategoriesView from "../view/CategoriesView";
 import EmployeesView from "../view/EmployeesView";
-import AlertsView from "../component/AlertsView";
+import AlertsView from "../view/AlertsView";
 import SalesView from "../view/SalesView";
 import TransactionsView from "../view/TransactionsView";
 

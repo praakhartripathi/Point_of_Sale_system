@@ -1,6 +1,6 @@
 package com.POS_system_backend.service.impl;
 
-import com.POS_system_backend.entity.DemoRequest;
+import com.POS_system_backend.dto.StoreRequest;
 import com.POS_system_backend.entity.enums.DemoStatus;
 import com.POS_system_backend.repository.DemoRequestRepository;
 import com.POS_system_backend.service.DemoRequestService;
@@ -16,18 +16,18 @@ public class DemoRequestServiceImpl implements DemoRequestService {
     private DemoRequestRepository demoRequestRepository;
 
     @Override
-    public DemoRequest createDemoRequest(DemoRequest demoRequest) {
+    public StoreRequest.DemoRequest createDemoRequest(StoreRequest.DemoRequest demoRequest) {
         return demoRequestRepository.save(demoRequest);
     }
 
     @Override
-    public List<DemoRequest> getAllDemoRequests() {
+    public List<StoreRequest.DemoRequest> getAllDemoRequests() {
         return demoRequestRepository.findAll();
     }
 
     @Override
     public void approveDemoRequest(Long id, String notes) {
-        DemoRequest request = demoRequestRepository.findById(id)
+        StoreRequest.DemoRequest request = demoRequestRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Demo request not found"));
         request.setStatus(DemoStatus.APPROVED);
         request.setNotes(notes);
@@ -39,7 +39,7 @@ public class DemoRequestServiceImpl implements DemoRequestService {
 
     @Override
     public void rejectDemoRequest(Long id, String notes) {
-        DemoRequest request = demoRequestRepository.findById(id)
+        StoreRequest.DemoRequest request = demoRequestRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Demo request not found"));
         request.setStatus(DemoStatus.REJECTED);
         request.setNotes(notes);

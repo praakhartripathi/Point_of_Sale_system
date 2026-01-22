@@ -1,6 +1,6 @@
 package com.POS_system_backend.controller;
 
-import com.POS_system_backend.dto.StoreRequest;
+import com.POS_system_backend.entity.DemoRequest;
 import com.POS_system_backend.service.DemoRequestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -12,14 +12,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/public")
-public class PublicController {
+public class DemoController {
 
     @Autowired
     private DemoRequestService demoRequestService;
 
     @PostMapping("/demo-request")
-    public ResponseEntity<StoreRequest.DemoRequest> submitDemoRequest(@RequestBody StoreRequest.DemoRequest demoRequest) {
-        StoreRequest.DemoRequest createdRequest = demoRequestService.createDemoRequest(demoRequest);
+    public ResponseEntity<DemoRequest> submitDemoRequest(@RequestBody DemoRequest demoRequest) {
+        DemoRequest createdRequest = demoRequestService.createDemoRequest(demoRequest);
         return new ResponseEntity<>(createdRequest, HttpStatus.CREATED);
     }
 }

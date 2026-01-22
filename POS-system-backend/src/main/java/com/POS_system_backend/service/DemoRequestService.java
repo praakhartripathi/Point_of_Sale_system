@@ -1,11 +1,12 @@
 package com.POS_system_backend.service;
 
-import com.POS_system_backend.entity.DemoRequest;
+import com.POS_system_backend.dto.StoreRequest;
+
 import java.util.List;
 
 public interface DemoRequestService {
-    DemoRequest createDemoRequest(DemoRequest demoRequest);
-    List<DemoRequest> getAllDemoRequests();
+    StoreRequest.DemoRequest createDemoRequest(StoreRequest.DemoRequest demoRequest);
+    List<StoreRequest.DemoRequest> getAllDemoRequests();
     void approveDemoRequest(Long id, String notes);
     void rejectDemoRequest(Long id, String notes);
 }

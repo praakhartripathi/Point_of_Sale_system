@@ -5,7 +5,7 @@ import RefundsView from "../view/RefundsView";
 import TransactionsView from "../view/TransactionsView";
 import InventoryView from "../view/InventoryView";
 import EmployeesView from "../view/EmployeesView";
-import CustomersView from "../component/CustomersView";
+import CustomersView from "../view/CustomersView";
 import ReportsView from "../view/ReportsView";
 import SettingsView from "../view/SettingsView";
 
