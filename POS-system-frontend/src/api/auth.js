@@ -1,7 +1,7 @@
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
+import { API_BASE_URL } from './endpoints';
 
-export const signin = async (credentials) => {
-  const response = await fetch(`${API_URL}/api/auth/signin`, {
+const signin = async (credentials) => {
+  const response = await fetch(`${API_BASE_URL}/api/auth/signin`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -17,3 +17,5 @@ export const signin = async (credentials) => {
 
   return data;
 };
+
+export { signin };

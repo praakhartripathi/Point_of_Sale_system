@@ -1,1 +1,0 @@
-export const DEMO_REQUEST_URL = "http://localhost:5000/api/public/demo-request";
