@@ -2,6 +2,7 @@ package com.POS_system_backend.entity;
 
 import com.POS_system_backend.entity.enums.StoreStatus;
 import com.POS_system_backend.entity.enums.StoreType;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -26,16 +27,19 @@ public class Store {
     private String brand;
 
     @OneToOne
+    @JoinColumn(name = "admin_id")
     private User storeAdmin;
 
-    @OneToMany
+    @OneToMany(mappedBy = "store", cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<User> employees = new ArrayList<>();
 
     @ManyToOne
     @JoinColumn(name = "parent_store_id")
     private Store parentStore;
 
-    @OneToMany(mappedBy = "parentStore")
+    @OneToMany(mappedBy = "parentStore", cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<Store> branches = new ArrayList<>();
 
     private LocalDateTime createdAt;

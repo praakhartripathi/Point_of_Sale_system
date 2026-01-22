@@ -1,88 +1,33 @@
 # POS System
 
-A robust, full-stack Point of Sale (POS) system designed for business billing, inventory management, sales tracking, and multi-store operations. It features a modern React frontend and a secure Spring Boot backend.
+A full-stack Point of Sale system composed of a Spring Boot backend, a modern frontend, and a MySQL database.
 
-## 🚀 Features
+## Architecture
 
-### Core Functionality
-- **Authentication & Authorization**: Secure JWT-based auth with RBAC (Admin, Cashier, Branch Manager, etc.).
-- **Multi-Store Support**: Manage parent stores and individual branches with specific working hours.
-- **Inventory Control**: Real-time stock tracking, low stock alerts, and product categorization.
-- **Billing & Invoicing**: Support for multiple payment modes (UPI, Card, Cash), tax calculations, and digital receipts.
+The project is containerized using Docker Compose and consists of the following services:
 
-### Management Modules
-- **User & Employee Management**: Manage profiles, roles, and shift tracking.
-- **Customer Management**: CRM features to track customer history and profiles.
-- **Product Management**: CRUD operations, search by SKU/name, and bulk CSV imports.
-- **Order Processing**: Comprehensive order history, refunds/returns handling, and status tracking.
+- **Database (`pos-db`)**: MySQL 8.0 running on port `3306` (exposed on host as `3307`).
+- **Backend (`pos-backend`)**: Spring Boot application running on port `5000`.
+- **Frontend (`pos-frontend`)**: Web interface running on port `5173` (exposed on host as `3000`).
 
-### Reporting & Analytics
-- **Dashboard**: Real-time overview of sales and inventory.
-- **Shift Reports**: Detailed summaries for cashiers including sales, refunds, and payment breakdowns.
-- **Sales Reports**: Daily, weekly, and monthly analytics.
+## Prerequisites
 
-### User Interface
-- **Responsive Design**: Built with Tailwind CSS for various screen sizes.
-- **Dark Mode**: Built-in support for dark theme.
+- Docker
+- Docker Compose
 
-## 🛠️ Tech Stack
+## Getting Started
 
-### Frontend
-- **Framework**: React
-- **Styling**: Tailwind CSS
-- **Icons**: Custom SVG implementation
+1. Navigate to the project root.
+2. Start the services:
 
-### Backend
-- **Language**: Java 17+
-- **Framework**: Spring Boot 3.5.9
-- **Security**: Spring Security (JWT)
-- **Database**: MySQL (Production), H2 (Dev)
-- **ORM**: Spring Data JPA (Hibernate)
-- **Build Tool**: Maven
-- **Integrations**: Razorpay (Payments), Java Mail Sender (Email)
-- **Utilities**: Lombok
-
-## 📂 Project Structure
-
-```text
-POS-system/
-├── POS-system-backend/    # Spring Boot API and Database logic
-├── POS-system-frontend/   # React User Interface logic
-└── README.md              # Project documentation
-```
-
-## ⚙️ Installation & Setup
-
-### Prerequisites
-- Node.js (v14 or higher)
-- Java Development Kit (JDK)
-- MySQL installed and running
-
-### Backend Setup
-1. Navigate to the backend directory:
    ```bash
-   cd backend
-   ```
-2. Configure database connection in `src/main/resources/application.properties`.
-3. Start the server:
-   ```bash
-   ./mvnw spring-boot:run
+   docker-compose up --build
    ```
 
-### Frontend Setup
-1. Navigate to the frontend directory:
-   ```bash
-   cd frontend
-   ```
-2. Install dependencies:
-   ```bash
-   npm install
-   ```
-3. Start the development server:
-   ```bash
-   npm start
-   ```
-
-## 🤝 Contributing
-
-Contributions are welcome! Please fork the repository and create a pull request.
+3. Access the application:
+   - **Frontend**: http://localhost:3000
+   - **Backend API**: http://localhost:5000
+   - **Database**: `localhost:3307`
+     - User: `pos_user`
+     - Password: `password`
+     - Database: `pos_db`
