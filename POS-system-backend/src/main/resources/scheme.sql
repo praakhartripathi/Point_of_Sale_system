@@ -195,3 +195,19 @@ CREATE TABLE IF NOT EXISTS refunds (
 -- Add Foreign Key Constraints for User (Circular dependencies)
 ALTER TABLE users ADD CONSTRAINT fk_user_store FOREIGN KEY (store_id) REFERENCES stores(id);
 ALTER TABLE users ADD CONSTRAINT fk_user_branch FOREIGN KEY (branch_id) REFERENCES branches(id);
+
+-- Trial Accounts Table
+CREATE TABLE IF NOT EXISTS trial_accounts (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    business_name VARCHAR(255),
+    owner_name VARCHAR(255),
+    email VARCHAR(255) NOT NULL UNIQUE,
+    mobile VARCHAR(255),
+    password VARCHAR(255),
+    plan VARCHAR(50) DEFAULT 'TRIAL',
+    start_date DATETIME,
+    end_date DATETIME,
+    is_active BOOLEAN DEFAULT TRUE,
+    created_at DATETIME,
+    updated_at DATETIME
+);

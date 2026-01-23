@@ -24,6 +24,7 @@ const TrialDashboard = ({ theme, setTheme }) => {
 
   const fetchProfileData = async () => {
     const token = localStorage.getItem("token");
+    const storedEmail = localStorage.getItem("email");
     if (!token) return;
 
     try {
@@ -47,6 +48,12 @@ const TrialDashboard = ({ theme, setTheme }) => {
           setAdminName(data.name);
           localStorage.setItem("name", data.name);
         }
+      } else {
+        // If fetch fails, try to rely on localStorage so UI doesn't get stuck on "Loading..."
+        if (storedEmail) setUserEmail(storedEmail);
+        const storedName = localStorage.getItem("name");
+        if (storedName) setAdminName(storedName);
+        console.warn("Profile fetch failed, using cached data.");
       }
     } catch (error) {
       console.error("Error fetching profile:", error);
