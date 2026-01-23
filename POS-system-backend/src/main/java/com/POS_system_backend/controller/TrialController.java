@@ -1,5 +1,6 @@
 package com.POS_system_backend.controller;
 
+import com.POS_system_backend.dto.LoginRequest;
 import com.POS_system_backend.dto.TrialSignupRequest;
 import com.POS_system_backend.entity.TrialAccount;
 import com.POS_system_backend.service.TrialService;
@@ -11,7 +12,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/trial")
-@CrossOrigin(origins = "*") // Allow frontend access
+@CrossOrigin(origins = "*") 
 public class TrialController {
 
     @Autowired
@@ -20,6 +21,12 @@ public class TrialController {
     @PostMapping("/signup")
     public ResponseEntity<?> registerTrial(@RequestBody TrialSignupRequest request) {
         Map<String, Object> response = trialService.createTrialAccount(request);
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<?> loginTrial(@RequestBody LoginRequest request) {
+        Map<String, Object> response = trialService.login(request);
         return ResponseEntity.ok(response);
     }
 }
