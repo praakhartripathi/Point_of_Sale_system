@@ -1,17 +1,65 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { API_BASE_URL } from "../api/endpoints";
 
 const TrialDashboard = ({ theme, setTheme }) => {
   const navigate = useNavigate();
   const [daysLeft, setDaysLeft] = useState(7);
   const [isExpired, setIsExpired] = useState(false);
   const [adminName, setAdminName] = useState("Admin");
+  const [userEmail, setUserEmail] = useState("");
+  const [showProfileDropdown, setShowProfileDropdown] = useState(false);
+  const [showChangePasswordModal, setShowChangePasswordModal] = useState(false);
+  const [currentPassword, setCurrentPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [passwordError, setPasswordError] = useState("");
+  const [passwordLoading, setPasswordLoading] = useState(false);
+  const [showCurrentPassword, setShowCurrentPassword] = useState(false);
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [showProfileModal, setShowProfileModal] = useState(false);
+  const [profileData, setProfileData] = useState(null);
+  const [profileLoading, setProfileLoading] = useState(false);
+
+  const fetchProfileData = async () => {
+    const token = localStorage.getItem("token");
+    if (!token) return;
+
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/trial/profile`, {
+        method: "GET",
+        headers: {
+          "Authorization": `Bearer ${token}`,
+        },
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setProfileData(data);
+        // Update email if not in localStorage or if different
+        if (data.email) {
+          setUserEmail(data.email);
+          localStorage.setItem("email", data.email);
+        }
+        // Update name if available
+        if (data.name) {
+          setAdminName(data.name);
+          localStorage.setItem("name", data.name);
+        }
+      }
+    } catch (error) {
+      console.error("Error fetching profile:", error);
+    }
+  };
 
   useEffect(() => {
     const endDate = localStorage.getItem("trialEndDate");
     const name = localStorage.getItem("name");
+    const email = localStorage.getItem("email") || "";
     
     if (name) setAdminName(name);
+    if (email) setUserEmail(email);
 
     if (endDate) {
       const end = new Date(endDate);
@@ -21,7 +69,32 @@ const TrialDashboard = ({ theme, setTheme }) => {
       setDaysLeft(diffDays > 0 ? diffDays : 0);
       if (diffDays <= 0) setIsExpired(true);
     }
+
+    // Fetch profile data to ensure email is available
+    fetchProfileData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  const handleOpenProfile = async () => {
+    setShowProfileDropdown(false);
+    setShowProfileModal(true);
+    setProfileLoading(true);
+    
+    // Fetch fresh profile data
+    await fetchProfileData();
+    setProfileLoading(false);
+  };
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (showProfileDropdown && !event.target.closest('.profile-dropdown-container')) {
+        setShowProfileDropdown(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [showProfileDropdown]);
 
   const handleLogout = () => {
     localStorage.clear();
@@ -30,6 +103,81 @@ const TrialDashboard = ({ theme, setTheme }) => {
 
   const toggleTheme = () => {
     setTheme((prev) => (prev === "dark" ? "light" : "dark"));
+  };
+
+  const handleChangePassword = async (e) => {
+    e.preventDefault();
+    setPasswordError("");
+
+    // Validation
+    if (!currentPassword || !newPassword || !confirmPassword) {
+      setPasswordError("All fields are required");
+      return;
+    }
+
+    if (newPassword.length < 6) {
+      setPasswordError("New password must be at least 6 characters long");
+      return;
+    }
+
+    if (newPassword !== confirmPassword) {
+      setPasswordError("New passwords do not match");
+      return;
+    }
+
+    if (currentPassword === newPassword) {
+      setPasswordError("New password must be different from current password");
+      return;
+    }
+
+    setPasswordLoading(true);
+
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        throw new Error("Not authenticated. Please login again.");
+      }
+
+      const response = await fetch(`${API_BASE_URL}/api/trial/change-password`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          currentPassword,
+          newPassword,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || "Failed to change password");
+      }
+
+      // Success
+      alert("Password changed successfully!");
+      setShowChangePasswordModal(false);
+      setCurrentPassword("");
+      setNewPassword("");
+      setConfirmPassword("");
+      setPasswordError("");
+    } catch (error) {
+      console.error("Error changing password:", error);
+      setPasswordError(error.message || "Failed to change password. Please try again.");
+    } finally {
+      setPasswordLoading(false);
+    }
+  };
+
+  const handleOpenChangePassword = () => {
+    setShowProfileDropdown(false);
+    setShowChangePasswordModal(true);
+    setPasswordError("");
+    setCurrentPassword("");
+    setNewPassword("");
+    setConfirmPassword("");
   };
 
   return (
@@ -70,17 +218,115 @@ const TrialDashboard = ({ theme, setTheme }) => {
           <button onClick={toggleTheme} className="p-2 text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full transition-colors">
             {theme === "dark" ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
           </button>
-          <div className="text-right hidden sm:block">
-            <p className="text-sm font-bold text-gray-900 dark:text-white">{adminName}</p>
-            <p className="text-xs text-gray-500 dark:text-gray-400">Trial Admin</p>
+          
+          {/* Profile Dropdown */}
+          <div className="relative profile-dropdown-container">
+            <button
+              onClick={() => setShowProfileDropdown(!showProfileDropdown)}
+              className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors cursor-pointer"
+            >
+              <div className="w-10 h-10 bg-indigo-100 dark:bg-indigo-900/30 rounded-full flex items-center justify-center text-indigo-700 dark:text-indigo-400 font-bold border border-indigo-200 dark:border-indigo-700">
+                {adminName.charAt(0).toUpperCase()}
+              </div>
+              <div className="text-right hidden sm:block">
+                <p className="text-sm font-bold text-gray-900 dark:text-white">{adminName}</p>
+                <p className="text-xs text-gray-500 dark:text-gray-400">Trial Admin</p>
+              </div>
+              <ChevronDown className={`w-4 h-4 text-gray-500 dark:text-gray-400 transition-transform ${showProfileDropdown ? 'rotate-180' : ''}`} />
+            </button>
+
+            {/* Dropdown Menu */}
+            {showProfileDropdown && (
+              <div className="absolute right-0 mt-2 w-80 bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 z-50 overflow-hidden">
+                {/* Section 1: User Info */}
+                <div className="px-4 py-3 border-b border-gray-200 dark:border-gray-700">
+                  <div className="flex items-center gap-3 mb-3">
+                    <div className="w-12 h-12 bg-indigo-100 dark:bg-indigo-900/30 rounded-full flex items-center justify-center text-indigo-700 dark:text-indigo-400 font-bold text-lg border border-indigo-200 dark:border-indigo-700">
+                      {adminName.charAt(0).toUpperCase()}
+                    </div>
+                    <div className="flex-1">
+                      <p className="text-sm font-bold text-gray-900 dark:text-white">{adminName}</p>
+                      <p className="text-xs text-gray-500 dark:text-gray-400">{userEmail || profileData?.email || "Loading..."}</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2 mb-2">
+                    <span className="px-2 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 text-xs font-medium rounded-full">Admin</span>
+                  </div>
+                  <p className="text-xs text-gray-500 dark:text-gray-400">
+                    {isExpired ? (
+                      <span className="text-red-600 dark:text-red-400 font-medium">Trial expired</span>
+                    ) : (
+                      <>Trial ends in <span className="font-bold text-gray-900 dark:text-white">{daysLeft} days</span></>
+                    )}
+                  </p>
+                </div>
+
+                {/* Section 2: Profile Actions */}
+                <div className="px-2 py-2 border-b border-gray-200 dark:border-gray-700">
+                  <button
+                    onClick={handleOpenProfile}
+                    className="w-full px-3 py-2 text-left text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors flex items-center gap-2"
+                  >
+                    <User className="w-4 h-4" />
+                    My Profile
+                  </button>
+                  <button
+                    onClick={handleOpenChangePassword}
+                    className="w-full px-3 py-2 text-left text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors flex items-center gap-2"
+                  >
+                    <Lock className="w-4 h-4" />
+                    Change Password
+                  </button>
+                </div>
+
+                {/* Section 3: Trial and Billing */}
+                <div className="px-2 py-2 border-b border-gray-200 dark:border-gray-700">
+                  <div className="px-3 py-2 mb-2">
+                    <p className="text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">Trial Status</p>
+                    <div className="flex items-center justify-between">
+                      <span className={`text-sm font-bold ${isExpired ? 'text-red-600 dark:text-red-400' : 'text-green-600 dark:text-green-400'}`}>
+                        {isExpired ? 'Expired' : `Active (${daysLeft} days)`}
+                      </span>
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => {
+                      setShowProfileDropdown(false);
+                      navigate("/pricing");
+                    }}
+                    className="w-full px-3 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-bold rounded-lg transition-colors mb-2 flex items-center justify-center gap-2"
+                  >
+                    <Zap className="w-4 h-4" />
+                    {isExpired ? "Upgrade to Continue" : "Upgrade Now"}
+                  </button>
+                  <button
+                    onClick={() => {
+                      setShowProfileDropdown(false);
+                      navigate("/pricing");
+                    }}
+                    className="w-full px-3 py-2 text-left text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors flex items-center gap-2"
+                  >
+                    <CreditCard className="w-4 h-4" />
+                    View Plan
+                  </button>
+                </div>
+
+                {/* Logout */}
+                <div className="px-2 py-2">
+                  <button
+                    onClick={() => {
+                      setShowProfileDropdown(false);
+                      handleLogout();
+                    }}
+                    className="w-full px-3 py-2 text-left text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors flex items-center gap-2"
+                  >
+                    <LogOut className="w-4 h-4" />
+                    Logout
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
-          <button 
-            onClick={handleLogout}
-            className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors"
-            title="Logout"
-          >
-            <LogOut className="w-5 h-5" />
-          </button>
         </div>
       </header>
 
@@ -206,6 +452,263 @@ const TrialDashboard = ({ theme, setTheme }) => {
 
         </div>
       </main>
+
+      {/* Change Password Modal */}
+      {showChangePasswordModal && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg w-full max-w-md overflow-hidden">
+            <div className="p-6 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center">
+              <h3 className="font-bold text-lg text-gray-900 dark:text-white">Change Password</h3>
+              <button
+                onClick={() => {
+                  setShowChangePasswordModal(false);
+                  setPasswordError("");
+                  setCurrentPassword("");
+                  setNewPassword("");
+                  setConfirmPassword("");
+                }}
+                className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 transition-colors"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+            <form onSubmit={handleChangePassword} className="p-6 space-y-4">
+              {passwordError && (
+                <div className="p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
+                  <p className="text-sm text-red-600 dark:text-red-400">{passwordError}</p>
+                </div>
+              )}
+
+              {/* Current Password */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                  Current Password
+                </label>
+                <div className="flex items-center gap-2 bg-gray-50 dark:bg-gray-900 px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 focus-within:ring-2 focus-within:ring-indigo-500/20 transition-all">
+                  <Lock className="w-4 h-4 text-gray-400" />
+                  <input
+                    type={showCurrentPassword ? "text" : "password"}
+                    value={currentPassword}
+                    onChange={(e) => setCurrentPassword(e.target.value)}
+                    placeholder="Enter current password"
+                    className="bg-transparent w-full outline-none text-sm text-gray-900 dark:text-white placeholder:text-gray-400"
+                    required
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowCurrentPassword(!showCurrentPassword)}
+                    className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+                  >
+                    {showCurrentPassword ? "🙈" : "👁"}
+                  </button>
+                </div>
+              </div>
+
+              {/* New Password */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                  New Password
+                </label>
+                <div className="flex items-center gap-2 bg-gray-50 dark:bg-gray-900 px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 focus-within:ring-2 focus-within:ring-indigo-500/20 transition-all">
+                  <Lock className="w-4 h-4 text-gray-400" />
+                  <input
+                    type={showNewPassword ? "text" : "password"}
+                    value={newPassword}
+                    onChange={(e) => setNewPassword(e.target.value)}
+                    placeholder="Enter new password (min 6 characters)"
+                    className="bg-transparent w-full outline-none text-sm text-gray-900 dark:text-white placeholder:text-gray-400"
+                    required
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowNewPassword(!showNewPassword)}
+                    className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+                  >
+                    {showNewPassword ? "🙈" : "👁"}
+                  </button>
+                </div>
+              </div>
+
+              {/* Confirm Password */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                  Confirm New Password
+                </label>
+                <div className="flex items-center gap-2 bg-gray-50 dark:bg-gray-900 px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 focus-within:ring-2 focus-within:ring-indigo-500/20 transition-all">
+                  <Lock className="w-4 h-4 text-gray-400" />
+                  <input
+                    type={showConfirmPassword ? "text" : "password"}
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    placeholder="Confirm new password"
+                    className="bg-transparent w-full outline-none text-sm text-gray-900 dark:text-white placeholder:text-gray-400"
+                    required
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                    className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+                  >
+                    {showConfirmPassword ? "🙈" : "👁"}
+                  </button>
+                </div>
+              </div>
+
+              {/* Buttons */}
+              <div className="flex gap-3 pt-4">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setShowChangePasswordModal(false);
+                    setPasswordError("");
+                    setCurrentPassword("");
+                    setNewPassword("");
+                    setConfirmPassword("");
+                  }}
+                  className="flex-1 px-4 py-2 border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors font-medium"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={passwordLoading}
+                  className="flex-1 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors font-medium disabled:opacity-70 disabled:cursor-not-allowed"
+                >
+                  {passwordLoading ? "Changing..." : "Change Password"}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Profile Modal */}
+      {showProfileModal && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg w-full max-w-2xl overflow-hidden">
+            <div className="p-6 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center">
+              <h3 className="font-bold text-lg text-gray-900 dark:text-white">My Profile</h3>
+              <button
+                onClick={() => setShowProfileModal(false)}
+                className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 transition-colors"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+            <div className="p-6">
+              {profileLoading ? (
+                <div className="flex items-center justify-center py-8">
+                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"></div>
+                </div>
+              ) : profileData ? (
+                <div className="space-y-6">
+                  {/* Profile Header */}
+                  <div className="flex items-center gap-4 pb-6 border-b border-gray-200 dark:border-gray-700">
+                    <div className="w-20 h-20 bg-indigo-100 dark:bg-indigo-900/30 rounded-full flex items-center justify-center text-indigo-700 dark:text-indigo-400 font-bold text-2xl border-2 border-indigo-200 dark:border-indigo-700">
+                      {profileData.name?.charAt(0).toUpperCase() || "U"}
+                    </div>
+                    <div>
+                      <h4 className="text-xl font-bold text-gray-900 dark:text-white">{profileData.name || "N/A"}</h4>
+                      <p className="text-sm text-gray-500 dark:text-gray-400">{profileData.role || "Admin"}</p>
+                    </div>
+                  </div>
+
+                  {/* Personal Information */}
+                  <div>
+                    <h5 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-4 uppercase tracking-wide">Personal Information</h5>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="space-y-1">
+                        <label className="text-xs font-medium text-gray-500 dark:text-gray-400">Full Name</label>
+                        <p className="text-sm text-gray-900 dark:text-white font-medium">{profileData.name || "N/A"}</p>
+                      </div>
+                      <div className="space-y-1">
+                        <label className="text-xs font-medium text-gray-500 dark:text-gray-400">Email Address</label>
+                        <p className="text-sm text-gray-900 dark:text-white font-medium">{profileData.email || "N/A"}</p>
+                      </div>
+                      <div className="space-y-1">
+                        <label className="text-xs font-medium text-gray-500 dark:text-gray-400">Phone Number</label>
+                        <p className="text-sm text-gray-900 dark:text-white font-medium">{profileData.phone || profileData.mobile || "N/A"}</p>
+                      </div>
+                      <div className="space-y-1">
+                        <label className="text-xs font-medium text-gray-500 dark:text-gray-400">Role</label>
+                        <span className="inline-block px-2 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 text-xs font-medium rounded-full">
+                          {profileData.role || "Admin"}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Business Information */}
+                  <div>
+                    <h5 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-4 uppercase tracking-wide">Business Information</h5>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="space-y-1">
+                        <label className="text-xs font-medium text-gray-500 dark:text-gray-400">Business Name</label>
+                        <p className="text-sm text-gray-900 dark:text-white font-medium">{profileData.businessName || "N/A"}</p>
+                      </div>
+                      <div className="space-y-1">
+                        <label className="text-xs font-medium text-gray-500 dark:text-gray-400">Owner Name</label>
+                        <p className="text-sm text-gray-900 dark:text-white font-medium">{profileData.ownerName || "N/A"}</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Trial Information */}
+                  <div>
+                    <h5 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-4 uppercase tracking-wide">Trial Information</h5>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="space-y-1">
+                        <label className="text-xs font-medium text-gray-500 dark:text-gray-400">Plan</label>
+                        <span className="inline-block px-2 py-1 bg-indigo-100 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-400 text-xs font-medium rounded-full">
+                          {profileData.plan || "TRIAL"}
+                        </span>
+                      </div>
+                      <div className="space-y-1">
+                        <label className="text-xs font-medium text-gray-500 dark:text-gray-400">Status</label>
+                        <span className={`inline-block px-2 py-1 text-xs font-medium rounded-full ${
+                          profileData.isActive 
+                            ? "bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400" 
+                            : "bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400"
+                        }`}>
+                          {profileData.isActive ? "Active" : "Inactive"}
+                        </span>
+                      </div>
+                      <div className="space-y-1">
+                        <label className="text-xs font-medium text-gray-500 dark:text-gray-400">Trial Start Date</label>
+                        <p className="text-sm text-gray-900 dark:text-white font-medium">
+                          {profileData.trialStartDate 
+                            ? new Date(profileData.trialStartDate).toLocaleDateString() 
+                            : "N/A"}
+                        </p>
+                      </div>
+                      <div className="space-y-1">
+                        <label className="text-xs font-medium text-gray-500 dark:text-gray-400">Trial End Date</label>
+                        <p className="text-sm text-gray-900 dark:text-white font-medium">
+                          {profileData.trialEndDate 
+                            ? new Date(profileData.trialEndDate).toLocaleDateString() 
+                            : "N/A"}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <div className="text-center py-8">
+                  <p className="text-gray-500 dark:text-gray-400">Failed to load profile data</p>
+                </div>
+              )}
+            </div>
+            <div className="p-6 border-t border-gray-200 dark:border-gray-700 flex justify-end">
+              <button
+                onClick={() => setShowProfileModal(false)}
+                className="px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors font-medium"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
@@ -219,5 +722,9 @@ const LogOut = (props) => <svg xmlns="http://www.w3.org/2000/svg" width="24" hei
 const Sun = (props) => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>;
 const Moon = (props) => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>;
 const Lock = (props) => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>;
+const ChevronDown = (props) => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}><path d="m6 9 6 6 6-6"/></svg>;
+const User = (props) => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>;
+const CreditCard = (props) => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></svg>;
+const X = (props) => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>;
 
 export default TrialDashboard;

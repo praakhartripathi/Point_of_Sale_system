@@ -1,5 +1,6 @@
 package com.POS_system_backend.controller;
 
+import com.POS_system_backend.dto.ChangePasswordRequest;
 import com.POS_system_backend.dto.LoginRequest;
 import com.POS_system_backend.dto.TrialSignupRequest;
 import com.POS_system_backend.entity.TrialAccount;
@@ -27,6 +28,18 @@ public class TrialController {
     @PostMapping("/login")
     public ResponseEntity<?> loginTrial(@RequestBody LoginRequest request) {
         Map<String, Object> response = trialService.login(request);
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/change-password")
+    public ResponseEntity<?> changePassword(@RequestBody ChangePasswordRequest request) {
+        Map<String, Object> response = trialService.changePassword(request);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/profile")
+    public ResponseEntity<?> getProfile() {
+        Map<String, Object> response = trialService.getProfile();
         return ResponseEntity.ok(response);
     }
 }

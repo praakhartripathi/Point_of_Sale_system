@@ -1,6 +1,7 @@
 package com.POS_system_backend.service.impl;
 
 import com.POS_system_backend.configuration.JwtProvider;
+import com.POS_system_backend.dto.ChangePasswordRequest;
 import com.POS_system_backend.dto.LoginRequest;
 import com.POS_system_backend.dto.TrialSignupRequest;
 import com.POS_system_backend.entity.Branch;
@@ -18,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -111,6 +113,7 @@ public class TrialServiceImpl implements TrialService {
         response.put("token", token);
         response.put("role", savedUser.getRole().toString());
         response.put("name", savedUser.getFullName());
+        response.put("email", savedUser.getEmail());
         response.put("trialEndDate", savedAccount.getEndDate());
         
         // Return specific account details to avoid circular reference issues in JSON serialization
@@ -146,6 +149,7 @@ public class TrialServiceImpl implements TrialService {
         response.put("token", token);
         response.put("role", user.getRole().toString());
         response.put("name", user.getFullName());
+        response.put("email", user.getEmail());
         response.put("trialEndDate", trialAccount.getEndDate());
         
         Map<String, Object> accountDetails = new HashMap<>();
@@ -153,6 +157,88 @@ public class TrialServiceImpl implements TrialService {
         accountDetails.put("businessName", trialAccount.getBusinessName());
         response.put("account", accountDetails);
 
+        return response;
+    }
+
+    @Override
+    public Map<String, Object> changePassword(ChangePasswordRequest request) {
+        // Get current user email from SecurityContext
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated()) {
+            throw new RuntimeException("User not authenticated");
+        }
+        
+        String email = authentication.getName();
+        
+        // Find user and trial account
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        
+        TrialAccount trialAccount = trialAccountRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Trial account not found"));
+        
+        // Verify current password
+        if (!passwordEncoder.matches(request.getCurrentPassword(), user.getPassword())) {
+            throw new RuntimeException("Current password is incorrect");
+        }
+        
+        // Check if new password is different from current password
+        if (passwordEncoder.matches(request.getNewPassword(), user.getPassword())) {
+            throw new RuntimeException("New password must be different from current password");
+        }
+        
+        // Validate new password (basic validation - at least 6 characters)
+        if (request.getNewPassword() == null || request.getNewPassword().length() < 6) {
+            throw new RuntimeException("New password must be at least 6 characters long");
+        }
+        
+        // Encode new password
+        String encodedNewPassword = passwordEncoder.encode(request.getNewPassword());
+        
+        // Update password in both User and TrialAccount
+        user.setPassword(encodedNewPassword);
+        userRepository.save(user);
+        
+        trialAccount.setPassword(encodedNewPassword);
+        trialAccountRepository.save(trialAccount);
+        
+        Map<String, Object> response = new HashMap<>();
+        response.put("message", "Password changed successfully");
+        response.put("success", true);
+        
+        return response;
+    }
+
+    @Override
+    public Map<String, Object> getProfile() {
+        // Get current user email from SecurityContext
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated()) {
+            throw new RuntimeException("User not authenticated");
+        }
+        
+        String email = authentication.getName();
+        
+        // Find user and trial account
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        
+        TrialAccount trialAccount = trialAccountRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Trial account not found"));
+        
+        Map<String, Object> response = new HashMap<>();
+        response.put("name", user.getFullName());
+        response.put("email", user.getEmail());
+        response.put("phone", user.getPhone());
+        response.put("role", user.getRole().toString());
+        response.put("businessName", trialAccount.getBusinessName());
+        response.put("ownerName", trialAccount.getOwnerName());
+        response.put("mobile", trialAccount.getMobile());
+        response.put("trialEndDate", trialAccount.getEndDate());
+        response.put("trialStartDate", trialAccount.getStartDate());
+        response.put("plan", trialAccount.getPlan());
+        response.put("isActive", trialAccount.isActive());
+        
         return response;
     }
 }

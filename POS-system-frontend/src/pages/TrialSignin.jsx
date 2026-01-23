@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
+import { API_BASE_URL } from "../api/endpoints";
 
 const TrialSignIn = () => {
   const [email, setEmail] = useState("");
@@ -13,7 +14,7 @@ const TrialSignIn = () => {
     setLoading(true);
 
     try {
-      const response = await fetch("http://localhost:5000/api/trial/login", {
+      const response = await fetch(`${API_BASE_URL}/api/trial/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -35,6 +36,7 @@ const TrialSignIn = () => {
         localStorage.setItem("token", data.token);
         localStorage.setItem("role", data.role);
         if (data.name) localStorage.setItem("name", data.name);
+        if (data.email) localStorage.setItem("email", data.email);
         if (data.trialEndDate) localStorage.setItem("trialEndDate", data.trialEndDate);
         
         alert("Trial Login Successful!");
@@ -49,7 +51,7 @@ const TrialSignIn = () => {
   };
 
   const handleGoogleLogin = () => {
-    window.location.href = "http://localhost:5000/oauth2/authorization/google";
+    window.location.href = `${API_BASE_URL}/oauth2/authorization/google`;
   };
 
   return (

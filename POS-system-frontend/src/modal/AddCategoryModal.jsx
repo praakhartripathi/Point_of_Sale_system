@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { API_BASE_URL } from "../api/endpoints";
 
 const AddCategoryModal = ({ isOpen, onClose, onCategoryAdded }) => {
   const [newCategoryName, setNewCategoryName] = useState("");
@@ -6,7 +7,7 @@ const AddCategoryModal = ({ isOpen, onClose, onCategoryAdded }) => {
   const handleAddCategory = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch("http://localhost:5000/api/categories", {
+      const response = await fetch(`${API_BASE_URL}/api/categories`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json"

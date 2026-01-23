@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
+import { API_BASE_URL } from "../api/endpoints";
 
 const TrialSignup = () => {
   const [ownerName, setOwnerName] = useState("");
@@ -16,7 +17,7 @@ const TrialSignup = () => {
     setLoading(true);
 
     try {
-      const response = await fetch("http://localhost:5000/api/trial/signup", {
+      const response = await fetch(`${API_BASE_URL}/api/trial/signup`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -48,7 +49,7 @@ const TrialSignup = () => {
   };
 
   const handleGoogleLogin = () => {
-    window.location.href = "http://localhost:5000/oauth2/authorization/google";
+    window.location.href = `${API_BASE_URL}/oauth2/authorization/google`;
   };
 
   return (

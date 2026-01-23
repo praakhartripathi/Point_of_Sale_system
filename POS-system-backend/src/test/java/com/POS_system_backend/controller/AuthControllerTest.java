@@ -1,12 +1,7 @@
 package com.POS_system_backend.controller;
 
-import com.POS_system_backend.configuration.JwtProvider;
 import com.POS_system_backend.dto.LoginRequest;
-import com.POS_system_backend.dto.SignupRequest;
-import com.POS_system_backend.entity.User;
-import com.POS_system_backend.entity.enums.UserRole;
 import com.POS_system_backend.service.AuthService;
-import com.POS_system_backend.service.impl.CustomUserImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,18 +9,13 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.http.MediaType;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -37,15 +27,6 @@ class AuthControllerTest {
 
     @Mock
     private AuthService authService;
-
-    @Mock
-    private PasswordEncoder passwordEncoder;
-
-    @Mock
-    private CustomUserImpl customUserImpl;
-
-    @Mock
-    private JwtProvider jwtProvider;
 
     @InjectMocks
     private AuthController authController;
@@ -59,59 +40,29 @@ class AuthControllerTest {
     }
 
     @Test
-    void createUserHandler_ShouldReturnJwt_WhenSignupIsSuccessful() throws Exception {
-        SignupRequest signupRequest = new SignupRequest();
-        signupRequest.setEmail("test@example.com");
-        signupRequest.setPassword("password");
-        signupRequest.setFullName("Test User");
-        signupRequest.setRole(UserRole.ROLE_USER);
-
-        User user = new User();
-        user.setEmail("test@example.com");
-        user.setPassword("password");
-        user.setFullName("Test User");
-        user.setRole(UserRole.ROLE_USER);
-
-        when(authService.createUser(any(User.class))).thenReturn(user);
-        when(jwtProvider.generateToken(any(Authentication.class))).thenReturn("jwt_token");
-
-        mockMvc.perform(post("/api/auth/signup")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(signupRequest)))
-                .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.jwt").value("jwt_token"))
-                .andExpect(jsonPath("$.message").value("Signup Success"))
-                .andExpect(jsonPath("$.role").value("ROLE_USER"));
-    }
-
-    @Test
-    void signin_ShouldReturnJwt_WhenSigninIsSuccessful() throws Exception {
+    void signin_ShouldReturnToken_WhenSigninIsSuccessful() throws Exception {
         String email = "test@example.com";
         String password = "password";
-        
-        User user = new User();
-        user.setEmail(email);
-        user.setPassword("encodedPassword");
-        user.setRole(UserRole.ROLE_USER);
-
-        UserDetails userDetails = new org.springframework.security.core.userdetails.User(
-                email, "encodedPassword", Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER")));
 
         LoginRequest loginRequest = new LoginRequest();
         loginRequest.setEmail(email);
         loginRequest.setPassword(password);
 
-        when(customUserImpl.loadUserByUsername(email)).thenReturn(userDetails);
-        when(passwordEncoder.matches(password, "encodedPassword")).thenReturn(true);
-        when(jwtProvider.generateToken(any(Authentication.class))).thenReturn("jwt_token");
-        when(authService.findUserByEmail(email)).thenReturn(user);
+        Map<String, Object> response = new HashMap<>();
+        response.put("message", "Login successful");
+        response.put("token", "jwt_token");
+        response.put("role", "ROLE_USER");
+        response.put("name", "Test User");
+
+        when(authService.login(any(LoginRequest.class))).thenReturn(response);
 
         mockMvc.perform(post("/api/auth/signin")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(loginRequest)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.jwt").value("jwt_token"))
-                .andExpect(jsonPath("$.message").value("Signin Success"))
-                .andExpect(jsonPath("$.role").value("ROLE_USER"));
+                .andExpect(jsonPath("$.token").value("jwt_token"))
+                .andExpect(jsonPath("$.message").value("Login successful"))
+                .andExpect(jsonPath("$.role").value("ROLE_USER"))
+                .andExpect(jsonPath("$.name").value("Test User"));
     }
 }

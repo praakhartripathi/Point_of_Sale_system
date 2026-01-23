@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { signin } from "../api/auth";
+import { API_BASE_URL } from "../api/endpoints";
 
 const SignIn = () => {
   const [isSignUp, setIsSignUp] = useState(false);
@@ -78,7 +79,7 @@ const SignIn = () => {
   };
 
   const handleGoogleLogin = () => {
-    window.location.href = "http://localhost:5000/oauth2/authorization/google";
+    window.location.href = `${API_BASE_URL}/oauth2/authorization/google`;
   };
 
   return (

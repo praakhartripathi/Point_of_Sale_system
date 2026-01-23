@@ -24,7 +24,8 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.sessionManagement(management -> management.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(Authorize -> Authorize
-                        .requestMatchers("/api/auth/**", "/api/public/**", "/api/trial/**").permitAll() // Permit trial endpoints
+                        .requestMatchers("/api/auth/**", "/api/public/**", "/api/trial/signup", "/api/trial/login").permitAll() // Permit trial signup/login
+                        .requestMatchers("/api/trial/change-password", "/api/trial/profile").authenticated() // Require auth for change password and profile
                         .requestMatchers("/api/**").authenticated()
                         .anyRequest().permitAll()
                 )
@@ -44,12 +45,9 @@ public class SecurityConfig {
             @Override
             public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
                 CorsConfiguration cfg = new CorsConfiguration();
-                cfg.setAllowedOrigins(Arrays.asList(
-                        "http://localhost:3000",
-                        "http://localhost:5173",
-                        "http://localhost:4200"
-                ));
-                cfg.setAllowedMethods(Collections.singletonList("*"));
+                // Allow all origins for development
+                cfg.setAllowedOriginPatterns(Collections.singletonList("*"));
+                cfg.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
                 cfg.setAllowCredentials(true);
                 cfg.setAllowedHeaders(Collections.singletonList("*"));
                 cfg.setExposedHeaders(Arrays.asList("Authorization"));
