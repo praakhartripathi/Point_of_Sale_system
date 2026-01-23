@@ -8,7 +8,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class AuthResponse {
-    private String jwt;
+    private String token;
     private String message;
     private String role;
+    private Long id;
+    private String email;
 }

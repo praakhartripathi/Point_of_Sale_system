@@ -1,13 +1,14 @@
 package com.POS_system_backend.service;
 
-import com.POS_system_backend.dto.ChangePasswordRequest;
-import com.POS_system_backend.dto.LoginRequest;
+import com.POS_system_backend.dto.AuthResponse;
+import com.POS_system_backend.dto.TrialChangePassword;
+import com.POS_system_backend.dto.TrialSigninRequest;
 import com.POS_system_backend.dto.TrialSignupRequest;
-import java.util.Map;
+import com.POS_system_backend.dto.TrialProfileResponse;
 
 public interface TrialService {
-    Map<String, Object> createTrialAccount(TrialSignupRequest request);
-    Map<String, Object> login(LoginRequest request);
-    Map<String, Object> changePassword(ChangePasswordRequest request);
-    Map<String, Object> getProfile();
+    AuthResponse signupTrial(TrialSignupRequest request);
+    AuthResponse signinTrial(TrialSigninRequest request);
+    String changePassword(String email, TrialChangePassword request);
+    TrialProfileResponse getTrialProfile(String email);
 }

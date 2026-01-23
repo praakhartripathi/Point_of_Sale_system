@@ -1,45 +1,54 @@
 package com.POS_system_backend.controller;
 
-import com.POS_system_backend.dto.ChangePasswordRequest;
-import com.POS_system_backend.dto.LoginRequest;
-import com.POS_system_backend.dto.TrialSignupRequest;
-import com.POS_system_backend.entity.TrialAccount;
+import com.POS_system_backend.dto.*;
 import com.POS_system_backend.service.TrialService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api/trial")
-@CrossOrigin(origins = "*") 
+@CrossOrigin(origins = "*")
 public class TrialController {
 
-    @Autowired
-    private TrialService trialService;
+    private final TrialService trialService;
+
+    public TrialController(TrialService trialService) {
+        this.trialService = trialService;
+    }
 
     @PostMapping("/signup")
-    public ResponseEntity<?> registerTrial(@RequestBody TrialSignupRequest request) {
-        Map<String, Object> response = trialService.createTrialAccount(request);
+    public ResponseEntity<AuthResponse> signupTrial(
+            @RequestBody TrialSignupRequest request) {
+
+        AuthResponse response = trialService.signupTrial(request);
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping("/login")
-    public ResponseEntity<?> loginTrial(@RequestBody LoginRequest request) {
-        Map<String, Object> response = trialService.login(request);
+    @PostMapping("/signin")
+    public ResponseEntity<AuthResponse> signinTrial(
+            @RequestBody TrialSigninRequest request) {
+
+        AuthResponse response = trialService.signinTrial(request);
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping("/change-password")
-    public ResponseEntity<?> changePassword(@RequestBody ChangePasswordRequest request) {
-        Map<String, Object> response = trialService.changePassword(request);
-        return ResponseEntity.ok(response);
+    @PutMapping("/change-password")
+    public ResponseEntity<String> changePassword(
+            @AuthenticationPrincipal String email,
+            @RequestBody TrialChangePassword request) {
+
+        String message = trialService.changePassword(email, request);
+        return ResponseEntity.ok(message);
     }
 
     @GetMapping("/profile")
-    public ResponseEntity<?> getProfile() {
-        Map<String, Object> response = trialService.getProfile();
-        return ResponseEntity.ok(response);
+    public ResponseEntity<TrialProfileResponse> getProfile(
+            @AuthenticationPrincipal String email) {
+
+        TrialProfileResponse profile =
+                trialService.getTrialProfile(email);
+
+        return ResponseEntity.ok(profile);
     }
 }

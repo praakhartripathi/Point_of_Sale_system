@@ -9,4 +9,6 @@ import java.util.Optional;
 @Repository
 public interface TrialAccountRepository extends JpaRepository<TrialAccount, Long> {
     Optional<TrialAccount> findByEmail(String email);
+    boolean existsByEmail(String email);
+    Optional<TrialAccount> findByEmailAndActiveTrue(String email);
 }

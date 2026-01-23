@@ -1,13 +1,13 @@
 package com.POS_system_backend.dto;
 
-public class LoginRequest {
+public class TrialSigninRequest {
     private String email;
     private String password;
 
-    public LoginRequest() {
+    public TrialSigninRequest() {
     }
 
-    public LoginRequest(String email, String password) {
+    public TrialSigninRequest(String email, String password) {
         this.email = email;
         this.password = password;
     }
