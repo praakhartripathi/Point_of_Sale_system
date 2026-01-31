@@ -61,7 +61,7 @@ public class TrialServiceImpl implements TrialService {
     }
 
     @Override
-    public AuthResponse signinTrial(TrialSigninRequest request) {
+    public AuthResponse signinTrial(TrialSignInRequest request) {
 
         TrialAccount trial = trialAccountRepository
                 .findByEmailAndActiveTrue(request.getEmail())
@@ -93,8 +93,8 @@ public class TrialServiceImpl implements TrialService {
         TrialAccount trial = trialAccountRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("Trial account not found"));
 
-        if (!passwordEncoder.matches(request.getOldPassword(), trial.getPassword())) {
-            throw new RuntimeException("Old password is incorrect");
+        if (!passwordEncoder.matches(request.getCurrentPassword(), trial.getPassword())) {
+            throw new RuntimeException("Current password is incorrect");
         }
 
         trial.setPassword(passwordEncoder.encode(request.getNewPassword()));

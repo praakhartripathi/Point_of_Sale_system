@@ -60,7 +60,7 @@ public class SecurityConfig {
                             "/api/auth/**",
                             "/api/public/**",
                             "/api/trial/signup",
-                            "/api/trial/login"
+                            "/api/trial/signin"
                         ).permitAll()
 
                         .requestMatchers(

@@ -1,23 +1,23 @@
 package com.POS_system_backend.dto;
 
 public class TrialChangePassword {
-    private String oldPassword;
+    private String currentPassword;
     private String newPassword;
 
     public TrialChangePassword() {
     }
 
-    public TrialChangePassword(String oldPassword, String newPassword) {
-        this.oldPassword = oldPassword;
+    public TrialChangePassword(String currentPassword, String newPassword) {
+        this.currentPassword = currentPassword;
         this.newPassword = newPassword;
     }
 
-    public String getOldPassword() {
-        return oldPassword;
+    public String getCurrentPassword() {
+        return currentPassword;
     }
 
-    public void setOldPassword(String oldPassword) {
-        this.oldPassword = oldPassword;
+    public void setCurrentPassword(String currentPassword) {
+        this.currentPassword = currentPassword;
     }
 
     public String getNewPassword() {

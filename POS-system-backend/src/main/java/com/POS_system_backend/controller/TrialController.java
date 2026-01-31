@@ -27,7 +27,7 @@ public class TrialController {
 
     @PostMapping("/signin")
     public ResponseEntity<AuthResponse> signinTrial(
-            @RequestBody TrialSigninRequest request) {
+            @RequestBody TrialSignInRequest request) {
 
         AuthResponse response = trialService.signinTrial(request);
         return ResponseEntity.ok(response);

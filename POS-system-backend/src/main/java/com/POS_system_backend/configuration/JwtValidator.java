@@ -32,23 +32,20 @@ public class JwtValidator extends OncePerRequestFilter {
         String path = request.getRequestURI();
         String method = request.getMethod();
 
-        // ✅ 1. Allow preflight requests
         if ("OPTIONS".equalsIgnoreCase(method)) {
             filterChain.doFilter(request, response);
             return;
         }
 
-        // ✅ 2. Allow public endpoints without JWT
         if (
             path.startsWith("/api/trial/signup") ||
-            path.startsWith("/api/trial/login") ||
+            path.startsWith("/api/trial/signin") ||
             path.startsWith("/api/auth/")
         ) {
             filterChain.doFilter(request, response);
             return;
         }
 
-        // ✅ 3. Read Authorization header
         String header = request.getHeader(JwtConstants.JWT_HEADER);
 
         if (header == null || !header.startsWith("Bearer ")) {
@@ -78,14 +75,12 @@ public class JwtValidator extends OncePerRequestFilter {
             Authentication authentication =
                     new UsernamePasswordAuthenticationToken(email, null, auths);
 
-            // ✅ 4. THIS LINE IS CRITICAL
             SecurityContextHolder.getContext().setAuthentication(authentication);
 
         } catch (Exception e) {
             throw new BadCredentialsException("Invalid or expired JWT token");
         }
 
-        // ✅ 5. Continue filter chain (NON-NEGOTIABLE)
         filterChain.doFilter(request, response);
     }
 }

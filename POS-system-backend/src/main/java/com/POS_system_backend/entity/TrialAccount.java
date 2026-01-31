@@ -14,7 +14,7 @@ public class TrialAccount {
     private String businessName;
     private String ownerName;
 
-    @Column(unique = true)
+    @Column(unique = true, nullable = false)
     private String email;
 
     private String mobile;
@@ -22,7 +22,9 @@ public class TrialAccount {
 
     private LocalDateTime startDate;
     private LocalDateTime endDate;
-    private boolean isActive;
+    
+    @Column(nullable = false)
+    private boolean active;
 
     private String plan;
     private int maxBranches;
@@ -40,7 +42,7 @@ public class TrialAccount {
         this.password = password;
         this.startDate = startDate;
         this.endDate = endDate;
-        this.isActive = isActive;
+        this.active = isActive;
         this.plan = plan;
         this.maxBranches = maxBranches;
         this.maxUsers = maxUsers;
@@ -109,13 +111,13 @@ public class TrialAccount {
     public void setEndDate(LocalDateTime endDate) {
         this.endDate = endDate;
     }
-
+    
     public boolean isActive() {
-        return isActive;
+        return active;
     }
 
     public void setActive(boolean active) {
-        isActive = active;
+        this.active = active;
     }
 
     public String getPlan() {
