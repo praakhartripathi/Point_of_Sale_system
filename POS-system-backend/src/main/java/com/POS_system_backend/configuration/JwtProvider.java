@@ -23,6 +23,7 @@ public class JwtProvider {
         String roles = populateAuthorities(authorities);
 
         return Jwts.builder()
+                .setSubject(auth.getName())
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(new Date().getTime() + 86400000))
                 .claim("email", auth.getName())
@@ -38,7 +39,12 @@ public class JwtProvider {
                 .build()
                 .parseClaimsJws(jwt)
                 .getBody();
-        return String.valueOf(claims.get("email"));
+        
+        String email = claims.getSubject();
+        if (email == null) {
+            email = String.valueOf(claims.get("email"));
+        }
+        return email;
     }
 
     private String populateAuthorities(Collection<? extends GrantedAuthority> authorities) {

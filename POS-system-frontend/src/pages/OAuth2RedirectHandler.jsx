@@ -11,13 +11,15 @@ const OAuth2RedirectHandler = () => {
     const token = params.get("token");
     const role = params.get("role");
     const name = params.get("name");
+    const email = params.get("email");
     const error = params.get("error");
 
     if (token) {
       // Store authentication data
-      localStorage.setItem("token", token);
+      localStorage.setItem("token", token.trim());
       if (role) localStorage.setItem("role", role);
       if (name) localStorage.setItem("name", name);
+      if (email) localStorage.setItem("email", email);
 
       // Redirect based on user role (matching logic in SignIn.jsx)
       switch (role) {

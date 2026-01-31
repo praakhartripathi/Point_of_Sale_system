@@ -42,7 +42,7 @@ const TrialSignup = () => {
       navigate("/trial-signin");
     } catch (error) {
       console.error("Error:", error);
-      alert("Error creating trial account. Please try again.");
+      alert(`Error creating trial account: ${error.message}. Please ensure the backend is running on port 5001.`);
     } finally {
       setLoading(false);
     }

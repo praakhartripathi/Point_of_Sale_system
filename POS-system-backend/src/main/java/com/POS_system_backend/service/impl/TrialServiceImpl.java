@@ -2,6 +2,7 @@ package com.POS_system_backend.service.impl;
 
 import com.POS_system_backend.dto.*;
 import com.POS_system_backend.entity.TrialAccount;
+import com.POS_system_backend.mapper.TrialMapper;
 import com.POS_system_backend.repository.TrialAccountRepository;
 import com.POS_system_backend.service.TrialService;
 import com.POS_system_backend.configuration.JwtProvider;
@@ -12,6 +13,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
+import java.util.Optional;
 
 @Service
 public class TrialServiceImpl implements TrialService {
@@ -19,13 +21,16 @@ public class TrialServiceImpl implements TrialService {
     private final TrialAccountRepository trialAccountRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtProvider jwtProvider;
+    private final TrialMapper trialMapper;
 
     public TrialServiceImpl(TrialAccountRepository trialAccountRepository,
                                    PasswordEncoder passwordEncoder,
-                                   JwtProvider jwtProvider) {
+                                   JwtProvider jwtProvider,
+                                   TrialMapper trialMapper) {
         this.trialAccountRepository = trialAccountRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtProvider = jwtProvider;
+        this.trialMapper = trialMapper;
     }
 
     @Override
@@ -35,12 +40,9 @@ public class TrialServiceImpl implements TrialService {
             throw new RuntimeException("Email already registered");
         }
 
-        TrialAccount trial = new TrialAccount();
-        trial.setBusinessName(request.getBusinessName());
-        trial.setOwnerName(request.getOwnerName());
-        trial.setEmail(request.getEmail());
-        trial.setMobile(request.getMobile());
+        TrialAccount trial = trialMapper.toEntity(request);
         trial.setPassword(passwordEncoder.encode(request.getPassword()));
+        trial.setActive(true);
 
         TrialAccount savedTrial = trialAccountRepository.save(trial);
 
@@ -63,9 +65,11 @@ public class TrialServiceImpl implements TrialService {
     @Override
     public AuthResponse signinTrial(TrialSignInRequest request) {
 
-        TrialAccount trial = trialAccountRepository
-                .findByEmailAndActiveTrue(request.getEmail())
-                .orElseThrow(() -> new RuntimeException("Invalid credentials or trial expired"));
+        Optional<TrialAccount> trialOpt = trialAccountRepository.findByEmailAndActiveTrue(request.getEmail());
+        if (trialOpt.isEmpty()) {
+            throw new RuntimeException("Invalid credentials or trial expired");
+        }
+        TrialAccount trial = trialOpt.get();
 
         if (!passwordEncoder.matches(request.getPassword(), trial.getPassword())) {
             throw new RuntimeException("Invalid credentials");
@@ -88,15 +92,27 @@ public class TrialServiceImpl implements TrialService {
     }
 
     @Override
-    public String changePassword(String email, TrialChangePassword request) {
+    public String changePassword(String email, UpdatePasswordRequest request) {
 
         TrialAccount trial = trialAccountRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("Trial account not found"));
 
+        // 1. Verify current password
         if (!passwordEncoder.matches(request.getCurrentPassword(), trial.getPassword())) {
             throw new RuntimeException("Current password is incorrect");
         }
 
+        // 2. Confirm new password
+        if (!request.getNewPassword().equals(request.getConfirmNewPassword())) {
+            throw new RuntimeException("New password and confirm password do not match");
+        }
+
+        // 3. Prevent reuse of old password
+        if (passwordEncoder.matches(request.getNewPassword(), trial.getPassword())) {
+            throw new RuntimeException("New password cannot be same as current password");
+        }
+
+        // 4. Save new password
         trial.setPassword(passwordEncoder.encode(request.getNewPassword()));
         trialAccountRepository.save(trial);
 
@@ -106,22 +122,12 @@ public class TrialServiceImpl implements TrialService {
     @Override
     public TrialProfileResponse getTrialProfile(String email) {
 
-        TrialAccount trial = trialAccountRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("Trial account not found"));
+        Optional<TrialAccount> trialOpt = trialAccountRepository.findByEmail(email);
+        if (trialOpt.isEmpty()) {
+            throw new RuntimeException("Trial account not found");
+        }
+        TrialAccount trial = trialOpt.get();
 
-        TrialProfileResponse dto = new TrialProfileResponse();
-        dto.setId(trial.getId());
-        dto.setBusinessName(trial.getBusinessName());
-        dto.setOwnerName(trial.getOwnerName());
-        dto.setEmail(trial.getEmail());
-        dto.setMobile(trial.getMobile());
-        dto.setPlan(trial.getPlan());
-        dto.setActive(trial.isActive());
-        dto.setStartDate(trial.getStartDate());
-        dto.setEndDate(trial.getEndDate());
-        dto.setMaxBranches(trial.getMaxBranches());
-        dto.setMaxUsers(trial.getMaxUsers());
-
-        return dto;
+        return trialMapper.toProfileResponse(trial);
     }
 }

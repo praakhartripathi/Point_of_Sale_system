@@ -17,5 +17,5 @@ WORKDIR /app
 # Copy ANY jar built by Maven
 COPY --from=build /app/target/*.jar app.jar
 
-EXPOSE 5000
+EXPOSE 5001
 ENTRYPOINT ["java", "-jar", "app.jar"]

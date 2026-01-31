@@ -6,11 +6,14 @@ const AddCategoryModal = ({ isOpen, onClose, onCategoryAdded }) => {
 
   const handleAddCategory = async (e) => {
     e.preventDefault();
+    const token = localStorage.getItem("token")?.trim();
+    
     try {
       const response = await fetch(`${API_BASE_URL}/api/categories`, {
         method: "POST",
         headers: {
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
         },
         body: JSON.stringify({ name: newCategoryName })
       });

@@ -14,7 +14,7 @@ const TrialSignIn = () => {
     setLoading(true);
 
     try {
-      const response = await fetch(`${API_BASE_URL}/api/trial/login`, {
+      const response = await fetch(`${API_BASE_URL}/api/trial/signin`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -33,7 +33,7 @@ const TrialSignIn = () => {
       const data = await response.json();
       
       if (data.token) {
-        localStorage.setItem("token", data.token);
+        localStorage.setItem("token", data.token.trim());
         localStorage.setItem("role", data.role);
         if (data.name) localStorage.setItem("name", data.name);
         if (data.email) localStorage.setItem("email", data.email);

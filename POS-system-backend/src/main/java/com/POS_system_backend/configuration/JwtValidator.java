@@ -23,28 +23,25 @@ import java.util.List;
 public class JwtValidator extends OncePerRequestFilter {
 
     @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) {
+        String path = request.getRequestURI();
+        // Using contains to be more robust against context paths
+        return path.contains("/api/trial/signup") ||
+               path.contains("/api/trial/signin") ||
+               path.contains("/api/auth/") ||
+               path.contains("/api/public/") ||
+               path.contains("/v3/api-docs") ||
+               path.contains("/swagger-ui") ||
+               path.equals("/error") ||
+               "OPTIONS".equalsIgnoreCase(request.getMethod());
+    }
+
+    @Override
     protected void doFilterInternal(
             HttpServletRequest request,
             HttpServletResponse response,
             FilterChain filterChain
     ) throws ServletException, IOException {
-
-        String path = request.getRequestURI();
-        String method = request.getMethod();
-
-        if ("OPTIONS".equalsIgnoreCase(method)) {
-            filterChain.doFilter(request, response);
-            return;
-        }
-
-        if (
-            path.startsWith("/api/trial/signup") ||
-            path.startsWith("/api/trial/signin") ||
-            path.startsWith("/api/auth/")
-        ) {
-            filterChain.doFilter(request, response);
-            return;
-        }
 
         String header = request.getHeader(JwtConstants.JWT_HEADER);
 
@@ -66,7 +63,11 @@ public class JwtValidator extends OncePerRequestFilter {
                     .parseClaimsJws(jwt)
                     .getBody();
 
-            String email = claims.getSubject(); // or claims.get("email")
+            String email = claims.getSubject();
+            if (email == null) {
+                email = String.valueOf(claims.get("email"));
+            }
+
             String authorities = String.valueOf(claims.get("authorities"));
 
             List<GrantedAuthority> auths =
@@ -78,6 +79,8 @@ public class JwtValidator extends OncePerRequestFilter {
             SecurityContextHolder.getContext().setAuthentication(authentication);
 
         } catch (Exception e) {
+            // Log the exception for debugging
+            System.out.println("JWT Validation Error: " + e.getMessage());
             throw new BadCredentialsException("Invalid or expired JWT token");
         }
 

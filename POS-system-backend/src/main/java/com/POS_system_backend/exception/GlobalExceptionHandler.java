@@ -13,6 +13,10 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorDetails> otherExceptionHandler(Exception ex, WebRequest req) {
+        System.out.println("GlobalExceptionHandler caught exception: " + ex.getClass().getName());
+        System.out.println("Exception message: " + ex.getMessage());
+        ex.printStackTrace();
+
         ErrorDetails error = new ErrorDetails(ex.getMessage(), req.getDescription(false), LocalDateTime.now());
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }

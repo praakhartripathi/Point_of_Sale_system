@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { API_BASE_URL } from "../api/endpoints";
 
 const AddInventoryModal = ({ isOpen, onClose, onProductAdded, productToEdit, onProductUpdated }) => {
   const [newItem, setNewItem] = useState({
@@ -29,14 +30,17 @@ const AddInventoryModal = ({ isOpen, onClose, onProductAdded, productToEdit, onP
     e.preventDefault();
     
     const url = productToEdit 
-      ? `http://localhost:8080/api/inventory/${productToEdit.id}` 
-      : "http://localhost:8080/api/inventory";
+      ? `${API_BASE_URL}/api/inventory/${productToEdit.id}` 
+      : `${API_BASE_URL}/api/inventory`;
+
+    const token = localStorage.getItem("token")?.trim();
 
     try {
       const response = await fetch(url, {
         method: productToEdit ? "PUT" : "POST",
         headers: {
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
         },
         body: JSON.stringify(newItem)
       });

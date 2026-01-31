@@ -19,6 +19,7 @@ import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.Arrays;
 import java.util.List;
@@ -60,7 +61,10 @@ public class SecurityConfig {
                             "/api/auth/**",
                             "/api/public/**",
                             "/api/trial/signup",
-                            "/api/trial/signin"
+                            "/api/trial/signin",
+                            "/v3/api-docs/**",
+                            "/swagger-ui/**",
+                            "/swagger-ui.html"
                         ).permitAll()
 
                         .requestMatchers(
@@ -88,10 +92,9 @@ public class SecurityConfig {
 
 
    private CorsConfigurationSource corsConfigurationSource() {
-    return request -> {
         CorsConfiguration cfg = new CorsConfiguration();
 
-        cfg.setAllowedOrigins(List.of("http://localhost:3000", "http://localhost:5173", "http://localhost:5174"));
+        cfg.setAllowedOrigins(List.of("http://localhost:3000", "http://localhost:5173", "http://localhost:5174", "http://localhost:5001"));
         cfg.setAllowedMethods(List.of(
                 "GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"
         ));
@@ -101,8 +104,9 @@ public class SecurityConfig {
         cfg.setAllowCredentials(true);
         cfg.setMaxAge(3600L);
 
-        return cfg;
-    };
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", cfg);
+        return source;
 }
 
 

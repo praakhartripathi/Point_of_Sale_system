@@ -46,7 +46,7 @@ const SignIn = () => {
       console.log("Sign in successful:", data);
       const token = data.token || data.jwt;
       if (token) {
-        localStorage.setItem("token", token);
+        localStorage.setItem("token", token.trim());
         localStorage.setItem("role", data.role);
         localStorage.setItem("name", data.name || "User");
 
