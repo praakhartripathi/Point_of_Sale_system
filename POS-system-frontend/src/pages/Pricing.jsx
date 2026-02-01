@@ -1,8 +1,12 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
+import BusinessDetailsModal from '../modal/BusinessDetailsModal';
 
 const Pricing = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
   const [selectedPlan, setSelectedPlan] = useState("Business");
+  const [showBusinessModal, setShowBusinessModal] = useState(false);
 
   const plans = [
     {
@@ -21,7 +25,8 @@ const Pricing = () => {
       ],
       borderColor: "border-green-200 dark:border-green-800",
       btnColor: "bg-green-600 hover:bg-green-700",
-      popular: false
+      popular: false,
+      path: "/signin"
     },
     {
       name: "Business",
@@ -40,7 +45,8 @@ const Pricing = () => {
       ],
       borderColor: "border-blue-500 dark:border-blue-400",
       btnColor: "bg-blue-600 hover:bg-blue-700",
-      popular: true
+      popular: true,
+      path: "/signin"
     },
     {
       name: "Enterprise",
@@ -59,9 +65,50 @@ const Pricing = () => {
       ],
       borderColor: "border-purple-200 dark:border-purple-800",
       btnColor: "bg-purple-600 hover:bg-purple-700",
-      popular: false
+      popular: false,
+      path: "/signin"
     }
   ];
+
+  useEffect(() => {
+    // Check if returned from login with a selected plan
+    if (location.state?.showModal && location.state?.plan) {
+      setSelectedPlan(location.state.plan);
+      setShowBusinessModal(true);
+      // Clear state to prevent reopening on refresh
+      window.history.replaceState({}, document.title);
+    }
+  }, [location]);
+
+  const handlePlanClick = (plan) => {
+    const token = localStorage.getItem("token");
+    setSelectedPlan(plan.name);
+    
+    if (token) {
+      // User is logged in, show modal
+      setShowBusinessModal(true);
+    } else {
+      // User not logged in, redirect to signin with return info
+      navigate("/signin", { 
+        state: { 
+          returnTo: "/pricing", 
+          plan: plan.name,
+          showModal: true 
+        } 
+      });
+    }
+  };
+
+  const handleBusinessDetailsSubmit = (details) => {
+    const planObject = plans.find(p => p.name === selectedPlan);
+    setShowBusinessModal(false);
+    navigate("/payment", { 
+      state: { 
+        plan: planObject, 
+        details: details 
+      } 
+    });
+  };
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-20 transition-colors duration-200">
@@ -72,7 +119,7 @@ const Pricing = () => {
             Choose the plan that fits your business needs. No hidden fees.
           </p>
           
-          <Link to="/trial-signup" className="inline-flex items-center gap-2 bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-400 px-6 py-3 rounded-full font-bold text-sm shadow-sm border border-yellow-200 dark:border-yellow-800 hover:bg-yellow-200 dark:hover:bg-yellow-900/50 transition-colors">
+          <Link to="/signin" className="inline-flex items-center gap-2 bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-400 px-6 py-3 rounded-full font-bold text-sm shadow-sm border border-yellow-200 dark:border-yellow-800 hover:bg-yellow-200 dark:hover:bg-yellow-900/50 transition-colors">
             <span className="text-lg">👉</span>
             7 Days Free – No Credit Card Required
           </Link>
@@ -118,13 +165,12 @@ const Pricing = () => {
                 ))}
               </div>
 
-              <Link 
-                to="/signup" 
-                state={{ plan: plan.name }}
+              <button 
+                onClick={() => handlePlanClick(plan)}
                 className={`w-full py-3 px-6 rounded-xl font-bold text-white text-center transition-colors shadow-md ${plan.btnColor}`}
               >
                 Get Started
-              </Link>
+              </button>
             </div>
           ))}
         </div>
@@ -135,6 +181,13 @@ const Pricing = () => {
           </p>
         </div>
       </div>
+
+      <BusinessDetailsModal 
+        isOpen={showBusinessModal}
+        onClose={() => setShowBusinessModal(false)}
+        plan={selectedPlan}
+        onSubmit={handleBusinessDetailsSubmit}
+      />
     </div>
   );
 };

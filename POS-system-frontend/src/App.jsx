@@ -20,6 +20,8 @@ import Analytics from './component/Analytics'
 import TrialSignup from './pages/TrialSignup'
 import TrialSignIn from './pages/TrialSignin'
 import TrialDashboard from './pages/TrialDashboard'
+import OAuth2RedirectHandler from './pages/OAuth2RedirectHandler'
+import PaymentPage from './pages/PaymentPage'
 
 const Layout = ({ children, theme, setTheme }) => {
   const location = useLocation();
@@ -73,6 +75,8 @@ function App() {
           <Route path="/trial-signup" element={<TrialSignup />} />
           <Route path="/trial-signin" element={<TrialSignIn />} />
           <Route path="/trial/dashboard" element={<TrialDashboard theme={theme} setTheme={setTheme} />} />
+          <Route path="/oauth2/redirect" element={<OAuth2RedirectHandler />} />
+          <Route path="/payment" element={<PaymentPage />} />
 
           {/* Fallback Route: Redirect unknown paths to Home to prevent blank screens */}
           <Route path="*" element={<Navigate to="/" replace />} />
