@@ -31,3 +31,38 @@ The project is containerized using Docker Compose and consists of the following 
      - User: `pos_user`
      - Password: `password`
      - Database: `pos_db`
+
+## Development Setup
+
+To work on the source code, clone the repository and set up the individual services.
+
+### 1. Clone the Repository
+
+```bash
+git clone https://github.com/praakhartripathi/Point_of_Sale_system.git
+cd Point_of_Sale_system
+```
+
+### 2. Backend Development
+
+The backend is a Spring Boot application located in `POS-system-backend/`.
+
+- **Prerequisites**: Java 17, Maven, MySQL.
+- **Configuration**: Update database credentials in `src/main/resources/application.properties` or via environment variables.
+- **Run**:
+  ```bash
+  cd POS-system-backend
+  mvn spring-boot:run
+  ```
+
+### 3. Frontend Development
+
+The frontend is a React + Vite application located in `POS-system-frontend/`.
+
+- **Prerequisites**: Node.js.
+- **Run**:
+  ```bash
+  cd POS-system-frontend
+  npm install
+  npm run dev
+  ```
