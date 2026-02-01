@@ -332,11 +332,11 @@ const TrialDashboard = ({ theme, setTheme }) => {
                 </span>
               </div>
               <button 
-                disabled={isExpired}
-                className={`w-full mt-4 py-2 border-2 border-dashed rounded-xl text-sm font-medium transition-colors flex items-center justify-center gap-2 ${isExpired ? 'border-gray-200 dark:border-gray-700 text-gray-300 dark:text-gray-600 cursor-not-allowed' : 'border-gray-200 dark:border-gray-700 text-gray-400 dark:text-gray-500 hover:border-indigo-300 dark:hover:border-indigo-500 hover:text-indigo-600 dark:hover:text-indigo-400'}`}
+                onClick={() => navigate("/pricing")}
+                className="w-full mt-4 py-2 border-2 border-dashed border-gray-200 dark:border-gray-700 rounded-xl text-sm font-medium text-gray-400 dark:text-gray-500 hover:border-indigo-300 dark:hover:border-indigo-500 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors flex items-center justify-center gap-2"
               >
                 <span>+ Add Branch</span>
-                {isExpired && <span className="text-xs bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 px-2 py-0.5 rounded">Read Only</span>}
+                <span className="text-xs bg-indigo-100 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 px-2 py-0.5 rounded">Upgrade</span>
               </button>
             </div>
           </div>
@@ -363,11 +363,11 @@ const TrialDashboard = ({ theme, setTheme }) => {
                 </span>
               </div>
               <button 
-                disabled={isExpired}
-                className={`w-full mt-4 py-2 border-2 border-dashed rounded-xl text-sm font-medium transition-colors flex items-center justify-center gap-2 ${isExpired ? 'border-gray-200 dark:border-gray-700 text-gray-300 dark:text-gray-600 cursor-not-allowed' : 'border-gray-200 dark:border-gray-700 text-gray-400 dark:text-gray-500 hover:border-indigo-300 dark:hover:border-indigo-500 hover:text-indigo-600 dark:hover:text-indigo-400'}`}
+                onClick={() => navigate("/pricing")}
+                className="w-full mt-4 py-2 border-2 border-dashed border-gray-200 dark:border-gray-700 rounded-xl text-sm font-medium text-gray-400 dark:text-gray-500 hover:border-indigo-300 dark:hover:border-indigo-500 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors flex items-center justify-center gap-2"
               >
                 <span>+ Add User</span>
-                {isExpired && <span className="text-xs bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 px-2 py-0.5 rounded">Read Only</span>}
+                <span className="text-xs bg-indigo-100 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 px-2 py-0.5 rounded">Upgrade</span>
               </button>
             </div>
           </div>
