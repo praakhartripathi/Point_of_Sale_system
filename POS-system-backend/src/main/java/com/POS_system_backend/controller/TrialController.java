@@ -38,7 +38,7 @@ public class TrialController {
     @PutMapping("/change-password")
     public ResponseEntity<String> changePassword(
             Authentication authentication,
-            @Valid @RequestBody UpdatePasswordRequest request) {
+            @Valid @RequestBody TrialUpdatePasswordRequest request) {
 
         if (authentication == null || authentication.getName() == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User not authenticated");

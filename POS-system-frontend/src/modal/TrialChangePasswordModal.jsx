@@ -51,13 +51,16 @@ const TrialChangePasswordModal = ({ isOpen, onClose }) => {
                 body: JSON.stringify({
                     currentPassword,
                     newPassword,
+                    confirmNewPassword: confirmPassword,
                 }),
+
 
             });
 
             const data = await response.json();
             if (!response.ok) throw new Error(data.message || "Failed to change password");
 
+            console.log("Password changed successfully");
             alert("Password changed successfully!");
             onClose();
             setCurrentPassword("");
@@ -81,7 +84,7 @@ const TrialChangePasswordModal = ({ isOpen, onClose }) => {
                         <X className="w-5 h-5" />
                     </button>
                 </div>
-                <form onSubmit={handleChangePassword} className="p-6 space-y-4">
+                <div className="p-6 space-y-4">
                     {error && (
                         <div className="p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg text-sm text-red-600 dark:text-red-400">
                             {error}
@@ -111,11 +114,11 @@ const TrialChangePasswordModal = ({ isOpen, onClose }) => {
                     />
                     <div className="flex gap-3 pt-4">
                         <button type="button" onClick={onClose} className="flex-1 px-4 py-2 border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors font-medium">Cancel</button>
-                        <button type="submit" disabled={loading} className="flex-1 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors font-medium disabled:opacity-70">
+                        <button type="button" onClick={handleChangePassword} disabled={loading} className="flex-1 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors font-medium disabled:opacity-70">
                             {loading ? "Changing..." : "Change Password"}
                         </button>
                     </div>
-                </form>
+                </div>
             </div>
         </div>
     );

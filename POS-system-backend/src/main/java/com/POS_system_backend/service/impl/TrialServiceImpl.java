@@ -92,10 +92,13 @@ public class TrialServiceImpl implements TrialService {
     }
 
     @Override
-    public String changePassword(String email, UpdatePasswordRequest request) {
+    public String changePassword(String email, TrialUpdatePasswordRequest request) {
 
-        TrialAccount trial = trialAccountRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("Trial account not found"));
+        Optional<TrialAccount> trialOpt = trialAccountRepository.findByEmail(email);
+        if (trialOpt.isEmpty()) {
+            throw new RuntimeException("Trial account not found");
+        }
+        TrialAccount trial = trialOpt.get();
 
         // 1. Verify current password
         if (!passwordEncoder.matches(request.getCurrentPassword(), trial.getPassword())) {
@@ -115,6 +118,8 @@ public class TrialServiceImpl implements TrialService {
         // 4. Save new password
         trial.setPassword(passwordEncoder.encode(request.getNewPassword()));
         trialAccountRepository.save(trial);
+
+        System.out.println("Password changed successfully for email: " + email);
 
         return "Password changed successfully";
     }

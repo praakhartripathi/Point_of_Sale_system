@@ -18,6 +18,8 @@ public class TrialAccount {
     private String email;
 
     private String mobile;
+
+    @Column(nullable = false, length = 255)
     private String password; 
 
     private LocalDateTime startDate;
