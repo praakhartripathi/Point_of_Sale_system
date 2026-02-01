@@ -160,8 +160,12 @@ const TrialDashboard = ({ theme, setTheme }) => {
               }}
               className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors cursor-pointer"
             >
-              <div className="w-10 h-10 bg-indigo-100 dark:bg-indigo-900/30 rounded-full flex items-center justify-center text-indigo-700 dark:text-indigo-400 font-bold border border-indigo-200 dark:border-indigo-700">
-                {adminName.charAt(0).toUpperCase()}
+              <div className="w-10 h-10 bg-indigo-100 dark:bg-indigo-900/30 rounded-full flex items-center justify-center text-indigo-700 dark:text-indigo-400 font-bold border border-indigo-200 dark:border-indigo-700 overflow-hidden">
+                {profileData?.profileImage ? (
+                  <img src={profileData.profileImage} alt="Profile" className="w-full h-full object-cover" />
+                ) : (
+                  adminName.charAt(0).toUpperCase()
+                )}
               </div>
               <div className="text-right hidden sm:block">
                 <p className="text-sm font-bold text-gray-900 dark:text-white">{adminName}</p>
@@ -176,8 +180,12 @@ const TrialDashboard = ({ theme, setTheme }) => {
                 {/* Section 1: User Info */}
                 <div className="px-4 py-3 border-b border-gray-200 dark:border-gray-700">
                   <div className="flex items-center gap-3 mb-3">
-                    <div className="w-12 h-12 bg-indigo-100 dark:bg-indigo-900/30 rounded-full flex items-center justify-center text-indigo-700 dark:text-indigo-400 font-bold text-lg border border-indigo-200 dark:border-indigo-700">
-                      {adminName.charAt(0).toUpperCase()}
+                    <div className="w-12 h-12 bg-indigo-100 dark:bg-indigo-900/30 rounded-full flex items-center justify-center text-indigo-700 dark:text-indigo-400 font-bold text-lg border border-indigo-200 dark:border-indigo-700 overflow-hidden">
+                      {profileData?.profileImage ? (
+                        <img src={profileData.profileImage} alt="Profile" className="w-full h-full object-cover" />
+                      ) : (
+                        adminName.charAt(0).toUpperCase()
+                      )}
                     </div>
                     <div className="flex-1">
                       <p className="text-sm font-bold text-gray-900 dark:text-white">{adminName}</p>
