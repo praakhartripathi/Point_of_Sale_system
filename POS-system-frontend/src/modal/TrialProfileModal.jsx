@@ -125,9 +125,20 @@ const TrialProfileModal = ({ isOpen, onClose, profileData, onUpdateSuccess }) =>
               <InfoItem label="Business Name" value={profileData?.businessName} />
               <InfoItem label="Owner Name" value={profileData?.ownerName} />
               <InfoItem label="Plan" value={profileData?.plan || "TRIAL"} badge />
-              <InfoItem label="Status" value={profileData?.isActive ? "Active" : "Inactive"} badge color={profileData?.isActive ? "green" : "red"} />
-              <InfoItem label="Trial Start" value={profileData?.trialStartDate ? new Date(profileData.trialStartDate).toLocaleDateString() : "N/A"} />
-              <InfoItem label="Trial End" value={profileData?.trialEndDate ? new Date(profileData.trialEndDate).toLocaleDateString() : "N/A"} />
+              <InfoItem 
+                label="Status" 
+                value={profileData?.status || (profileData?.isActive || profileData?.active ? "Active" : "Inactive")} 
+                badge 
+                color={(profileData?.status === "Active" || profileData?.isActive || profileData?.active) ? "green" : "red"} 
+              />
+              <InfoItem 
+                label="Trial Start" 
+                value={(profileData?.trialStartDate || profileData?.startDate) ? new Date(profileData.trialStartDate || profileData.startDate).toLocaleDateString() : "N/A"} 
+              />
+              <InfoItem 
+                label="Trial End" 
+                value={(profileData?.trialEndDate || profileData?.endDate) ? new Date(profileData.trialEndDate || profileData.endDate).toLocaleDateString() : "N/A"} 
+              />
             </div>
           )}
         </div>

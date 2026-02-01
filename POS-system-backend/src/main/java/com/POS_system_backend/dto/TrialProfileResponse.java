@@ -1,5 +1,8 @@
 package com.POS_system_backend.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.time.LocalDateTime;
 
 public class TrialProfileResponse {
@@ -9,9 +12,16 @@ public class TrialProfileResponse {
     private String email;
     private String mobile;
     private String plan;
+    
+    @JsonProperty("active")
     private boolean active;
+
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime startDate;
+
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime endDate;
+    
     private int maxBranches;
     private int maxUsers;
 
@@ -86,6 +96,11 @@ public class TrialProfileResponse {
 
     public void setActive(boolean active) {
         this.active = active;
+    }
+
+    // Helper method for frontend display
+    public String getStatus() {
+        return active ? "Active" : "Inactive";
     }
 
     public LocalDateTime getStartDate() {

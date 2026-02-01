@@ -12,6 +12,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.Optional;
 
@@ -42,7 +43,16 @@ public class TrialServiceImpl implements TrialService {
 
         TrialAccount trial = trialMapper.toEntity(request);
         trial.setPassword(passwordEncoder.encode(request.getPassword()));
+        
+        // Explicitly set default values
         trial.setActive(true);
+        trial.setPlan("TRIAL");
+        trial.setMaxBranches(1);
+        trial.setMaxUsers(1);
+        
+        LocalDateTime now = LocalDateTime.now();
+        trial.setStartDate(now);
+        trial.setEndDate(now.plusDays(7));
 
         TrialAccount savedTrial = trialAccountRepository.save(trial);
 
