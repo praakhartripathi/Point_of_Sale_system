@@ -57,9 +57,13 @@ const TrialChangePasswordModal = ({ isOpen, onClose }) => {
 
             });
 
-            const data = await response.json();
-            if (!response.ok) throw new Error(data.message || "Failed to change password");
+            if (!response.ok) {
+                const data = await response.json();
+                throw new Error(data.message || "Failed to change password");
+            }
 
+            // Success: clear error state and show success feedback
+            setError("");
             console.log("Password changed successfully");
             alert("Password changed successfully!");
             onClose();
