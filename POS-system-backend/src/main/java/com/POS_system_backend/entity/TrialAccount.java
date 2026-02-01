@@ -22,6 +22,10 @@ public class TrialAccount {
     @Column(nullable = false, length = 255)
     private String password; 
 
+    @Lob
+    @Column(columnDefinition = "LONGTEXT")
+    private String profileImage;
+
     private LocalDateTime startDate;
     private LocalDateTime endDate;
     
@@ -35,13 +39,14 @@ public class TrialAccount {
     public TrialAccount() {
     }
 
-    public TrialAccount(Long id, String businessName, String ownerName, String email, String mobile, String password, LocalDateTime startDate, LocalDateTime endDate, boolean isActive, String plan, int maxBranches, int maxUsers) {
+    public TrialAccount(Long id, String businessName, String ownerName, String email, String mobile, String password, String profileImage, LocalDateTime startDate, LocalDateTime endDate, boolean isActive, String plan, int maxBranches, int maxUsers) {
         this.id = id;
         this.businessName = businessName;
         this.ownerName = ownerName;
         this.email = email;
         this.mobile = mobile;
         this.password = password;
+        this.profileImage = profileImage;
         this.startDate = startDate;
         this.endDate = endDate;
         this.active = isActive;
@@ -96,6 +101,14 @@ public class TrialAccount {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getProfileImage() {
+        return profileImage;
+    }
+
+    public void setProfileImage(String profileImage) {
+        this.profileImage = profileImage;
     }
 
     public LocalDateTime getStartDate() {

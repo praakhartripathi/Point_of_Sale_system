@@ -12,15 +12,16 @@ public class TrialProfileResponse {
     private String email;
     private String mobile;
     private String plan;
+    private String profileImage;
     
     @JsonProperty("active")
     private boolean active;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime startDate;
+    private LocalDateTime trialStartDate;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime endDate;
+    private LocalDateTime trialEndDate;
     
     private int maxBranches;
     private int maxUsers;
@@ -28,16 +29,17 @@ public class TrialProfileResponse {
     public TrialProfileResponse() {
     }
 
-    public TrialProfileResponse(Long id, String businessName, String ownerName, String email, String mobile, String plan, boolean active, LocalDateTime startDate, LocalDateTime endDate, int maxBranches, int maxUsers) {
+    public TrialProfileResponse(Long id, String businessName, String ownerName, String email, String mobile, String plan, String profileImage, boolean active, LocalDateTime trialStartDate, LocalDateTime trialEndDate, int maxBranches, int maxUsers) {
         this.id = id;
         this.businessName = businessName;
         this.ownerName = ownerName;
         this.email = email;
         this.mobile = mobile;
         this.plan = plan;
+        this.profileImage = profileImage;
         this.active = active;
-        this.startDate = startDate;
-        this.endDate = endDate;
+        this.trialStartDate = trialStartDate;
+        this.trialEndDate = trialEndDate;
         this.maxBranches = maxBranches;
         this.maxUsers = maxUsers;
     }
@@ -90,6 +92,14 @@ public class TrialProfileResponse {
         this.plan = plan;
     }
 
+    public String getProfileImage() {
+        return profileImage;
+    }
+
+    public void setProfileImage(String profileImage) {
+        this.profileImage = profileImage;
+    }
+
     public boolean isActive() {
         return active;
     }
@@ -103,20 +113,20 @@ public class TrialProfileResponse {
         return active ? "Active" : "Inactive";
     }
 
-    public LocalDateTime getStartDate() {
-        return startDate;
+    public LocalDateTime getTrialStartDate() {
+        return trialStartDate;
     }
 
-    public void setStartDate(LocalDateTime startDate) {
-        this.startDate = startDate;
+    public void setTrialStartDate(LocalDateTime trialStartDate) {
+        this.trialStartDate = trialStartDate;
     }
 
-    public LocalDateTime getEndDate() {
-        return endDate;
+    public LocalDateTime getTrialEndDate() {
+        return trialEndDate;
     }
 
-    public void setEndDate(LocalDateTime endDate) {
-        this.endDate = endDate;
+    public void setTrialEndDate(LocalDateTime trialEndDate) {
+        this.trialEndDate = trialEndDate;
     }
 
     public int getMaxBranches() {

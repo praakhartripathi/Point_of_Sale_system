@@ -69,6 +69,7 @@ public class SecurityConfig {
 
                         .requestMatchers(
                             "/api/trial/profile",
+                            "/api/trial/update-profile",
                             "/api/trial/change-password"
                         ).authenticated()
                         .requestMatchers("/api/**").authenticated()

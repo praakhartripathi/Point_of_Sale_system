@@ -62,4 +62,18 @@ public class TrialController {
                 trialService.getTrialProfile(email);
         return ResponseEntity.ok(profile);
     }
+
+    @PutMapping("/profile")
+    public ResponseEntity<TrialProfileResponse> updateProfile(
+            Authentication authentication,
+            @RequestBody TrialUpdateProfileRequest request) {
+
+        if (authentication == null || authentication.getName() == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        String email = authentication.getName();
+        TrialProfileResponse updatedProfile = trialService.updateProfile(email, request);
+        return ResponseEntity.ok(updatedProfile);
+    }
 }

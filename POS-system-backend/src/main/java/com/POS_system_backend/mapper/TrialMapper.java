@@ -32,9 +32,10 @@ public class TrialMapper {
         response.setEmail(trialAccount.getEmail());
         response.setMobile(trialAccount.getMobile());
         response.setPlan(trialAccount.getPlan());
+        response.setProfileImage(trialAccount.getProfileImage());
         response.setActive(trialAccount.isActive());
-        response.setStartDate(trialAccount.getStartDate());
-        response.setEndDate(trialAccount.getEndDate());
+        response.setTrialStartDate(trialAccount.getStartDate());
+        response.setTrialEndDate(trialAccount.getEndDate());
         response.setMaxBranches(trialAccount.getMaxBranches());
         response.setMaxUsers(trialAccount.getMaxUsers());
         return response;

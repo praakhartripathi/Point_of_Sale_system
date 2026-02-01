@@ -145,4 +145,39 @@ public class TrialServiceImpl implements TrialService {
 
         return trialMapper.toProfileResponse(trial);
     }
+
+    @Override
+    public TrialProfileResponse updateProfile(String email, TrialUpdateProfileRequest request) {
+        Optional<TrialAccount> trialOpt = trialAccountRepository.findByEmail(email);
+        if (trialOpt.isEmpty()) {
+            throw new RuntimeException("Trial account not found");
+        }
+        TrialAccount trial = trialOpt.get();
+
+        if (request.getBusinessName() != null && !request.getBusinessName().isEmpty()) {
+            trial.setBusinessName(request.getBusinessName());
+        }
+        if (request.getOwnerName() != null && !request.getOwnerName().isEmpty()) {
+            trial.setOwnerName(request.getOwnerName());
+        }
+        if (request.getMobile() != null && !request.getMobile().isEmpty()) {
+            trial.setMobile(request.getMobile());
+        }
+        if (request.getProfileImage() != null && !request.getProfileImage().isEmpty()) {
+            trial.setProfileImage(request.getProfileImage());
+        }
+        
+        // Note: Email update is usually restricted or requires re-verification, 
+        // so we might want to skip it or handle it carefully. 
+        // For now, I'll allow it if provided, but check for duplicates.
+        if (request.getEmail() != null && !request.getEmail().isEmpty() && !request.getEmail().equals(email)) {
+             if (trialAccountRepository.existsByEmail(request.getEmail())) {
+                throw new RuntimeException("Email already in use");
+            }
+            trial.setEmail(request.getEmail());
+        }
+
+        TrialAccount updatedTrial = trialAccountRepository.save(trial);
+        return trialMapper.toProfileResponse(updatedTrial);
+    }
 }

@@ -1,20 +1,33 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { TRIAL_PROFILE_URL } from "../api/endpoints";
 
 const TrialProfileModal = ({ isOpen, onClose, profileData, onUpdateSuccess }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({});
   const [loading, setLoading] = useState(false);
+  const fileInputRef = useRef(null);
 
   useEffect(() => {
     if (profileData) {
       setFormData({
-        name: profileData.name || "",
+        ownerName: profileData.ownerName || "",
         businessName: profileData.businessName || "",
-        mobile: profileData.mobile || profileData.phone || "",
+        mobile: profileData.mobile || "",
+        profileImage: profileData.profileImage || "",
       });
     }
   }, [profileData, isOpen]);
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setFormData(prev => ({ ...prev, profileImage: reader.result }));
+      };
+      reader.readAsDataURL(file);
+    }
+  };
 
   const handleUpdateProfile = async (e) => {
     e.preventDefault();
@@ -62,11 +75,33 @@ const TrialProfileModal = ({ isOpen, onClose, profileData, onUpdateSuccess }) =>
         
         <div className="p-6">
           <div className="flex items-center gap-4 pb-6 border-b border-gray-200 dark:border-gray-700 mb-6">
-            <div className="w-20 h-20 bg-indigo-100 dark:bg-indigo-900/30 rounded-full flex items-center justify-center text-indigo-700 dark:text-indigo-400 font-bold text-2xl border-2 border-indigo-200 dark:border-indigo-700">
-              {profileData?.name?.charAt(0).toUpperCase() || "U"}
+            <div className="relative group">
+              <div className="w-20 h-20 bg-indigo-100 dark:bg-indigo-900/30 rounded-full flex items-center justify-center text-indigo-700 dark:text-indigo-400 font-bold text-2xl border-2 border-indigo-200 dark:border-indigo-700 overflow-hidden">
+                {(isEditing ? formData.profileImage : profileData?.profileImage) ? (
+                  <img src={isEditing ? formData.profileImage : profileData?.profileImage} alt="Profile" className="w-full h-full object-cover" />
+                ) : (
+                  (isEditing ? formData.ownerName : profileData?.ownerName)?.charAt(0).toUpperCase() || "U"
+                )}
+              </div>
+              {isEditing && (
+                <button 
+                  type="button"
+                  onClick={() => fileInputRef.current?.click()}
+                  className="absolute bottom-0 right-0 bg-indigo-600 text-white p-1.5 rounded-full shadow-lg hover:bg-indigo-700 transition-colors"
+                >
+                  <Upload className="w-3 h-3" />
+                </button>
+              )}
+              <input 
+                type="file" 
+                ref={fileInputRef} 
+                onChange={handleImageChange} 
+                accept="image/*" 
+                className="hidden" 
+              />
             </div>
             <div>
-              <h4 className="text-xl font-bold text-gray-900 dark:text-white">{profileData?.name || "N/A"}</h4>
+              <h4 className="text-xl font-bold text-gray-900 dark:text-white">{profileData?.ownerName || "N/A"}</h4>
               <p className="text-sm text-gray-500 dark:text-gray-400">{profileData?.role || "Admin"}</p>
               {!isEditing && (
                 <button 
@@ -86,8 +121,8 @@ const TrialProfileModal = ({ isOpen, onClose, profileData, onUpdateSuccess }) =>
                   <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">Full Name</label>
                   <input 
                     type="text" 
-                    value={formData.name} 
-                    onChange={(e) => setFormData({...formData, name: e.target.value})}
+                    value={formData.ownerName} 
+                    onChange={(e) => setFormData({...formData, ownerName: e.target.value})}
                     className="w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white"
                     required
                   />
@@ -165,5 +200,6 @@ const InfoItem = ({ label, value, badge, color }) => (
 );
 
 const X = (props) => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>;
+const Upload = (props) => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" x2="12" y1="3" y2="15"/></svg>;
 
 export default TrialProfileModal;
