@@ -1,5 +1,5 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 
 const StoreManagerDashboard = () => {
   const navigate = useNavigate();
@@ -18,7 +18,7 @@ const StoreManagerDashboard = () => {
             <h1 className="text-2xl font-bold text-gray-900">Store Manager Dashboard</h1>
             <p className="text-gray-500">Inventory and Staff Overview</p>
           </div>
-          <button 
+          <button
             onClick={handleLogout}
             className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
           >

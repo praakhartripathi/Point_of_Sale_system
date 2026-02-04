@@ -11,7 +11,7 @@ const images = [
   "https://images.unsplash.com/photo-1572635196237-14b3f281503f?auto=format&fit=crop&w=300&q=80"
 ];
 
-const dummyProducts = Array.from({ length: 2000 }, (_, i) => ({
+const dummyProducts = Array.from({length: 2000}, (_, i) => ({
   id: i + 1,
   name: `Product Item ${i + 1}`,
   category: categories[Math.floor(Math.random() * categories.length)],

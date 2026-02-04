@@ -1,7 +1,7 @@
-import React, { useState, useEffect, useRef } from "react";
-import { TRIAL_PROFILE_URL } from "../api/endpoints";
+import React, {useEffect, useRef, useState} from "react";
+import {TRIAL_PROFILE_URL} from "../api/endpoints";
 
-const TrialProfileModal = ({ isOpen, onClose, profileData, onUpdateSuccess }) => {
+const TrialProfileModal = ({isOpen, onClose, profileData, onUpdateSuccess}) => {
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({});
   const [loading, setLoading] = useState(false);
@@ -23,7 +23,7 @@ const TrialProfileModal = ({ isOpen, onClose, profileData, onUpdateSuccess }) =>
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
-        setFormData(prev => ({ ...prev, profileImage: reader.result }));
+        setFormData(prev => ({...prev, profileImage: reader.result}));
       };
       reader.readAsDataURL(file);
     }
@@ -35,14 +35,14 @@ const TrialProfileModal = ({ isOpen, onClose, profileData, onUpdateSuccess }) =>
     try {
       const token = localStorage.getItem("token")?.trim();
       const email = localStorage.getItem("email");
-      
+
       const response = await fetch(TRIAL_PROFILE_URL, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
           "Authorization": `Bearer ${token}`,
         },
-        body: JSON.stringify({ ...formData, email }),
+        body: JSON.stringify({...formData, email}),
       });
 
       if (response.ok) {
@@ -68,43 +68,46 @@ const TrialProfileModal = ({ isOpen, onClose, profileData, onUpdateSuccess }) =>
       <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg w-full max-w-2xl overflow-hidden">
         <div className="p-6 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center">
           <h3 className="font-bold text-lg text-gray-900 dark:text-white">My Profile</h3>
-          <button onClick={onClose} className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
-            <X className="w-5 h-5" />
+          <button onClick={onClose}
+                  className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
+            <X className="w-5 h-5"/>
           </button>
         </div>
-        
+
         <div className="p-6">
           <div className="flex items-center gap-4 pb-6 border-b border-gray-200 dark:border-gray-700 mb-6">
             <div className="relative group">
-              <div className="w-20 h-20 bg-indigo-100 dark:bg-indigo-900/30 rounded-full flex items-center justify-center text-indigo-700 dark:text-indigo-400 font-bold text-2xl border-2 border-indigo-200 dark:border-indigo-700 overflow-hidden">
+              <div
+                className="w-20 h-20 bg-indigo-100 dark:bg-indigo-900/30 rounded-full flex items-center justify-center text-indigo-700 dark:text-indigo-400 font-bold text-2xl border-2 border-indigo-200 dark:border-indigo-700 overflow-hidden">
                 {(isEditing ? formData.profileImage : profileData?.profileImage) ? (
-                  <img src={isEditing ? formData.profileImage : profileData?.profileImage} alt="Profile" className="w-full h-full object-cover" />
+                  <img src={isEditing ? formData.profileImage : profileData?.profileImage} alt="Profile"
+                       className="w-full h-full object-cover"/>
                 ) : (
                   (isEditing ? formData.ownerName : profileData?.ownerName)?.charAt(0).toUpperCase() || "U"
                 )}
               </div>
               {isEditing && (
-                <button 
+                <button
                   type="button"
                   onClick={() => fileInputRef.current?.click()}
                   className="absolute bottom-0 right-0 bg-indigo-600 text-white p-1.5 rounded-full shadow-lg hover:bg-indigo-700 transition-colors"
                 >
-                  <Upload className="w-3 h-3" />
+                  <Upload className="w-3 h-3"/>
                 </button>
               )}
-              <input 
-                type="file" 
-                ref={fileInputRef} 
-                onChange={handleImageChange} 
-                accept="image/*" 
-                className="hidden" 
+              <input
+                type="file"
+                ref={fileInputRef}
+                onChange={handleImageChange}
+                accept="image/*"
+                className="hidden"
               />
             </div>
             <div>
               <h4 className="text-xl font-bold text-gray-900 dark:text-white">{profileData?.ownerName || "N/A"}</h4>
               <p className="text-sm text-gray-500 dark:text-gray-400">{profileData?.role || "Admin"}</p>
               {!isEditing && (
-                <button 
+                <button
                   onClick={() => setIsEditing(true)}
                   className="mt-2 text-xs text-indigo-600 dark:text-indigo-400 font-bold hover:underline"
                 >
@@ -119,67 +122,72 @@ const TrialProfileModal = ({ isOpen, onClose, profileData, onUpdateSuccess }) =>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">Full Name</label>
-                  <input 
-                    type="text" 
-                    value={formData.ownerName} 
+                  <input
+                    type="text"
+                    value={formData.ownerName}
                     onChange={(e) => setFormData({...formData, ownerName: e.target.value})}
                     className="w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white"
                     required
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">Business Name</label>
-                  <input 
-                    type="text" 
-                    value={formData.businessName} 
+                  <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">Business
+                    Name</label>
+                  <input
+                    type="text"
+                    value={formData.businessName}
                     onChange={(e) => setFormData({...formData, businessName: e.target.value})}
                     className="w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white"
                   />
                 </div>
                 <div>
                   <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">Mobile</label>
-                  <input 
-                    type="text" 
-                    value={formData.mobile} 
+                  <input
+                    type="text"
+                    value={formData.mobile}
                     onChange={(e) => setFormData({...formData, mobile: e.target.value})}
                     className="w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white"
                   />
                 </div>
               </div>
               <div className="flex justify-end gap-3 mt-4">
-                <button type="button" onClick={() => setIsEditing(false)} className="px-4 py-2 text-sm font-medium text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg">Cancel</button>
-                <button type="submit" disabled={loading} className="px-4 py-2 text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 rounded-lg disabled:opacity-70">
+                <button type="button" onClick={() => setIsEditing(false)}
+                        className="px-4 py-2 text-sm font-medium text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg">Cancel
+                </button>
+                <button type="submit" disabled={loading}
+                        className="px-4 py-2 text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 rounded-lg disabled:opacity-70">
                   {loading ? "Saving..." : "Save Changes"}
                 </button>
               </div>
             </form>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <InfoItem label="Email Address" value={profileData?.email} />
-              <InfoItem label="Phone Number" value={profileData?.phone || profileData?.mobile} />
-              <InfoItem label="Business Name" value={profileData?.businessName} />
-              <InfoItem label="Owner Name" value={profileData?.ownerName} />
-              <InfoItem label="Plan" value={profileData?.plan || "TRIAL"} badge />
-              <InfoItem 
-                label="Status" 
-                value={profileData?.status || (profileData?.isActive || profileData?.active ? "Active" : "Inactive")} 
-                badge 
-                color={(profileData?.status === "Active" || profileData?.isActive || profileData?.active) ? "green" : "red"} 
+              <InfoItem label="Email Address" value={profileData?.email}/>
+              <InfoItem label="Phone Number" value={profileData?.phone || profileData?.mobile}/>
+              <InfoItem label="Business Name" value={profileData?.businessName}/>
+              <InfoItem label="Owner Name" value={profileData?.ownerName}/>
+              <InfoItem label="Plan" value={profileData?.plan || "TRIAL"} badge/>
+              <InfoItem
+                label="Status"
+                value={profileData?.status || (profileData?.isActive || profileData?.active ? "Active" : "Inactive")}
+                badge
+                color={(profileData?.status === "Active" || profileData?.isActive || profileData?.active) ? "green" : "red"}
               />
-              <InfoItem 
-                label="Trial Start" 
-                value={(profileData?.trialStartDate || profileData?.startDate) ? new Date(profileData.trialStartDate || profileData.startDate).toLocaleDateString() : "N/A"} 
+              <InfoItem
+                label="Trial Start"
+                value={(profileData?.trialStartDate || profileData?.startDate) ? new Date(profileData.trialStartDate || profileData.startDate).toLocaleDateString() : "N/A"}
               />
-              <InfoItem 
-                label="Trial End" 
-                value={(profileData?.trialEndDate || profileData?.endDate) ? new Date(profileData.trialEndDate || profileData.endDate).toLocaleDateString() : "N/A"} 
+              <InfoItem
+                label="Trial End"
+                value={(profileData?.trialEndDate || profileData?.endDate) ? new Date(profileData.trialEndDate || profileData.endDate).toLocaleDateString() : "N/A"}
               />
             </div>
           )}
         </div>
-        
+
         <div className="p-6 border-t border-gray-200 dark:border-gray-700 flex justify-end">
-          <button onClick={onClose} className="px-6 py-2 bg-gray-900 dark:bg-gray-700 text-white rounded-lg hover:bg-gray-800 dark:hover:bg-gray-600 transition-colors font-medium">
+          <button onClick={onClose}
+                  className="px-6 py-2 bg-gray-900 dark:bg-gray-700 text-white rounded-lg hover:bg-gray-800 dark:hover:bg-gray-600 transition-colors font-medium">
             Close
           </button>
         </div>
@@ -188,18 +196,29 @@ const TrialProfileModal = ({ isOpen, onClose, profileData, onUpdateSuccess }) =>
   );
 };
 
-const InfoItem = ({ label, value, badge, color }) => (
+const InfoItem = ({label, value, badge, color}) => (
   <div className="space-y-1">
     <label className="text-xs font-medium text-gray-500 dark:text-gray-400">{label}</label>
     {badge ? (
-      <span className={`inline-block px-2 py-1 text-xs font-medium rounded-full ${color === 'red' ? 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400' : 'bg-indigo-100 text-indigo-700 dark:bg-indigo-900/30 dark:text-indigo-400'}`}>{value || "N/A"}</span>
+      <span
+        className={`inline-block px-2 py-1 text-xs font-medium rounded-full ${color === 'red' ? 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400' : 'bg-indigo-100 text-indigo-700 dark:bg-indigo-900/30 dark:text-indigo-400'}`}>{value || "N/A"}</span>
     ) : (
       <p className="text-sm text-gray-900 dark:text-white font-medium">{value || "N/A"}</p>
     )}
   </div>
 );
 
-const X = (props) => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>;
-const Upload = (props) => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" x2="12" y1="3" y2="15"/></svg>;
+const X = (props) => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                          stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
+  <path d="M18 6 6 18"/>
+  <path d="m6 6 12 12"/>
+</svg>;
+const Upload = (props) => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                               stroke="currentColor" strokeWidth="2" strokeLinecap="round"
+                               strokeLinejoin="round" {...props}>
+  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+  <polyline points="17 8 12 3 7 8"/>
+  <line x1="12" x2="12" y1="3" y2="15"/>
+</svg>;
 
 export default TrialProfileModal;

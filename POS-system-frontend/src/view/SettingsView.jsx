@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 
 const SettingsView = () => {
   const [activeTab, setActiveTab] = useState("General");
@@ -31,9 +31,9 @@ const SettingsView = () => {
 
       {/* Content */}
       <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700">
-        {activeTab === "General" && <GeneralSettings />}
-        {activeTab === "Security" && <SecuritySettings />}
-        {activeTab === "Notifications" && <NotificationSettings />}
+        {activeTab === "General" && <GeneralSettings/>}
+        {activeTab === "Security" && <SecuritySettings/>}
+        {activeTab === "Notifications" && <NotificationSettings/>}
       </div>
     </div>
   );
@@ -49,7 +49,7 @@ const GeneralSettings = () => {
   });
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    setFormData({...formData, [e.target.name]: e.target.value});
   };
 
   return (
@@ -143,22 +143,44 @@ const SecuritySettings = () => {
 };
 
 const NotificationSettings = () => {
-  const [toggles, setToggles] = useState({ emailOrder: true, emailStock: true, smsShift: false, pushSales: true });
-  const handleToggle = (key) => setToggles(prev => ({ ...prev, [key]: !prev[key] }));
+  const [toggles, setToggles] = useState({emailOrder: true, emailStock: true, smsShift: false, pushSales: true});
+  const handleToggle = (key) => setToggles(prev => ({...prev, [key]: !prev[key]}));
 
   return (
     <div className="max-w-2xl space-y-6">
       <h3 className="text-lg font-medium text-gray-900 dark:text-white">Notification Preferences</h3>
       <div className="space-y-4">
         {[
-          { key: 'emailOrder', label: "Email Alerts for New Orders", desc: "Receive an email whenever a new order is placed." },
-          { key: 'emailStock', label: "Low Stock Alerts", desc: "Get notified when inventory items fall below threshold." },
-          { key: 'smsShift', label: "SMS for Shift Updates", desc: "Receive SMS notifications for shift starts and ends." },
-          { key: 'pushSales', label: "Daily Sales Push Notifications", desc: "Get a daily summary of sales performance on your device." }
+          {
+            key: 'emailOrder',
+            label: "Email Alerts for New Orders",
+            desc: "Receive an email whenever a new order is placed."
+          },
+          {
+            key: 'emailStock',
+            label: "Low Stock Alerts",
+            desc: "Get notified when inventory items fall below threshold."
+          },
+          {
+            key: 'smsShift',
+            label: "SMS for Shift Updates",
+            desc: "Receive SMS notifications for shift starts and ends."
+          },
+          {
+            key: 'pushSales',
+            label: "Daily Sales Push Notifications",
+            desc: "Get a daily summary of sales performance on your device."
+          }
         ].map((item) => (
-          <div key={item.key} className="flex items-center justify-between py-3 border-b border-gray-100 dark:border-gray-700 last:border-0">
-            <div><p className="font-medium text-gray-900 dark:text-white">{item.label}</p><p className="text-sm text-gray-500 dark:text-gray-400">{item.desc}</p></div>
-            <button onClick={() => handleToggle(item.key)} className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${toggles[item.key] ? 'bg-blue-600' : 'bg-gray-200 dark:bg-gray-700'}`}><span className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${toggles[item.key] ? 'translate-x-6' : 'translate-x-1'}`} /></button>
+          <div key={item.key}
+               className="flex items-center justify-between py-3 border-b border-gray-100 dark:border-gray-700 last:border-0">
+            <div><p className="font-medium text-gray-900 dark:text-white">{item.label}</p><p
+              className="text-sm text-gray-500 dark:text-gray-400">{item.desc}</p></div>
+            <button onClick={() => handleToggle(item.key)}
+                    className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${toggles[item.key] ? 'bg-blue-600' : 'bg-gray-200 dark:bg-gray-700'}`}>
+              <span
+                className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${toggles[item.key] ? 'translate-x-6' : 'translate-x-1'}`}/>
+            </button>
           </div>
         ))}
       </div>

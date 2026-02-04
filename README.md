@@ -25,8 +25,8 @@ The project is containerized using Docker Compose and consists of the following 
    ```
 
 3. Access the application:
-   - **Frontend**: http://localhost:3000
-   - **Backend API**: http://localhost:5000
+   - **Frontend**: <http://localhost:3000>
+   - **Backend API**: <http://localhost:5000>
    - **Database**: `localhost:3307`
      - User: `pos_user`
      - Password: `password`
@@ -50,6 +50,7 @@ The backend is a Spring Boot application located in `POS-system-backend/`.
 - **Prerequisites**: Java 17, Maven, MySQL.
 - **Configuration**: Update database credentials in `src/main/resources/application.properties` or via environment variables.
 - **Run**:
+
   ```bash
   cd POS-system-backend
   mvn spring-boot:run
@@ -61,6 +62,7 @@ The frontend is a React + Vite application located in `POS-system-frontend/`.
 
 - **Prerequisites**: Node.js.
 - **Run**:
+
   ```bash
   cd POS-system-frontend
   npm install

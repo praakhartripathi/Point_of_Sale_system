@@ -1,4 +1,4 @@
-import { API_BASE_URL } from './endpoints';
+import {API_BASE_URL} from './endpoints';
 
 const signin = async (credentials) => {
   const response = await fetch(`${API_BASE_URL}/api/auth/signin`, {
@@ -18,4 +18,4 @@ const signin = async (credentials) => {
   return data;
 };
 
-export { signin };
+export {signin};

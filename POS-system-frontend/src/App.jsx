@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react'
-import { BrowserRouter as Router, Routes, Route, useLocation, Navigate } from 'react-router-dom'
+import {useEffect, useState} from 'react'
+import {BrowserRouter as Router, Navigate, Route, Routes, useLocation} from 'react-router-dom'
 import './App.css'
 import Navbar from './component/index'
 import Home from './pages/Home'
@@ -23,14 +23,14 @@ import TrialDashboard from './pages/TrialDashboard'
 import OAuth2RedirectHandler from './pages/OAuth2RedirectHandler'
 import PaymentPage from './pages/PaymentPage'
 
-const Layout = ({ children, theme, setTheme }) => {
+const Layout = ({children, theme, setTheme}) => {
   const location = useLocation();
   // Hide Navbar on dashboard routes
   const isDashboard = location.pathname.includes('/dashboard');
 
   return (
     <div className="min-h-screen w-full bg-background text-foreground">
-      {!isDashboard && <Navbar theme={theme} setTheme={setTheme} />}
+      {!isDashboard && <Navbar theme={theme} setTheme={setTheme}/>}
       {children}
     </div>
   );
@@ -55,31 +55,32 @@ function App() {
     <Router>
       <Layout theme={theme} setTheme={setTheme}>
         <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/pricing" element={<Pricing />} />
-          <Route path="/testimonials" element={<Testimonials />} />
-          <Route path="/contact" element={<Contact />} />
-          <Route path="/signin" element={<SignIn />} />
-          <Route path="/request-demo" element={<RequestDemo />} />
-          <Route path="/cashier/dashboard" element={<CashierDashboard />} />
-          <Route path="/admin/dashboard" element={<AdminDashboard />} />
-          <Route path="/super-admin/dashboard" element={<SuperAdminDashboard />} />
-          <Route path="/store-manager/dashboard" element={<StoreManagerDashboard />} />
-          <Route path="/branch-manager/dashboard" element={<BranchManagerDashboard theme={theme} setTheme={setTheme} />} />
-          <Route path="/dashboard" element={<UserDashboard />} />
+          <Route path="/" element={<Home/>}/>
+          <Route path="/pricing" element={<Pricing/>}/>
+          <Route path="/testimonials" element={<Testimonials/>}/>
+          <Route path="/contact" element={<Contact/>}/>
+          <Route path="/signin" element={<SignIn/>}/>
+          <Route path="/request-demo" element={<RequestDemo/>}/>
+          <Route path="/cashier/dashboard" element={<CashierDashboard/>}/>
+          <Route path="/admin/dashboard" element={<AdminDashboard/>}/>
+          <Route path="/super-admin/dashboard" element={<SuperAdminDashboard/>}/>
+          <Route path="/store-manager/dashboard" element={<StoreManagerDashboard/>}/>
+          <Route path="/branch-manager/dashboard"
+                 element={<BranchManagerDashboard theme={theme} setTheme={setTheme}/>}/>
+          <Route path="/dashboard" element={<UserDashboard/>}/>
 
           {/* Feature Pages */}
-          <Route path="/features/point-of-sale" element={<PointOfSale />} />
-          <Route path="/features/inventory" element={<Inventory />} />
-          <Route path="/features/analytics" element={<Analytics />} />
-          <Route path="/trial-signup" element={<TrialSignup />} />
-          <Route path="/trial-signin" element={<TrialSignIn />} />
-          <Route path="/trial/dashboard" element={<TrialDashboard theme={theme} setTheme={setTheme} />} />
-          <Route path="/oauth2/redirect" element={<OAuth2RedirectHandler />} />
-          <Route path="/payment" element={<PaymentPage />} />
+          <Route path="/features/point-of-sale" element={<PointOfSale/>}/>
+          <Route path="/features/inventory" element={<Inventory/>}/>
+          <Route path="/features/analytics" element={<Analytics/>}/>
+          <Route path="/trial-signup" element={<TrialSignup/>}/>
+          <Route path="/trial-signin" element={<TrialSignIn/>}/>
+          <Route path="/trial/dashboard" element={<TrialDashboard theme={theme} setTheme={setTheme}/>}/>
+          <Route path="/oauth2/redirect" element={<OAuth2RedirectHandler/>}/>
+          <Route path="/payment" element={<PaymentPage/>}/>
 
           {/* Fallback Route: Redirect unknown paths to Home to prevent blank screens */}
-          <Route path="*" element={<Navigate to="/" replace />} />
+          <Route path="*" element={<Navigate to="/" replace/>}/>
         </Routes>
       </Layout>
     </Router>

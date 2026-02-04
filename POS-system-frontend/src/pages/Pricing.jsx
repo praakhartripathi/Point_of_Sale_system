@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
+import React, {useEffect, useState} from 'react';
+import {Link, useLocation, useNavigate} from 'react-router-dom';
 import BusinessDetailsModal from '../modal/BusinessDetailsModal';
 
 const Pricing = () => {
@@ -83,18 +83,18 @@ const Pricing = () => {
   const handlePlanClick = (plan) => {
     const token = localStorage.getItem("token");
     setSelectedPlan(plan.name);
-    
+
     if (token) {
       // User is logged in, show modal
       setShowBusinessModal(true);
     } else {
       // User not logged in, redirect to signin with return info
-      navigate("/signin", { 
-        state: { 
-          returnTo: "/pricing", 
+      navigate("/signin", {
+        state: {
+          returnTo: "/pricing",
           plan: plan.name,
-          showModal: true 
-        } 
+          showModal: true
+        }
       });
     }
   };
@@ -102,11 +102,11 @@ const Pricing = () => {
   const handleBusinessDetailsSubmit = (details) => {
     const planObject = plans.find(p => p.name === selectedPlan);
     setShowBusinessModal(false);
-    navigate("/payment", { 
-      state: { 
-        plan: planObject, 
-        details: details 
-      } 
+    navigate("/payment", {
+      state: {
+        plan: planObject,
+        details: details
+      }
     });
   };
 
@@ -118,8 +118,9 @@ const Pricing = () => {
           <p className="text-xl text-gray-600 dark:text-gray-300 mb-8">
             Choose the plan that fits your business needs. No hidden fees.
           </p>
-          
-          <Link to="/signin" className="inline-flex items-center gap-2 bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-400 px-6 py-3 rounded-full font-bold text-sm shadow-sm border border-yellow-200 dark:border-yellow-800 hover:bg-yellow-200 dark:hover:bg-yellow-900/50 transition-colors">
+
+          <Link to="/signin"
+                className="inline-flex items-center gap-2 bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-400 px-6 py-3 rounded-full font-bold text-sm shadow-sm border border-yellow-200 dark:border-yellow-800 hover:bg-yellow-200 dark:hover:bg-yellow-900/50 transition-colors">
             <span className="text-lg">👉</span>
             7 Days Free – No Credit Card Required
           </Link>
@@ -127,21 +128,21 @@ const Pricing = () => {
 
         <div className="grid md:grid-cols-3 gap-8 max-w-7xl mx-auto">
           {plans.map((plan, index) => (
-            <div 
-              key={index} 
+            <div
+              key={index}
               onClick={() => setSelectedPlan(plan.name)}
-              className={`relative bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-lg border flex flex-col transition-all duration-300 cursor-pointer ${
-                selectedPlan === plan.name 
-                  ? "border-blue-600 dark:border-blue-400 ring-2 ring-blue-600 dark:ring-blue-400 transform scale-105 z-10" 
-                  : `${plan.borderColor} hover:-translate-y-1`
+              className={`relative bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-lg border flex flex-col transition-all duration-300 cursor-pointer ${selectedPlan === plan.name
+                ? "border-blue-600 dark:border-blue-400 ring-2 ring-blue-600 dark:ring-blue-400 transform scale-105 z-10"
+                : `${plan.borderColor} hover:-translate-y-1`
               }`}
             >
               {plan.popular && (
-                <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-blue-600 text-white px-4 py-1 rounded-full text-sm font-bold uppercase tracking-wide shadow-md flex items-center gap-1">
+                <div
+                  className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-blue-600 text-white px-4 py-1 rounded-full text-sm font-bold uppercase tracking-wide shadow-md flex items-center gap-1">
                   <span>⭐</span> MOST POPULAR
                 </div>
               )}
-              
+
               <div className="mb-8">
                 <div className="flex items-center gap-2 mb-2">
                   <span className="text-xl">{plan.icon}</span>
@@ -157,15 +158,16 @@ const Pricing = () => {
               <div className="flex-1 space-y-4 mb-8">
                 {plan.features.map((feature, i) => (
                   <div key={i} className="flex items-start gap-3">
-                    <div className="mt-1 p-0.5 rounded-full bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400 shrink-0">
-                      <Check className="w-3 h-3" />
+                    <div
+                      className="mt-1 p-0.5 rounded-full bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400 shrink-0">
+                      <Check className="w-3 h-3"/>
                     </div>
                     <span className="text-gray-700 dark:text-gray-300 text-sm">{feature}</span>
                   </div>
                 ))}
               </div>
 
-              <button 
+              <button
                 onClick={() => handlePlanClick(plan)}
                 className={`w-full py-3 px-6 rounded-xl font-bold text-white text-center transition-colors shadow-md ${plan.btnColor}`}
               >
@@ -177,12 +179,14 @@ const Pricing = () => {
 
         <div className="mt-16 text-center">
           <p className="text-gray-500 dark:text-gray-400">
-            Need a custom plan for a large enterprise? <Link to="/contact" className="text-blue-600 dark:text-blue-400 font-medium hover:underline">Contact Sales</Link>
+            Need a custom plan for a large enterprise? <Link to="/contact"
+                                                             className="text-blue-600 dark:text-blue-400 font-medium hover:underline">Contact
+            Sales</Link>
           </p>
         </div>
       </div>
 
-      <BusinessDetailsModal 
+      <BusinessDetailsModal
         isOpen={showBusinessModal}
         onClose={() => setShowBusinessModal(false)}
         plan={selectedPlan}
@@ -192,9 +196,10 @@ const Pricing = () => {
   );
 };
 
-const Check = ({ className }) => (
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className={className}>
-    <polyline points="20 6 9 17 4 12" />
+const Check = ({className}) => (
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"
+       strokeLinecap="round" strokeLinejoin="round" className={className}>
+    <polyline points="20 6 9 17 4 12"/>
   </svg>
 );
 
