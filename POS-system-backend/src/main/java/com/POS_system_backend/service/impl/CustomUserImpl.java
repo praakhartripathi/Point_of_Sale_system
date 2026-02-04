@@ -36,9 +36,9 @@ public class CustomUserImpl implements UserDetailsService {
         authorities.add(new SimpleGrantedAuthority(user.getRole().toString()));
 
         return new org.springframework.security.core.userdetails.User(
-                user.getEmail(),
-                user.getPassword(),
-                authorities
+            user.getEmail(),
+            user.getPassword(),
+            authorities
         );
     }
 }

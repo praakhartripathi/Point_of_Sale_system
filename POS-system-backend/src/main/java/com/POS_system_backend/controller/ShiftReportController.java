@@ -61,8 +61,8 @@ public class ShiftReportController {
 
     @GetMapping("/cashier/{cashierId}/date")
     public ResponseEntity<List<ShiftReport>> getShiftReportsByCashierAndDate(
-            @PathVariable Long cashierId,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+        @PathVariable Long cashierId,
+        @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
         List<ShiftReport> shiftReports = shiftReportService.getShiftReportsByCashierAndDate(cashierId, date);
         return ResponseEntity.ok(shiftReports);
     }

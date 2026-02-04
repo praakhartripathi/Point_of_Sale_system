@@ -62,7 +62,7 @@ public class BranchServiceImpl implements BranchService {
         Optional<Branch> branchOptional = branchRepository.findById(branchId);
         if (branchOptional.isPresent()) {
             Branch branch = branchOptional.get();
-            
+
             if (branchDto.getName() != null) branch.setName(branchDto.getName());
             if (branchDto.getAddress() != null) branch.setAddress(branchDto.getAddress());
             if (branchDto.getPhone() != null) branch.setPhone(branchDto.getPhone());

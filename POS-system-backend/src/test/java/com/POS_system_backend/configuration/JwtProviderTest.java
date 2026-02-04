@@ -38,7 +38,7 @@ class JwtProviderTest {
         String token = jwtProvider.generateToken(auth);
 
         assertNotNull(token);
-        
+
         Claims claims = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
         assertEquals("test@example.com", claims.get("email"));
         assertEquals("ROLE_USER", claims.get("authorities"));
@@ -50,7 +50,7 @@ class JwtProviderTest {
         authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
         Authentication auth = new UsernamePasswordAuthenticationToken("test@example.com", "password", authorities);
         String token = jwtProvider.generateToken(auth);
-        
+
         // Add "Bearer " prefix as expected by getEmailFromToken
         String bearerToken = "Bearer " + token;
 

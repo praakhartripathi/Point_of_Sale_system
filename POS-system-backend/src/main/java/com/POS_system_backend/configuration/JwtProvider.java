@@ -23,23 +23,23 @@ public class JwtProvider {
         String roles = populateAuthorities(authorities);
 
         return Jwts.builder()
-                .setSubject(auth.getName())
-                .setIssuedAt(new Date())
-                .setExpiration(new Date(new Date().getTime() + 86400000))
-                .claim("email", auth.getName())
-                .claim("authorities", roles)
-                .signWith(key)
-                .compact();
+            .setSubject(auth.getName())
+            .setIssuedAt(new Date())
+            .setExpiration(new Date(new Date().getTime() + 86400000))
+            .claim("email", auth.getName())
+            .claim("authorities", roles)
+            .signWith(key)
+            .compact();
     }
 
     public String getEmailFromToken(String jwt) {
         jwt = jwt.substring(7);
         Claims claims = Jwts.parserBuilder()
-                .setSigningKey(key)
-                .build()
-                .parseClaimsJws(jwt)
-                .getBody();
-        
+            .setSigningKey(key)
+            .build()
+            .parseClaimsJws(jwt)
+            .getBody();
+
         String email = claims.getSubject();
         if (email == null) {
             email = String.valueOf(claims.get("email"));

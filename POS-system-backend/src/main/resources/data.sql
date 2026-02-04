@@ -2,33 +2,44 @@
 
 -- 1. Create Super Admin User (Password: password)
 INSERT INTO users (full_name, email, password, phone, role, status, created_at, updated_at)
-VALUES ('Super Admin', 'superadmin@pos.com', '$2a$10$8.UnVuG9HHgffUDAlk8qfOuVGkqRkgVdukPxk.So0Ba4r.e8h.e.e', '0000000000', 'ROLE_SUPERADMIN', 'ACTIVE', NOW(), NOW());
+VALUES ('Super Admin', 'superadmin@pos.com', '$2a$10$8.UnVuG9HHgffUDAlk8qfOuVGkqRkgVdukPxk.So0Ba4r.e8h.e.e',
+        '0000000000', 'ROLE_SUPERADMIN', 'ACTIVE', NOW(), NOW());
 
 -- 2. Create a Sample Store
-INSERT INTO stores (brand, description, store_type, status, email, phone, address, city, country, created_at, updated_at)
-VALUES ('Tech World', 'Electronics and Gadgets', 'RETAIL', 'ACTIVE', 'contact@techworld.com', '1234567890', '123 Tech Street', 'Silicon Valley', 'USA', NOW(), NOW());
+INSERT INTO stores (brand, description, store_type, status, email, phone, address, city, country, created_at,
+                    updated_at)
+VALUES ('Tech World', 'Electronics and Gadgets', 'RETAIL', 'ACTIVE', 'contact@techworld.com', '1234567890',
+        '123 Tech Street', 'Silicon Valley', 'USA', NOW(), NOW());
 
 -- 3. Create Store Admin User (Password: password)
 INSERT INTO users (full_name, email, password, phone, role, status, store_id, created_at, updated_at)
-VALUES ('Store Admin', 'admin@techworld.com', '$2a$10$8.UnVuG9HHgffUDAlk8qfOuVGkqRkgVdukPxk.So0Ba4r.e8h.e.e', '9876543210', 'ROLE_STORE_MANAGER', 'ACTIVE', 1, NOW(), NOW());
+VALUES ('Store Admin', 'admin@techworld.com', '$2a$10$8.UnVuG9HHgffUDAlk8qfOuVGkqRkgVdukPxk.So0Ba4r.e8h.e.e',
+        '9876543210', 'ROLE_STORE_MANAGER', 'ACTIVE', 1, NOW(), NOW());
 
 -- Update Store with Admin ID
-UPDATE stores SET admin_id = 2 WHERE id = 1;
+UPDATE stores
+SET admin_id = 2
+WHERE id = 1;
 
 -- 4. Create a Sample Branch
 INSERT INTO branches (name, address, phone, email, open_time, close_time, store_id, created_at, updated_at)
-VALUES ('Downtown Branch', '456 Downtown Ave', '1122334455', 'downtown@techworld.com', '09:00:00', '21:00:00', 1, NOW(), NOW());
+VALUES ('Downtown Branch', '456 Downtown Ave', '1122334455', 'downtown@techworld.com', '09:00:00', '21:00:00', 1, NOW(),
+        NOW());
 
 -- 5. Create Branch Manager User (Password: password)
 INSERT INTO users (full_name, email, password, phone, role, status, store_id, branch_id, created_at, updated_at)
-VALUES ('Branch Manager', 'manager@techworld.com', '$2a$10$8.UnVuG9HHgffUDAlk8qfOuVGkqRkgVdukPxk.So0Ba4r.e8h.e.e', '5566778899', 'ROLE_BRANCH_MANAGER', 'ACTIVE', 1, 1, NOW(), NOW());
+VALUES ('Branch Manager', 'manager@techworld.com', '$2a$10$8.UnVuG9HHgffUDAlk8qfOuVGkqRkgVdukPxk.So0Ba4r.e8h.e.e',
+        '5566778899', 'ROLE_BRANCH_MANAGER', 'ACTIVE', 1, 1, NOW(), NOW());
 
 -- Update Branch with Manager ID
-UPDATE branches SET manager_id = 3 WHERE id = 1;
+UPDATE branches
+SET manager_id = 3
+WHERE id = 1;
 
 -- 6. Create Cashier User (Password: password)
 INSERT INTO users (full_name, email, password, phone, role, status, store_id, branch_id, created_at, updated_at)
-VALUES ('John Cashier', 'cashier@techworld.com', '$2a$10$8.UnVuG9HHgffUDAlk8qfOuVGkqRkgVdukPxk.So0Ba4r.e8h.e.e', '9988776655', 'ROLE_CASHIER', 'ACTIVE', 1, 1, NOW(), NOW());
+VALUES ('John Cashier', 'cashier@techworld.com', '$2a$10$8.UnVuG9HHgffUDAlk8qfOuVGkqRkgVdukPxk.So0Ba4r.e8h.e.e',
+        '9988776655', 'ROLE_CASHIER', 'ACTIVE', 1, 1, NOW(), NOW());
 
 -- 7. Create Categories
 INSERT INTO categories (name, description, store_id, created_at, updated_at)
@@ -38,13 +49,16 @@ INSERT INTO categories (name, description, store_id, created_at, updated_at)
 VALUES ('Laptops', 'Notebooks and PCs', 1, NOW(), NOW());
 
 -- 8. Create Products
-INSERT INTO products (name, sku, description, mrp, selling_price, cost_price, brand, category_id, store_id, is_active, created_at, updated_at)
+INSERT INTO products (name, sku, description, mrp, selling_price, cost_price, brand, category_id, store_id, is_active,
+                      created_at, updated_at)
 VALUES ('iPhone 15', 'IP15-128', 'Latest Apple iPhone', 999.99, 899.99, 800.00, 'Apple', 1, 1, TRUE, NOW(), NOW());
 
-INSERT INTO products (name, sku, description, mrp, selling_price, cost_price, brand, category_id, store_id, is_active, created_at, updated_at)
+INSERT INTO products (name, sku, description, mrp, selling_price, cost_price, brand, category_id, store_id, is_active,
+                      created_at, updated_at)
 VALUES ('Samsung S24', 'S24-256', 'Samsung Galaxy S24', 899.99, 799.99, 700.00, 'Samsung', 1, 1, TRUE, NOW(), NOW());
 
-INSERT INTO products (name, sku, description, mrp, selling_price, cost_price, brand, category_id, store_id, is_active, created_at, updated_at)
+INSERT INTO products (name, sku, description, mrp, selling_price, cost_price, brand, category_id, store_id, is_active,
+                      created_at, updated_at)
 VALUES ('MacBook Air', 'MBA-M2', 'Apple MacBook Air M2', 1199.99, 1099.99, 950.00, 'Apple', 2, 1, TRUE, NOW(), NOW());
 
 -- 9. Inventory
@@ -66,19 +80,25 @@ INSERT INTO demo_requests (full_name, email, company_name, phone, status, create
 VALUES ('Interested User', 'demo@newcompany.com', 'New Retail Co', '1112223333', 'PENDING', NOW(), NOW());
 
 -- 12. Sample Trial Account (Password: password)
-INSERT INTO trial_accounts (business_name, owner_name, email, mobile, password, plan, start_date, end_date, is_active, created_at, updated_at)
-VALUES ('Trial Store', 'Trial Owner', 'trial@example.com', '9876543211', '$2a$10$8.UnVuG9HHgffUDAlk8qfOuVGkqRkgVdukPxk.So0Ba4r.e8h.e.e', 'TRIAL', NOW(), DATE_ADD(NOW(), INTERVAL 7 DAY), TRUE, NOW(), NOW());
+INSERT INTO trial_accounts (business_name, owner_name, email, mobile, password, plan, start_date, end_date, is_active,
+                            created_at, updated_at)
+VALUES ('Trial Store', 'Trial Owner', 'trial@example.com', '9876543211',
+        '$2a$10$8.UnVuG9HHgffUDAlk8qfOuVGkqRkgVdukPxk.So0Ba4r.e8h.e.e', 'TRIAL', NOW(), DATE_ADD(NOW(), INTERVAL 7 DAY),
+        TRUE, NOW(), NOW());
 
 -- 13. Create User for Trial Account (ID: 5)
 INSERT INTO users (full_name, email, password, phone, role, status, created_at, updated_at)
-VALUES ('Trial Owner', 'trial@example.com', '$2a$10$8.UnVuG9HHgffUDAlk8qfOuVGkqRkgVdukPxk.So0Ba4r.e8h.e.e', '9876543211', 'ROLE_ADMIN', 'ACTIVE', NOW(), NOW());
+VALUES ('Trial Owner', 'trial@example.com', '$2a$10$8.UnVuG9HHgffUDAlk8qfOuVGkqRkgVdukPxk.So0Ba4r.e8h.e.e',
+        '9876543211', 'ROLE_ADMIN', 'ACTIVE', NOW(), NOW());
 
 -- 14. Create Store for Trial Account (ID: 2)
 INSERT INTO stores (brand, description, store_type, status, email, phone, admin_id, created_at, updated_at)
 VALUES ('Trial Store', 'Trial Account Store', 'RETAIL', 'ACTIVE', 'trial@example.com', '9876543211', 5, NOW(), NOW());
 
 -- Update User with Store ID
-UPDATE users SET store_id = 2 WHERE id = 5;
+UPDATE users
+SET store_id = 2
+WHERE id = 5;
 
 -- 15. Create Branch for Trial Account (ID: 2)
 INSERT INTO branches (name, address, phone, email, store_id, created_at, updated_at)

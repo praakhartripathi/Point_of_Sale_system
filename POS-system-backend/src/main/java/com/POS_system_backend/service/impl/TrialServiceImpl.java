@@ -25,9 +25,9 @@ public class TrialServiceImpl implements TrialService {
     private final TrialMapper trialMapper;
 
     public TrialServiceImpl(TrialAccountRepository trialAccountRepository,
-                                   PasswordEncoder passwordEncoder,
-                                   JwtProvider jwtProvider,
-                                   TrialMapper trialMapper) {
+                            PasswordEncoder passwordEncoder,
+                            JwtProvider jwtProvider,
+                            TrialMapper trialMapper) {
         this.trialAccountRepository = trialAccountRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtProvider = jwtProvider;
@@ -43,13 +43,13 @@ public class TrialServiceImpl implements TrialService {
 
         TrialAccount trial = trialMapper.toEntity(request);
         trial.setPassword(passwordEncoder.encode(request.getPassword()));
-        
+
         // Explicitly set default values
         trial.setActive(true);
         trial.setPlan("TRIAL");
         trial.setMaxBranches(1);
         trial.setMaxUsers(1);
-        
+
         LocalDateTime now = LocalDateTime.now();
         trial.setStartDate(now);
         trial.setEndDate(now.plusDays(7));
@@ -57,18 +57,18 @@ public class TrialServiceImpl implements TrialService {
         TrialAccount savedTrial = trialAccountRepository.save(trial);
 
         Authentication authentication = new UsernamePasswordAuthenticationToken(
-                savedTrial.getEmail(),
-                null,
-                Collections.singletonList(new SimpleGrantedAuthority("ROLE_TRIAL"))
+            savedTrial.getEmail(),
+            null,
+            Collections.singletonList(new SimpleGrantedAuthority("ROLE_TRIAL"))
         );
         String token = jwtProvider.generateToken(authentication);
 
         return new AuthResponse(
-                token,
-                "Trial account created successfully",
-                "ROLE_TRIAL",
-                savedTrial.getId(),
-                savedTrial.getEmail()
+            token,
+            "Trial account created successfully",
+            "ROLE_TRIAL",
+            savedTrial.getId(),
+            savedTrial.getEmail()
         );
     }
 
@@ -86,18 +86,18 @@ public class TrialServiceImpl implements TrialService {
         }
 
         Authentication authentication = new UsernamePasswordAuthenticationToken(
-                trial.getEmail(),
-                null,
-                Collections.singletonList(new SimpleGrantedAuthority("ROLE_TRIAL"))
+            trial.getEmail(),
+            null,
+            Collections.singletonList(new SimpleGrantedAuthority("ROLE_TRIAL"))
         );
         String token = jwtProvider.generateToken(authentication);
 
         return new AuthResponse(
-                token,
-                "Login successful",
-                "ROLE_TRIAL",
-                trial.getId(),
-                trial.getEmail()
+            token,
+            "Login successful",
+            "ROLE_TRIAL",
+            trial.getId(),
+            trial.getEmail()
         );
     }
 
@@ -166,12 +166,12 @@ public class TrialServiceImpl implements TrialService {
         if (request.getProfileImage() != null && !request.getProfileImage().isEmpty()) {
             trial.setProfileImage(request.getProfileImage());
         }
-        
-        // Note: Email update is usually restricted or requires re-verification, 
-        // so we might want to skip it or handle it carefully. 
+
+        // Note: Email update is usually restricted or requires re-verification,
+        // so we might want to skip it or handle it carefully.
         // For now, I'll allow it if provided, but check for duplicates.
         if (request.getEmail() != null && !request.getEmail().isEmpty() && !request.getEmail().equals(email)) {
-             if (trialAccountRepository.existsByEmail(request.getEmail())) {
+            if (trialAccountRepository.existsByEmail(request.getEmail())) {
                 throw new RuntimeException("Email already in use");
             }
             trial.setEmail(request.getEmail());

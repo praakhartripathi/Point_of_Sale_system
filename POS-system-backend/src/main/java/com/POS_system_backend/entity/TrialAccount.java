@@ -1,6 +1,7 @@
 package com.POS_system_backend.entity;
 
 import jakarta.persistence.*;
+
 import java.time.LocalDateTime;
 
 @Entity
@@ -20,7 +21,7 @@ public class TrialAccount {
     private String mobile;
 
     @Column(nullable = false, length = 255)
-    private String password; 
+    private String password;
 
     @Lob
     @Column(columnDefinition = "LONGTEXT")
@@ -28,7 +29,7 @@ public class TrialAccount {
 
     private LocalDateTime startDate;
     private LocalDateTime endDate;
-    
+
     @Column(nullable = false)
     private boolean active;
 
@@ -126,7 +127,7 @@ public class TrialAccount {
     public void setEndDate(LocalDateTime endDate) {
         this.endDate = endDate;
     }
-    
+
     public boolean isActive() {
         return active;
     }
@@ -159,7 +160,7 @@ public class TrialAccount {
         this.maxUsers = maxUsers;
     }
 
-     @PrePersist
+    @PrePersist
     protected void onCreate() {
         if (this.startDate == null)
             this.startDate = LocalDateTime.now();

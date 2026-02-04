@@ -3,6 +3,7 @@ package com.POS_system_backend.entity;
 import com.POS_system_backend.entity.enums.StoreStatus;
 import com.POS_system_backend.entity.enums.StoreType;
 import org.junit.jupiter.api.Test;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class StoreTest {

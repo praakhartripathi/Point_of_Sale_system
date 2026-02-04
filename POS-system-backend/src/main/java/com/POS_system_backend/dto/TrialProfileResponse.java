@@ -13,7 +13,7 @@ public class TrialProfileResponse {
     private String mobile;
     private String plan;
     private String profileImage;
-    
+
     @JsonProperty("active")
     private boolean active;
 
@@ -22,7 +22,7 @@ public class TrialProfileResponse {
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime trialEndDate;
-    
+
     private int maxBranches;
     private int maxUsers;
 

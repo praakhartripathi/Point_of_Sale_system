@@ -17,7 +17,7 @@ public class RefundMapper {
         dto.setAmount(refund.getAmount());
         dto.setPaymentType(refund.getPaymentType());
         dto.setCreatedAt(refund.getCreatedAt());
-        
+
         if (refund.getOrder() != null) {
             dto.setOrderId(refund.getOrder().getId());
         }

@@ -29,7 +29,7 @@ public class CustomerServiceImpl implements CustomerService {
                 throw new RuntimeException("Customer already exists with email: " + customerDto.getEmail());
             }
         }
-        
+
         Customer customer = customerMapper.toEntity(customerDto);
         Customer savedCustomer = customerRepository.save(customer);
         return customerMapper.toDto(savedCustomer);
@@ -40,7 +40,7 @@ public class CustomerServiceImpl implements CustomerService {
         Optional<Customer> customerOptional = customerRepository.findById(customerId);
         if (customerOptional.isPresent()) {
             Customer customer = customerOptional.get();
-            
+
             if (customerDto.getFirstName() != null) customer.setFirstName(customerDto.getFirstName());
             if (customerDto.getEmail() != null) customer.setEmail(customerDto.getEmail());
             if (customerDto.getPhone() != null) customer.setPhone(customerDto.getPhone());

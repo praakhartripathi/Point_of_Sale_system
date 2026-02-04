@@ -59,10 +59,10 @@ class AuthControllerTest {
         mockMvc.perform(post("/api/auth/signin")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(loginRequest)))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.token").value("jwt_token"))
-                .andExpect(jsonPath("$.message").value("Login successful"))
-                .andExpect(jsonPath("$.role").value("ROLE_USER"))
-                .andExpect(jsonPath("$.name").value("Test User"));
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.token").value("jwt_token"))
+            .andExpect(jsonPath("$.message").value("Login successful"))
+            .andExpect(jsonPath("$.role").value("ROLE_USER"))
+            .andExpect(jsonPath("$.name").value("Test User"));
     }
 }

@@ -17,10 +17,10 @@ public class OrderItem {
     private Long id;
 
     private String productName;
-    
+
     private int quantity;
-    
+
     private double price;
-    
+
     private Long productId;
 }

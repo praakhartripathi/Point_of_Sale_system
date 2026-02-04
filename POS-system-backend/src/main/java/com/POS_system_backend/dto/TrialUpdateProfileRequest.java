@@ -8,20 +8,20 @@ import lombok.Data;
 public class TrialUpdateProfileRequest {
     @NotBlank(message = "Business name is required")
     private String businessName;
-    
+
     @NotBlank(message = "Owner name is required")
     private String ownerName;
-    
+
     @NotBlank(message = "Mobile number is required")
     @Pattern(
-            regexp = "^[6-9]\\d{9}$",
-            message = "Invalid mobile number"
+        regexp = "^[6-9]\\d{9}$",
+        message = "Invalid mobile number"
     )
     private String mobile;
-    
+
     @NotBlank(message = "Email is required")
     private String email;
-    
+
     private String profileImage; // Base64 encoded string
 
     public String getBusinessName() {

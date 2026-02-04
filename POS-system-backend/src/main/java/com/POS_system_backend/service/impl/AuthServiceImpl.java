@@ -31,16 +31,16 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public Map<String, Object> login(LoginRequest request) {
         User user = userRepository.findByEmail(request.getEmail())
-                .orElseThrow(() -> new RuntimeException("User not found"));
+            .orElseThrow(() -> new RuntimeException("User not found"));
 
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
             throw new RuntimeException("Invalid password");
         }
 
         Authentication authentication = new UsernamePasswordAuthenticationToken(
-                user.getEmail(), 
-                null, 
-                Collections.singletonList(new SimpleGrantedAuthority(user.getRole().toString()))
+            user.getEmail(),
+            null,
+            Collections.singletonList(new SimpleGrantedAuthority(user.getRole().toString()))
         );
         String token = jwtProvider.generateToken(authentication);
 

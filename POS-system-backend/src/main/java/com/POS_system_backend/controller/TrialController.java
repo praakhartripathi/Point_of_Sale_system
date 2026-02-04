@@ -21,7 +21,7 @@ public class TrialController {
 
     @PostMapping("/signup")
     public ResponseEntity<AuthResponse> signupTrial(
-            @RequestBody TrialSignupRequest request) {
+        @RequestBody TrialSignupRequest request) {
 
         AuthResponse response = trialService.signupTrial(request);
         return ResponseEntity.ok(response);
@@ -29,7 +29,7 @@ public class TrialController {
 
     @PostMapping("/signin")
     public ResponseEntity<AuthResponse> signinTrial(
-            @RequestBody TrialSignInRequest request) {
+        @RequestBody TrialSignInRequest request) {
 
         AuthResponse response = trialService.signinTrial(request);
         return ResponseEntity.ok(response);
@@ -37,8 +37,8 @@ public class TrialController {
 
     @PutMapping("/change-password")
     public ResponseEntity<String> changePassword(
-            Authentication authentication,
-            @Valid @RequestBody TrialUpdatePasswordRequest request) {
+        Authentication authentication,
+        @Valid @RequestBody TrialUpdatePasswordRequest request) {
 
         if (authentication == null || authentication.getName() == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User not authenticated");
@@ -51,22 +51,22 @@ public class TrialController {
 
     @GetMapping("/profile")
     public ResponseEntity<TrialProfileResponse> getProfile(
-            Authentication authentication) {
-        
+        Authentication authentication) {
+
         if (authentication == null || authentication.getName() == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
 
         String email = authentication.getName();
         TrialProfileResponse profile =
-                trialService.getTrialProfile(email);
+            trialService.getTrialProfile(email);
         return ResponseEntity.ok(profile);
     }
 
     @PutMapping("/profile")
     public ResponseEntity<TrialProfileResponse> updateProfile(
-            Authentication authentication,
-            @RequestBody TrialUpdateProfileRequest request) {
+        Authentication authentication,
+        @RequestBody TrialUpdateProfileRequest request) {
 
         if (authentication == null || authentication.getName() == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();

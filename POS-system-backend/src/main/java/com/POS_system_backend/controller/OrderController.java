@@ -32,12 +32,12 @@ public class OrderController {
 
     @GetMapping("/branch/{branchId}")
     public ResponseEntity<List<OrderDto>> getOrdersByBranchId(
-            @PathVariable Long branchId,
-            @RequestParam(required = false) Long customerId,
-            @RequestParam(required = false) Long cashierId,
-            @RequestParam(required = false) OrderStatus orderStatus,
-            @RequestParam(required = false) PaymentStatus paymentStatus) {
-        
+        @PathVariable Long branchId,
+        @RequestParam(required = false) Long customerId,
+        @RequestParam(required = false) Long cashierId,
+        @RequestParam(required = false) OrderStatus orderStatus,
+        @RequestParam(required = false) PaymentStatus paymentStatus) {
+
         List<OrderDto> orders = orderService.getOrdersByBranchId(branchId, customerId, cashierId, orderStatus, paymentStatus);
         return new ResponseEntity<>(orders, HttpStatus.OK);
     }

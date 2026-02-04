@@ -9,6 +9,8 @@ import java.util.List;
 @Repository
 public interface RefundRepository extends JpaRepository<Refund, Long> {
     List<Refund> findByCashierId(Long cashierId);
+
     List<Refund> findByShiftReportId(Long shiftReportId);
+
     List<Refund> findByBranchId(Long branchId);
 }

@@ -27,20 +27,20 @@ public class JwtValidator extends OncePerRequestFilter {
         String path = request.getRequestURI();
         // Using contains to be more robust against context paths
         return path.contains("/api/trial/signup") ||
-               path.contains("/api/trial/signin") ||
-               path.contains("/api/auth/") ||
-               path.contains("/api/public/") ||
-               path.contains("/v3/api-docs") ||
-               path.contains("/swagger-ui") ||
-               path.equals("/error") ||
-               "OPTIONS".equalsIgnoreCase(request.getMethod());
+            path.contains("/api/trial/signin") ||
+            path.contains("/api/auth/") ||
+            path.contains("/api/public/") ||
+            path.contains("/v3/api-docs") ||
+            path.contains("/swagger-ui") ||
+            path.equals("/error") ||
+            "OPTIONS".equalsIgnoreCase(request.getMethod());
     }
 
     @Override
     protected void doFilterInternal(
-            HttpServletRequest request,
-            HttpServletResponse response,
-            FilterChain filterChain
+        HttpServletRequest request,
+        HttpServletResponse response,
+        FilterChain filterChain
     ) throws ServletException, IOException {
 
         String header = request.getHeader(JwtConstants.JWT_HEADER);
@@ -54,14 +54,14 @@ public class JwtValidator extends OncePerRequestFilter {
 
         try {
             SecretKey key = Keys.hmacShaKeyFor(
-                    JwtConstants.SECRET_KEY.getBytes(StandardCharsets.UTF_8)
+                JwtConstants.SECRET_KEY.getBytes(StandardCharsets.UTF_8)
             );
 
             Claims claims = Jwts.parserBuilder()
-                    .setSigningKey(key)
-                    .build()
-                    .parseClaimsJws(jwt)
-                    .getBody();
+                .setSigningKey(key)
+                .build()
+                .parseClaimsJws(jwt)
+                .getBody();
 
             String email = claims.getSubject();
             if (email == null) {
@@ -71,10 +71,10 @@ public class JwtValidator extends OncePerRequestFilter {
             String authorities = String.valueOf(claims.get("authorities"));
 
             List<GrantedAuthority> auths =
-                    AuthorityUtils.commaSeparatedStringToAuthorityList(authorities);
+                AuthorityUtils.commaSeparatedStringToAuthorityList(authorities);
 
             Authentication authentication =
-                    new UsernamePasswordAuthenticationToken(email, null, auths);
+                new UsernamePasswordAuthenticationToken(email, null, auths);
 
             SecurityContextHolder.getContext().setAuthentication(authentication);
 

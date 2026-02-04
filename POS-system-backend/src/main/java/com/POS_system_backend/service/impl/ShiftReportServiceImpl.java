@@ -40,9 +40,9 @@ public class ShiftReportServiceImpl implements ShiftReportService {
     @Override
     public ShiftReport startShift(Long cashierId, Long branchId) {
         User cashier = userRepository.findById(cashierId)
-                .orElseThrow(() -> new RuntimeException("Cashier not found"));
+            .orElseThrow(() -> new RuntimeException("Cashier not found"));
         Branch branch = branchRepository.findById(branchId)
-                .orElseThrow(() -> new RuntimeException("Branch not found"));
+            .orElseThrow(() -> new RuntimeException("Branch not found"));
 
         ShiftReport shiftReport = new ShiftReport();
         shiftReport.setCashier(cashier);
@@ -55,7 +55,7 @@ public class ShiftReportServiceImpl implements ShiftReportService {
     @Override
     public ShiftReport endShift(Long shiftReportId) {
         ShiftReport shiftReport = shiftReportRepository.findById(shiftReportId)
-                .orElseThrow(() -> new RuntimeException("Shift report not found"));
+            .orElseThrow(() -> new RuntimeException("Shift report not found"));
 
         if (shiftReport.getEndTime() != null) {
             throw new RuntimeException("Shift already ended");
@@ -65,9 +65,9 @@ public class ShiftReportServiceImpl implements ShiftReportService {
 
         // Calculate totals based on orders and refunds during the shift
         List<Order> orders = orderRepository.findOrdersByBranchIdAndDateRange(
-                shiftReport.getBranch().getId(),
-                shiftReport.getStartTime(),
-                shiftReport.getEndTime()
+            shiftReport.getBranch().getId(),
+            shiftReport.getStartTime(),
+            shiftReport.getEndTime()
         ).stream().filter(o -> o.getCashier().getId().equals(shiftReport.getCashier().getId())).collect(Collectors.toList());
 
         double totalSales = orders.stream().mapToDouble(Order::getTotalAmount).sum();
@@ -75,9 +75,9 @@ public class ShiftReportServiceImpl implements ShiftReportService {
 
         // Calculate refunds
         List<Refund> refunds = refundRepository.findByCashierId(shiftReport.getCashier().getId())
-                .stream()
-                .filter(r -> r.getCreatedAt().isAfter(shiftReport.getStartTime()) && r.getCreatedAt().isBefore(shiftReport.getEndTime()))
-                .collect(Collectors.toList());
+            .stream()
+            .filter(r -> r.getCreatedAt().isAfter(shiftReport.getStartTime()) && r.getCreatedAt().isBefore(shiftReport.getEndTime()))
+            .collect(Collectors.toList());
 
         double totalRefunds = refunds.stream().mapToDouble(Refund::getAmount).sum();
         shiftReport.setTotalRefunds(totalRefunds);
@@ -89,9 +89,9 @@ public class ShiftReportServiceImpl implements ShiftReportService {
 
         // Populate recent orders
         List<Order> recentOrders = orders.stream()
-                .sorted((o1, o2) -> o2.getCreatedAt().compareTo(o1.getCreatedAt()))
-                .limit(10)
-                .collect(Collectors.toList());
+            .sorted((o1, o2) -> o2.getCreatedAt().compareTo(o1.getCreatedAt()))
+            .limit(10)
+            .collect(Collectors.toList());
         shiftReport.setRecentOrders(recentOrders);
 
         // Top selling products
@@ -105,11 +105,11 @@ public class ShiftReportServiceImpl implements ShiftReportService {
         }
 
         List<Product> topSelling = productSalesCount.entrySet().stream()
-                .sorted((e1, e2) -> e2.getValue().compareTo(e1.getValue()))
-                .limit(5)
-                .map(entry -> productRepository.findById(entry.getKey()).orElse(null))
-                .filter(product -> product != null)
-                .collect(Collectors.toList());
+            .sorted((e1, e2) -> e2.getValue().compareTo(e1.getValue()))
+            .limit(5)
+            .map(entry -> productRepository.findById(entry.getKey()).orElse(null))
+            .filter(product -> product != null)
+            .collect(Collectors.toList());
         shiftReport.setTopSellingProducts(topSelling);
 
         return shiftReportRepository.save(shiftReport);
@@ -118,7 +118,7 @@ public class ShiftReportServiceImpl implements ShiftReportService {
     @Override
     public ShiftReport getShiftReportById(Long shiftReportId) {
         return shiftReportRepository.findById(shiftReportId)
-                .orElseThrow(() -> new RuntimeException("Shift report not found"));
+            .orElseThrow(() -> new RuntimeException("Shift report not found"));
     }
 
     @Override
@@ -139,33 +139,33 @@ public class ShiftReportServiceImpl implements ShiftReportService {
     @Override
     public ShiftReport getCurrentShiftProgress(Long cashierId) {
         ShiftReport shiftReport = shiftReportRepository.findCurrentShiftByCashierId(cashierId)
-                .orElseThrow(() -> new RuntimeException("No active shift found for this cashier"));
+            .orElseThrow(() -> new RuntimeException("No active shift found for this cashier"));
 
         // Calculate current progress (sales, refunds, etc.) without ending the shift
         LocalDateTime endTime = LocalDateTime.now();
 
         List<Order> orders = orderRepository.findOrdersByBranchIdAndDateRange(
-                shiftReport.getBranch().getId(),
-                shiftReport.getStartTime(),
-                endTime
+            shiftReport.getBranch().getId(),
+            shiftReport.getStartTime(),
+            endTime
         ).stream().filter(o -> o.getCashier().getId().equals(shiftReport.getCashier().getId())).collect(Collectors.toList());
 
         double totalSales = orders.stream().mapToDouble(Order::getTotalAmount).sum();
         shiftReport.setTotalSales(totalSales);
 
         List<Refund> refunds = refundRepository.findByCashierId(shiftReport.getCashier().getId())
-                .stream()
-                .filter(r -> r.getCreatedAt().isAfter(shiftReport.getStartTime()) && r.getCreatedAt().isBefore(endTime))
-                .collect(Collectors.toList());
+            .stream()
+            .filter(r -> r.getCreatedAt().isAfter(shiftReport.getStartTime()) && r.getCreatedAt().isBefore(endTime))
+            .collect(Collectors.toList());
 
         double totalRefunds = refunds.stream().mapToDouble(Refund::getAmount).sum();
         shiftReport.setTotalRefunds(totalRefunds);
         shiftReport.setRefunds(refunds);
 
         List<Order> recentOrders = orders.stream()
-                .sorted((o1, o2) -> o2.getCreatedAt().compareTo(o1.getCreatedAt()))
-                .limit(10)
-                .collect(Collectors.toList());
+            .sorted((o1, o2) -> o2.getCreatedAt().compareTo(o1.getCreatedAt()))
+            .limit(10)
+            .collect(Collectors.toList());
         shiftReport.setRecentOrders(recentOrders);
 
         Map<Long, Integer> productSalesCount = new HashMap<>();
@@ -178,11 +178,11 @@ public class ShiftReportServiceImpl implements ShiftReportService {
         }
 
         List<Product> topSelling = productSalesCount.entrySet().stream()
-                .sorted((e1, e2) -> e2.getValue().compareTo(e1.getValue()))
-                .limit(5)
-                .map(entry -> productRepository.findById(entry.getKey()).orElse(null))
-                .filter(product -> product != null)
-                .collect(Collectors.toList());
+            .sorted((e1, e2) -> e2.getValue().compareTo(e1.getValue()))
+            .limit(5)
+            .map(entry -> productRepository.findById(entry.getKey()).orElse(null))
+            .filter(product -> product != null)
+            .collect(Collectors.toList());
         shiftReport.setTopSellingProducts(topSelling);
 
         return shiftReport;

@@ -24,6 +24,7 @@ The application is configured via environment variables (see `docker-compose.yml
 ## Running Locally (Without Docker)
 
 Prerequisites:
+
 - Java JDK 17
 - Maven
 - Running MySQL instance
@@ -38,7 +39,7 @@ mvn spring-boot:run
 
 Once the application is running, you can access the Swagger UI documentation at:
 
-```
+```bash
 http://localhost:5001/swagger-ui/index.html
 ```
 
@@ -50,6 +51,7 @@ http://localhost:5001/swagger-ui/index.html
 - **Change Password**: `PUT /api/trial/change-password` (Requires Bearer Token)
 
 ### Change Password Request Body
+
 ```json
 {
   "currentPassword": "your_current_password",

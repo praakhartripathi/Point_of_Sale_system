@@ -77,27 +77,27 @@ public class SecurityConfig {
                 }
             })
 
-        .addFilterBefore(new JwtValidator(), BasicAuthenticationFilter.class)
+            .addFilterBefore(new JwtValidator(), BasicAuthenticationFilter.class)
 
-        .exceptionHandling(new Customizer<ExceptionHandlingConfigurer<HttpSecurity>>() {
-            @Override
-            public void customize(ExceptionHandlingConfigurer<HttpSecurity> e) {
-                e.authenticationEntryPoint(
-                    new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)
-                );
-            }
-        });
+            .exceptionHandling(new Customizer<ExceptionHandlingConfigurer<HttpSecurity>>() {
+                @Override
+                public void customize(ExceptionHandlingConfigurer<HttpSecurity> e) {
+                    e.authenticationEntryPoint(
+                        new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)
+                    );
+                }
+            });
 
         return http.build();
     }
 
 
-   private CorsConfigurationSource corsConfigurationSource() {
+    private CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration cfg = new CorsConfiguration();
 
         cfg.setAllowedOrigins(List.of("http://localhost:3000", "http://localhost:5173", "http://localhost:5174", "http://localhost:5001"));
         cfg.setAllowedMethods(List.of(
-                "GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"
+            "GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"
         ));
 
         cfg.setAllowedHeaders(List.of("*"));
@@ -108,7 +108,7 @@ public class SecurityConfig {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", cfg);
         return source;
-}
+    }
 
 
     @Bean

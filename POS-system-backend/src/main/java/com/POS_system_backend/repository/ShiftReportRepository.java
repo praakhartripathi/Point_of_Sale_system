@@ -13,6 +13,7 @@ import java.util.Optional;
 @Repository
 public interface ShiftReportRepository extends JpaRepository<ShiftReport, Long> {
     List<ShiftReport> findByBranchId(Long branchId);
+
     List<ShiftReport> findByCashierId(Long cashierId);
 
     @Query("SELECT s FROM ShiftReport s WHERE s.cashier.id = :cashierId AND s.endTime IS NULL")

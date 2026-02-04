@@ -124,7 +124,7 @@ public class EmployeeServiceImpl implements EmployeeService {
             if (employeeDto.getPassword() != null && !employeeDto.getPassword().isEmpty()) {
                 user.setPassword(passwordEncoder.encode(employeeDto.getPassword()));
             }
-            
+
             User updatedUser = userRepository.save(user);
             return userMapper.toDto(updatedUser);
         } else {

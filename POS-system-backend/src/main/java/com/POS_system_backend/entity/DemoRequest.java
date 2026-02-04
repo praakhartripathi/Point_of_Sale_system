@@ -2,6 +2,7 @@ package com.POS_system_backend.entity;
 
 import com.POS_system_backend.entity.enums.DemoStatus;
 import jakarta.persistence.*;
+
 import java.time.LocalDateTime;
 import java.util.Objects;
 
@@ -128,15 +129,15 @@ public class DemoRequest {
     @Override
     public String toString() {
         return "DemoRequest{" +
-                "id=" + id +
-                ", fullName='" + fullName + '\'' +
-                ", email='" + email + '\'' +
-                ", companyName='" + companyName + '\'' +
-                ", phone='" + phone + '\'' +
-                ", status=" + status +
-                ", notes='" + notes + '\'' +
-                ", createdAt=" + createdAt +
-                ", updatedAt=" + updatedAt +
-                '}';
+            "id=" + id +
+            ", fullName='" + fullName + '\'' +
+            ", email='" + email + '\'' +
+            ", companyName='" + companyName + '\'' +
+            ", phone='" + phone + '\'' +
+            ", status=" + status +
+            ", notes='" + notes + '\'' +
+            ", createdAt=" + createdAt +
+            ", updatedAt=" + updatedAt +
+            '}';
     }
 }

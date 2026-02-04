@@ -22,7 +22,7 @@ public class OrderMapper {
         dto.setOrderStatus(order.getOrderStatus());
         dto.setPaymentStatus(order.getPaymentStatus());
         dto.setCreatedAt(order.getCreatedAt());
-        
+
         if (order.getCustomer() != null) {
             dto.setCustomerId(order.getCustomer().getId());
         }
@@ -35,7 +35,7 @@ public class OrderMapper {
         if (order.getCashier() != null) {
             dto.setCashierId(order.getCashier().getId());
         }
-        
+
         List<OrderItemDto> itemDtos = new ArrayList<>();
         if (order.getItems() != null) {
             for (OrderItem item : order.getItems()) {
@@ -49,7 +49,7 @@ public class OrderMapper {
             }
         }
         dto.setItems(itemDtos);
-        
+
         return dto;
     }
 
@@ -62,7 +62,7 @@ public class OrderMapper {
         order.setTotalAmount(dto.getTotalAmount());
         order.setOrderStatus(dto.getOrderStatus());
         order.setPaymentStatus(dto.getPaymentStatus());
-        
+
         List<OrderItem> items = new ArrayList<>();
         if (dto.getItems() != null) {
             for (OrderItemDto itemDto : dto.getItems()) {
@@ -76,7 +76,7 @@ public class OrderMapper {
             }
         }
         order.setItems(items);
-        
+
         return order;
     }
 }

@@ -127,7 +127,7 @@ public class OrderServiceImpl implements OrderService {
     public List<OrderDto> getTodayOrdersByBranchId(Long branchId) {
         LocalDateTime startOfDay = LocalDateTime.of(LocalDate.now(), LocalTime.MIN);
         LocalDateTime endOfDay = LocalDateTime.of(LocalDate.now(), LocalTime.MAX);
-        
+
         List<Order> orders = orderRepository.findOrdersByBranchIdAndDateRange(branchId, startOfDay, endOfDay);
         List<OrderDto> orderDtos = new ArrayList<>();
         for (Order order : orders) {

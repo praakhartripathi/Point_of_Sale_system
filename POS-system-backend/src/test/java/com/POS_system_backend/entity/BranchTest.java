@@ -1,8 +1,10 @@
 package com.POS_system_backend.entity;
 
 import org.junit.jupiter.api.Test;
+
 import java.time.LocalTime;
 import java.util.Arrays;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class BranchTest {

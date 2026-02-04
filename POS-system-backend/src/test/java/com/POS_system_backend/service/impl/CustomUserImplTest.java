@@ -45,8 +45,8 @@ class CustomUserImplTest {
         assertEquals(email, userDetails.getUsername());
         assertEquals("password", userDetails.getPassword());
         assertTrue(userDetails.getAuthorities().stream()
-                .anyMatch(a -> a.getAuthority().equals("ROLE_USER")));
-        
+            .anyMatch(a -> a.getAuthority().equals("ROLE_USER")));
+
         verify(userRepository, times(1)).findByEmail(email);
     }
 

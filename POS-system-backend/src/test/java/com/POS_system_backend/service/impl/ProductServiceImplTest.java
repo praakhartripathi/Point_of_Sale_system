@@ -109,7 +109,7 @@ class ProductServiceImplTest {
         Long storeId = 1L;
         List<Product> products = new ArrayList<>();
         products.add(new Product());
-        
+
         when(productRepository.findByStoreId(storeId)).thenReturn(products);
         when(productMapper.toDto(any(Product.class))).thenReturn(new ProductDto());
 

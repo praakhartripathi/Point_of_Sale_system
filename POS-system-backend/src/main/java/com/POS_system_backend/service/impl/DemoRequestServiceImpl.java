@@ -28,11 +28,11 @@ public class DemoRequestServiceImpl implements DemoRequestService {
     @Override
     public void approveDemoRequest(Long id, String notes) {
         DemoRequest request = demoRequestRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Demo request not found"));
+            .orElseThrow(() -> new RuntimeException("Demo request not found"));
         request.setStatus(DemoStatus.APPROVED);
         request.setNotes(notes);
         demoRequestRepository.save(request);
-        
+
         // Option 1: Manual Trial Creation (Just mark as approved)
         // In a real scenario, you might trigger an email here or create a trial account.
     }
@@ -40,7 +40,7 @@ public class DemoRequestServiceImpl implements DemoRequestService {
     @Override
     public void rejectDemoRequest(Long id, String notes) {
         DemoRequest request = demoRequestRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Demo request not found"));
+            .orElseThrow(() -> new RuntimeException("Demo request not found"));
         request.setStatus(DemoStatus.REJECTED);
         request.setNotes(notes);
         demoRequestRepository.save(request);

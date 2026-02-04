@@ -30,14 +30,14 @@ public class StoreServiceImpl implements StoreService {
         store.setStatus(req.getStatus());
         store.setContact(req.getContact());
         store.setStoreAdmin(user);
-        
+
         return storeRepository.save(store);
     }
 
     @Override
     public Store updateStore(Long storeId, StoreRequest req) throws Exception {
         Store store = findStoreById(storeId);
-        
+
         if (req.getBrand() != null) store.setBrand(req.getBrand());
         if (req.getDescription() != null) store.setDescription(req.getDescription());
         if (req.getStoreType() != null) store.setStoreType(req.getStoreType());
@@ -81,7 +81,7 @@ public class StoreServiceImpl implements StoreService {
     public void addEmployeeToStore(Long storeId, Long employeeId) throws Exception {
         Store store = findStoreById(storeId);
         User employee = userService.findUserById(employeeId);
-        
+
         if (!store.getEmployees().contains(employee)) {
             store.getEmployees().add(employee);
             storeRepository.save(store);
@@ -103,7 +103,7 @@ public class StoreServiceImpl implements StoreService {
     @Override
     public Store createBranch(Long parentStoreId, StoreRequest req, User user) throws Exception {
         Store parentStore = findStoreById(parentStoreId);
-        
+
         Store branch = new Store();
         branch.setBrand(req.getBrand());
         branch.setDescription(req.getDescription());
@@ -112,7 +112,7 @@ public class StoreServiceImpl implements StoreService {
         branch.setContact(req.getContact());
         branch.setStoreAdmin(user);
         branch.setParentStore(parentStore);
-        
+
         return storeRepository.save(branch);
     }
 }

@@ -8,17 +8,17 @@ import org.springframework.beans.factory.annotation.Value;
 @SpringBootApplication
 public class PosSystemBackendApplication {
 
-	@Value("${spring.security.oauth2.client.registration.google.client-id}")
-	private String clientId;
+    @Value("${spring.security.oauth2.client.registration.google.client-id}")
+    private String clientId;
 
-	public static void main(String[] args) {
-		SpringApplication.run(PosSystemBackendApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(PosSystemBackendApplication.class, args);
+    }
 
-	@PostConstruct
-	public void init() {
-		System.out.println("--------------------------------------------------");
-		System.out.println("Loaded Google Client ID: " + clientId);
-		System.out.println("--------------------------------------------------");
-	}
+    @PostConstruct
+    public void init() {
+        System.out.println("--------------------------------------------------");
+        System.out.println("Loaded Google Client ID: " + clientId);
+        System.out.println("--------------------------------------------------");
+    }
 }

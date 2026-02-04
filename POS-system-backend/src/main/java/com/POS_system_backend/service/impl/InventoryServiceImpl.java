@@ -35,7 +35,7 @@ public class InventoryServiceImpl implements InventoryService {
     public InventoryDto addInventory(InventoryDto inventoryDto) {
         // Check if inventory already exists for this branch and product
         Optional<Inventory> existingInventory = inventoryRepository.findByBranchIdAndProductId(
-                inventoryDto.getBranchId(), inventoryDto.getProductId());
+            inventoryDto.getBranchId(), inventoryDto.getProductId());
 
         if (existingInventory.isPresent()) {
             throw new RuntimeException("Inventory already exists for this product in the branch. Use update instead.");
@@ -70,12 +70,12 @@ public class InventoryServiceImpl implements InventoryService {
         Optional<Inventory> inventoryOptional = inventoryRepository.findById(inventoryId);
         if (inventoryOptional.isPresent()) {
             Inventory inventory = inventoryOptional.get();
-            
+
             if (inventoryDto.getQuantity() != null) {
                 inventory.setQuantity(inventoryDto.getQuantity());
             }
 
-            // We typically don't update branch or product for an existing inventory record, 
+            // We typically don't update branch or product for an existing inventory record,
             // but if needed, logic can be added here.
 
             Inventory updatedInventory = inventoryRepository.save(inventory);

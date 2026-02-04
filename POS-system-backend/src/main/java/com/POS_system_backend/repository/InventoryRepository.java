@@ -12,6 +12,7 @@ import java.util.Optional;
 @Repository
 public interface InventoryRepository extends JpaRepository<Inventory, Long> {
     List<Inventory> findByBranchId(Long branchId);
+
     Optional<Inventory> findByBranchIdAndProductId(Long branchId, Long productId);
 
     @Query("SELECT i FROM Inventory i WHERE i.branch.id = :branchId AND LOWER(i.product.name) LIKE LOWER(CONCAT('%', :productName, '%'))")
