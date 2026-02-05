@@ -61,8 +61,9 @@ class UserTest {
         LocalDateTime now = LocalDateTime.now();
         Branch branch = null;
         Store store = null;
+        String razorpayCustomerId = "cust_123";
 
-        User user = new User(id, fullName, email, password, phone, profileImage, role, status, store, branch, now, now, now);
+        User user = new User(id, fullName, email, password, phone, profileImage, role, status, store, branch, razorpayCustomerId, now, now, now);
 
         assertEquals(id, user.getId());
         assertEquals(fullName, user.getFullName());
@@ -72,6 +73,7 @@ class UserTest {
         assertEquals(profileImage, user.getProfileImage());
         assertEquals(role, user.getRole());
         assertEquals(status, user.getStatus());
+        assertEquals(razorpayCustomerId, user.getRazorpayCustomerId());
         assertEquals(now, user.getCreatedAt());
         assertEquals(now, user.getUpdatedAt());
         assertEquals(now, user.getLastLoginAt());
@@ -85,9 +87,9 @@ class UserTest {
 
     @Test
     void testEqualsAndHashCode() {
-        User user1 = new User(1L, "John", "john@test.com", "pass", "123", "img", UserRole.ROLE_USER, UserStatus.ACTIVE, null, null, null, null, null);
-        User user2 = new User(1L, "John", "john@test.com", "pass", "123", "img", UserRole.ROLE_USER, UserStatus.ACTIVE, null, null, null, null, null);
-        User user3 = new User(2L, "Jane", "jane@test.com", "pass", "456", "img", UserRole.ROLE_ADMIN, UserStatus.ACTIVE, null, null, null, null, null);
+        User user1 = new User(1L, "John", "john@test.com", "pass", "123", "img", UserRole.ROLE_USER, UserStatus.ACTIVE, null, null, "cust_123", null, null, null);
+        User user2 = new User(1L, "John", "john@test.com", "pass", "123", "img", UserRole.ROLE_USER, UserStatus.ACTIVE, null, null, "cust_123", null, null, null);
+        User user3 = new User(2L, "Jane", "jane@test.com", "pass", "456", "img", UserRole.ROLE_ADMIN, UserStatus.ACTIVE, null, null, "cust_456", null, null, null);
 
         assertEquals(user1, user2);
         assertNotEquals(user1, user3);

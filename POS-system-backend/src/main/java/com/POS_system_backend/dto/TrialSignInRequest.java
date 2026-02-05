@@ -1,7 +1,12 @@
 package com.POS_system_backend.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
 public class TrialSignInRequest {
+    @Schema(description = "Email address", example = "john.doe@example.com")
     private String email;
+
+    @Schema(description = "Password", example = "password123")
     private String password;
 
     public TrialSignInRequest() {

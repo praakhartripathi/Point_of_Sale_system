@@ -50,6 +50,8 @@ public class User {
     @ManyToOne
     @JoinColumn(name = "branch_id")
     private Branch branch;
+    
+    private String razorpayCustomerId;
 
     private LocalDateTime createdAt;
 

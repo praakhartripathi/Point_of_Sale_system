@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import StoresView from "../view/StoresView";
 import BranchesView from "../view/BranchesView";
@@ -14,6 +14,26 @@ const AdminDashboard = () => {
   const [activeItem, setActiveItem] = useState("Dashboard");
   const [currentPlan, setCurrentPlan] = useState("Pro");
   const [settingsTab, setSettingsTab] = useState("General");
+  const [subscription, setSubscription] = useState(null);
+
+  // 5️⃣ Fetch User Subscription Status
+  useEffect(() => {
+    const fetchSubscription = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        const res = await fetch("/api/subscriptions/me", {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        if (res.ok) {
+          const data = await res.json();
+          setSubscription(data);
+        }
+      } catch (err) {
+        console.error("Failed to fetch subscription", err);
+      }
+    };
+    fetchSubscription();
+  }, []);
 
   const handleLogout = () => {
     localStorage.removeItem("token");
@@ -211,6 +231,14 @@ const AdminDashboard = () => {
               <TransactionsView />
             </div>
           ) : activeItem === "Reports" ? (
+            // 6️⃣ Feature Gating in UI
+            subscription?.status !== "ACTIVE" ? (
+              <div className="bg-white p-12 rounded-xl shadow-sm border border-gray-100 text-center">
+                <h2 className="text-xl font-bold text-gray-900 mb-2">Upgrade Required</h2>
+                <p className="text-gray-500 mb-6">Reports are only available for active subscribers.</p>
+                <button onClick={() => setActiveItem("Upgrade Plan")} className="px-6 py-2 bg-green-600 text-white rounded-lg font-medium">View Plans</button>
+              </div>
+            ) : (
             <div className="space-y-6">
               <div className="flex justify-between items-center">
                 <h2 className="text-2xl font-bold text-gray-900">Reports & Analytics</h2>
@@ -280,6 +308,7 @@ const AdminDashboard = () => {
                 </div>
               </div>
             </div>
+            )
           ) : activeItem === "Upgrade Plan" ? (
             <div className="space-y-8">
               <div className="bg-green-50 border border-green-200 rounded-xl p-6 flex flex-col md:flex-row items-center justify-between gap-4 shadow-sm">

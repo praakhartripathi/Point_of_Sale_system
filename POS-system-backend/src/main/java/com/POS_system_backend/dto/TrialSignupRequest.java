@@ -1,10 +1,21 @@
 package com.POS_system_backend.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
 public class TrialSignupRequest {
+    @Schema(description = "Name of the business", example = "My Awesome Store")
     private String businessName;
+
+    @Schema(description = "Name of the business owner", example = "John Doe")
     private String ownerName;
+
+    @Schema(description = "Email address of the owner", example = "john.doe@example.com")
     private String email;
+
+    @Schema(description = "Mobile number of the owner", example = "9876543210")
     private String mobile;
+
+    @Schema(description = "Password for the account", example = "password123")
     private String password;
 
     public TrialSignupRequest() {

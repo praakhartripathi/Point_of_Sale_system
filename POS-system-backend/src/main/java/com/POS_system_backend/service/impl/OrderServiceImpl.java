@@ -10,6 +10,7 @@ import com.POS_system_backend.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -40,8 +41,33 @@ public class OrderServiceImpl implements OrderService {
     @Autowired
     private OrderMapper orderMapper;
 
+    @Autowired
+    private SubscriptionRepository subscriptionRepository;
+
     @Override
     public OrderDto createOrder(OrderDto orderDto) {
+        // Check subscription status
+        if (orderDto.getStoreId() != null) {
+            Optional<Store> storeOptional = storeRepository.findById(orderDto.getStoreId());
+            if (storeOptional.isPresent()) {
+                Store store = storeOptional.get();
+                User admin = store.getStoreAdmin();
+                if (admin != null) {
+                    Optional<Subscription> subOpt = subscriptionRepository.findByUserId(admin.getId());
+                    if (subOpt.isPresent()) {
+                        Subscription subscription = subOpt.get();
+                        if (!subscription.isActive()) {
+                            throw new AccessDeniedException("Subscription required");
+                        }
+                    } else {
+                        // Handle case where no subscription exists (maybe allow trial or block)
+                        // For now, assuming subscription is required if not in trial
+                        // You might need more complex logic here depending on your business rules
+                    }
+                }
+            }
+        }
+
         Order order = orderMapper.toEntity(orderDto);
 
         if (orderDto.getCustomerId() != null) {

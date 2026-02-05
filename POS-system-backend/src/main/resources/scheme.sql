@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS users (
     created_at DATETIME,
     updated_at DATETIME,
     last_login_at DATETIME,
-    stripe_customer_id VARCHAR(255)
+    razorpay_customer_id VARCHAR(255)
 );
 
 -- Stores Table
@@ -171,8 +171,8 @@ CREATE TABLE IF NOT EXISTS subscriptions (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     user_id BIGINT NOT NULL,
     plan_type ENUM('STARTER', 'BUSINESS', 'ENTERPRISE'),
-    stripe_subscription_id VARCHAR(255),
-    status ENUM('ACTIVE', 'CANCELED', 'PAST_DUE'),
+    razorpay_subscription_id VARCHAR(255),
+    status ENUM('CREATED', 'ACTIVE', 'HALTED', 'CANCELLED'),
     start_date DATETIME,
     end_date DATETIME,
     created_at DATETIME,
@@ -186,7 +186,7 @@ CREATE TABLE IF NOT EXISTS payments (
     user_id BIGINT NOT NULL,
     amount DOUBLE,
     currency VARCHAR(10),
-    stripe_payment_intent_id VARCHAR(255),
+    razorpay_payment_id VARCHAR(255),
     status VARCHAR(50),
     created_at DATETIME,
     FOREIGN KEY (user_id) REFERENCES users(id)
@@ -232,9 +232,12 @@ CREATE TABLE IF NOT EXISTS trial_accounts (
     mobile VARCHAR(255),
     password VARCHAR(255),
     plan VARCHAR(50) DEFAULT 'TRIAL',
+    profile_image LONGTEXT,
     start_date DATETIME,
     end_date DATETIME,
-    is_active BOOLEAN DEFAULT TRUE,
+    active BOOLEAN DEFAULT TRUE,
+    max_branches INT DEFAULT 1,
+    max_users INT DEFAULT 1,
     created_at DATETIME,
     updated_at DATETIME
 );

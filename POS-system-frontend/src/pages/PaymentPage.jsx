@@ -1,12 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
+const loadRazorpayScript = () => {
+  return new Promise((resolve) => {
+    const script = document.createElement('script');
+    script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+    script.onload = () => resolve(true);
+    script.onerror = () => resolve(false);
+    document.body.appendChild(script);
+  });
+};
+
 const PaymentPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { plan, details } = location.state || {};
   const [loading, setLoading] = useState(false);
-  const [showSuccess, setShowSuccess] = useState(false);
 
   useEffect(() => {
     if (!plan || !details) {
@@ -14,45 +23,64 @@ const PaymentPage = () => {
     }
   }, [plan, details, navigate]);
 
-  const handlePayment = (e) => {
+  const handlePayment = async (e) => {
     e.preventDefault();
     setLoading(true);
-    
-    // Simulate API payment processing
-    setTimeout(() => {
+
+    const scriptLoaded = await loadRazorpayScript();
+    if (!scriptLoaded) {
+      alert('Razorpay SDK failed to load. Are you online?');
       setLoading(false);
-      setShowSuccess(true);
-      
-      // Redirect to dashboard after success
-      setTimeout(() => {
-        navigate('/dashboard');
-      }, 3000);
-    }, 2000);
+      return;
+    }
+
+    try {
+        const token = localStorage.getItem("token");
+        // Call Backend to Create Subscription
+        // POST /api/subscriptions/create?plan=BUSINESS
+        const planName = plan.name.toUpperCase();
+        
+        const response = await fetch(`/api/subscriptions/create?plan=${planName}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to create subscription');
+        }
+
+        const data = await response.json();
+
+        // Open Razorpay Checkout
+        const options = {
+            key: "rzp_test_xxxxxxxx", // Replace with your actual public key
+            subscription_id: data.subscriptionId,
+            name: "POS Pro",
+            description: `${plan.name} Plan Subscription`,
+            handler: function (response) {
+                console.log("Payment success", response);
+                navigate('/payment-success');
+            },
+            theme: {
+                color: '#3399cc'
+            }
+        };
+
+        const rzp = new window.Razorpay(options);
+        rzp.open();
+        setLoading(false);
+
+    } catch (error) {
+        console.error('Subscription failed:', error);
+        alert('Failed to initiate subscription. Please try again.');
+        setLoading(false);
+    }
   };
 
   if (!plan || !details) return null;
-
-  if (showSuccess) {
-    return (
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center p-4">
-        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8 max-w-md w-full text-center border border-gray-100 dark:border-gray-700">
-          <div className="w-20 h-20 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center mx-auto mb-6">
-            <svg className="w-10 h-10 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
-            </svg>
-          </div>
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">Payment Successful!</h2>
-          <p className="text-gray-500 dark:text-gray-400 mb-6">
-            Your subscription to the <span className="font-bold text-indigo-600 dark:text-indigo-400">{plan.name}</span> plan is active.
-          </p>
-          <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-1.5 mb-2 overflow-hidden">
-            <div className="bg-green-500 h-1.5 rounded-full animate-[width_3s_ease-in-out_forwards]" style={{ width: '0%' }}></div>
-          </div>
-          <p className="text-xs text-gray-400">Redirecting to dashboard...</p>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-12 px-4 transition-colors duration-200">
@@ -84,34 +112,17 @@ const PaymentPage = () => {
         <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700 p-6">
           <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-6">Payment Details</h2>
           <form onSubmit={handlePayment} className="space-y-5">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">Card Number</label>
-              <input required type="text" placeholder="0000 0000 0000 0000" className="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900 text-gray-900 dark:text-white focus:ring-2 focus:ring-indigo-500 outline-none transition-all" />
-            </div>
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">Expiry Date</label>
-                <input required type="text" placeholder="MM/YY" className="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900 text-gray-900 dark:text-white focus:ring-2 focus:ring-indigo-500 outline-none transition-all" />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">CVV</label>
-                <input required type="password" placeholder="123" maxLength="3" className="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900 text-gray-900 dark:text-white focus:ring-2 focus:ring-indigo-500 outline-none transition-all" />
-              </div>
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">Cardholder Name</label>
-              <input required type="text" placeholder="John Doe" className="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900 text-gray-900 dark:text-white focus:ring-2 focus:ring-indigo-500 outline-none transition-all" />
-            </div>
 
-            <button 
-              type="submit" 
+
+            <button
+              type="submit"
               disabled={loading}
               className="w-full mt-6 bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3.5 rounded-xl shadow-lg shadow-indigo-200 dark:shadow-none transition-all disabled:opacity-70 flex items-center justify-center gap-2"
             >
               {loading ? (
                 <>Processing...</>
               ) : (
-                <>Pay {plan.price}</>
+                <>Subscribe {plan.price}</>
               )}
             </button>
           </form>
