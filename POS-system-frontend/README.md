@@ -1,66 +1,65 @@
-# POS Pro - Frontend
+# POS Pro - Point of Sale System
 
-A modern, responsive Point of Sale (POS) system frontend built with React and Tailwind CSS. This application provides a comprehensive interface for managing retail operations, including inventory, sales, employees, and reporting.
+A comprehensive, modern Point of Sale (POS) frontend application built with React and Tailwind CSS. This system is designed to streamline retail operations, offering role-based access control, inventory management, and a dedicated cashier terminal.
 
 ## Features
 
-### 📦 Inventory Management
-- Real-time stock tracking with status indicators (In Stock, Low Stock, Out of Stock)
-- Product categorization and search
-- CSV import functionality for bulk updates
-- Add and edit product details seamlessly
+###  Authentication & Security
+- **Role-Based Access Control (RBAC)**: Secure dashboards tailored for Super Admins, Admins, Store Managers, Branch Managers, Cashiers, and Users.
+- **OAuth2 Integration**: Support for Google Sign-In authentication.
+- **Trial System**: Self-service trial account creation and management.
 
-### 🛍️ Order & Sales Management
-- Comprehensive order history view
-- Support for multiple payment modes (UPI, Card, Cash)
-- Digital receipt generation and printing
-- Transaction status tracking
+### 🛒 Point of Sale (POS) Terminal
+- **Cashier Dashboard**: A keyboard-friendly interface optimized for speed.
+- **Cart Operations**: Add items, adjust quantities, and remove products.
+- **Discount Management**: Apply fixed or percentage-based discounts.
+- **Product Lookup**: Search by name, SKU, or category.
+- **Shift Management**: Track shift summaries and sales data.
 
-### 🔄 Refunds & Returns
-- Dedicated interface for managing refund requests
-- Track refund reasons and processing status
-- Link refunds to specific orders and customers
+### 📦 Inventory & Product Management
+- **CRUD Operations**: Add, edit, delete, and view products.
+- **Stock Control**: Monitor stock levels and manage SKUs.
+- **Categories**: Organize inventory by product categories.
 
-### 👥 Employee Management
-- Manage staff profiles and contact details
-- Role-based designations (Manager, Cashier, Staff, Admin)
-- Track active status and join dates
+### 👥 User & Customer Management
+- **Employee Management**: Onboard staff and assign roles.
+- **Customer Profiles**: Manage customer details and loyalty tiers (Bronze, Silver, Gold, Platinum).
 
-### 📊 Shift Reports
-- Detailed shift summaries for cashiers
-- Sales analytics and payment method breakdowns
-- Top-selling items reporting
-- Print-friendly layout for physical records
-
-### 🎨 User Interface
-- Clean, modern design
-- Built-in Dark Mode support
-- Responsive layout for various screen sizes
+### 📊 Business Tools
+- **Analytics**: Visual insights into sales and performance.
+- **Demo Requests**: Integrated flow for prospective clients to request demos.
 
 ## Tech Stack
 
-- **Frontend Framework**: React
+- **Frontend Framework**: React (Vite)
 - **Styling**: Tailwind CSS
-- **Build Tool**: Vite
-- **Icons**: Custom SVG implementation
+- **Routing**: React Router DOM
+- **State Management**: React Hooks
+- **Icons**: Lucide React
 
 ## Getting Started
 
 ### Prerequisites
-- Node.js (v14 or higher recommended)
+- Node.js (v14 or higher)
 - npm or yarn
 
-### Running Locally
+### Installation
 
-1. Clone the repository
+1. Clone the repository:
+   ```bash
+   git clone <repository-url>
+   ```
+
 2. Navigate to the project directory:
    ```bash
    cd POS-system-frontend
    ```
+
 3. Install dependencies:
    ```bash
    npm install
    ```
+
 4. Start the development server:
    ```bash
    npm run dev

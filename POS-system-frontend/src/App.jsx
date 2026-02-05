@@ -21,7 +21,7 @@ import TrialSignup from './pages/TrialSignup'
 import TrialSignIn from './pages/TrialSignin'
 import TrialDashboard from './pages/TrialDashboard'
 import OAuth2RedirectHandler from './pages/OAuth2RedirectHandler'
-import PaymentPage from './pages/PaymentPage'
+ import PaymentPage from './pages/PaymentPage'
 
 const Layout = ({ children, theme, setTheme }) => {
   const location = useLocation();
@@ -29,7 +29,7 @@ const Layout = ({ children, theme, setTheme }) => {
   const isDashboard = location.pathname.includes('/dashboard');
 
   return (
-    <div className="min-h-screen w-full bg-background text-foreground">
+    <div className="min-h-screen w-full bg-candi-bg text-candi-text">
       {!isDashboard && <Navbar theme={theme} setTheme={setTheme} />}
       {children}
     </div>

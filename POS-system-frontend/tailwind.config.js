@@ -1,4 +1,5 @@
 import animate from "tailwindcss-animate"
+import { theme as candiTheme, plugin as candiPlugin } from "@wtasnorg/candi"
 
 /** @type {import('tailwindcss').Config} */
 export default {
@@ -14,6 +15,7 @@ export default {
         sm: 'calc(var(--radius) - 4px)'
       },
       colors: {
+        ...candiTheme.colors,
         background: 'hsl(var(--background))',
         foreground: 'hsl(var(--foreground))',
         card: {
@@ -57,5 +59,5 @@ export default {
       }
     }
   },
-  plugins: [animate],
+  plugins: [animate, candiPlugin],
 }
