@@ -9,8 +9,8 @@ INSERT INTO stores (brand, description, store_type, status, email, phone, addres
 VALUES ('Tech World', 'Electronics and Gadgets', 'RETAIL', 'ACTIVE', 'contact@techworld.com', '1234567890', '123 Tech Street', 'Silicon Valley', 'USA', NOW(), NOW());
 
 -- 3. Create Store Admin User (Password: password)
-INSERT INTO users (full_name, email, password, phone, role, status, store_id, created_at, updated_at)
-VALUES ('Store Admin', 'admin@techworld.com', '$2a$10$8.UnVuG9HHgffUDAlk8qfOuVGkqRkgVdukPxk.So0Ba4r.e8h.e.e', '9876543210', 'ROLE_STORE_MANAGER', 'ACTIVE', 1, NOW(), NOW());
+INSERT INTO users (full_name, email, password, phone, role, status, store_id, stripe_customer_id, created_at, updated_at)
+VALUES ('Store Admin', 'admin@techworld.com', '$2a$10$8.UnVuG9HHgffUDAlk8qfOuVGkqRkgVdukPxk.So0Ba4r.e8h.e.e', '9876543210', 'ROLE_STORE_MANAGER', 'ACTIVE', 1, 'cus_sample123', NOW(), NOW());
 
 -- Update Store with Admin ID
 UPDATE stores SET admin_id = 2 WHERE id = 1;
@@ -83,3 +83,11 @@ UPDATE users SET store_id = 2 WHERE id = 5;
 -- 15. Create Branch for Trial Account (ID: 2)
 INSERT INTO branches (name, address, phone, email, store_id, created_at, updated_at)
 VALUES ('Main Branch', 'Trial Address', '9876543211', 'trial@example.com', 2, NOW(), NOW());
+
+-- 16. Sample Subscription
+INSERT INTO subscriptions (user_id, plan_type, stripe_subscription_id, status, start_date, end_date, created_at, updated_at)
+VALUES (2, 'BUSINESS', 'sub_sample123', 'ACTIVE', NOW(), DATE_ADD(NOW(), INTERVAL 30 DAY), NOW(), NOW());
+
+-- 17. Sample Payment
+INSERT INTO payments (user_id, amount, currency, stripe_payment_intent_id, status, created_at)
+VALUES (2, 49.99, 'USD', 'pi_sample123', 'succeeded', NOW());

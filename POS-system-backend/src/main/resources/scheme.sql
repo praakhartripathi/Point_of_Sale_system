@@ -12,7 +12,8 @@ CREATE TABLE IF NOT EXISTS users (
     branch_id BIGINT,
     created_at DATETIME,
     updated_at DATETIME,
-    last_login_at DATETIME
+    last_login_at DATETIME,
+    stripe_customer_id VARCHAR(255)
 );
 
 -- Stores Table
@@ -163,6 +164,32 @@ CREATE TABLE IF NOT EXISTS demo_requests (
     notes TEXT,
     created_at DATETIME,
     updated_at DATETIME
+);
+
+-- Subscriptions Table
+CREATE TABLE IF NOT EXISTS subscriptions (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    user_id BIGINT NOT NULL,
+    plan_type ENUM('STARTER', 'BUSINESS', 'ENTERPRISE'),
+    stripe_subscription_id VARCHAR(255),
+    status ENUM('ACTIVE', 'CANCELED', 'PAST_DUE'),
+    start_date DATETIME,
+    end_date DATETIME,
+    created_at DATETIME,
+    updated_at DATETIME,
+    FOREIGN KEY (user_id) REFERENCES users(id)
+);
+
+-- Payments Table
+CREATE TABLE IF NOT EXISTS payments (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    user_id BIGINT NOT NULL,
+    amount DOUBLE,
+    currency VARCHAR(10),
+    stripe_payment_intent_id VARCHAR(255),
+    status VARCHAR(50),
+    created_at DATETIME,
+    FOREIGN KEY (user_id) REFERENCES users(id)
 );
 
 -- Shift Reports Table
