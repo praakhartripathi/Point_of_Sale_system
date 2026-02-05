@@ -6,6 +6,7 @@ import lombok.Data;
 
 @Data
 public class CreateSubscriptionRequest {
-    @Schema(description = "Type of subscription plan", example = "STARTER")
+    @Schema(description = "Type of subscription plan", example = "STARTER", requiredMode = Schema.RequiredMode.REQUIRED,
+            allowableValues = {"STARTER", "BUSINESS", "ENTERPRISE"})
     private PlanType planType;
 }

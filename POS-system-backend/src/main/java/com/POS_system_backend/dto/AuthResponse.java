@@ -9,18 +9,19 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class AuthResponse {
-    @Schema(description = "JWT Access Token", example = "eyJhbGciOiJIUzI1NiJ9...")
+    @Schema(description = "JWT Access Token", example = "eyJhbGciOiJIUzI1NiJ9...", requiredMode = Schema.RequiredMode.REQUIRED)
     private String token;
 
-    @Schema(description = "Response message", example = "Login successful")
+    @Schema(description = "Response message", example = "Login successful", requiredMode = Schema.RequiredMode.REQUIRED)
     private String message;
 
-    @Schema(description = "User Role", example = "ROLE_TRIAL")
+    @Schema(description = "User Role", example = "ROLE_TRIAL", requiredMode = Schema.RequiredMode.REQUIRED, 
+            allowableValues = {"ROLE_SUPERADMIN", "ROLE_STORE_MANAGER", "ROLE_BRANCH_MANAGER", "ROLE_CASHIER", "ROLE_TRIAL"})
     private String role;
 
-    @Schema(description = "User ID", example = "1")
+    @Schema(description = "User ID", example = "1", requiredMode = Schema.RequiredMode.REQUIRED)
     private Long id;
 
-    @Schema(description = "User Email", example = "user@example.com")
+    @Schema(description = "User Email", example = "user@example.com", requiredMode = Schema.RequiredMode.REQUIRED)
     private String email;
 }
