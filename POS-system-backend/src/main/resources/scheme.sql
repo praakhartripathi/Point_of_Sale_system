@@ -241,3 +241,19 @@ CREATE TABLE IF NOT EXISTS trial_accounts (
     created_at DATETIME,
     updated_at DATETIME
 );
+
+-- Testimonials Table
+CREATE TABLE IF NOT EXISTS testimonials (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    customer_name VARCHAR(255) NOT NULL,
+    business_name VARCHAR(255),
+    business_type VARCHAR(100),
+    rating INT CHECK (rating >= 1 AND rating <= 5),
+    testimonial_text TEXT,
+    image_url VARCHAR(255),
+    plan_type VARCHAR(50),
+    is_featured BOOLEAN DEFAULT FALSE,
+    is_active BOOLEAN DEFAULT TRUE,
+    created_at DATETIME,
+    updated_at DATETIME
+);

@@ -91,3 +91,13 @@ VALUES (2, 'BUSINESS', 'sub_sample123', 'ACTIVE', NOW(), DATE_ADD(NOW(), INTERVA
 -- 17. Sample Payment
 INSERT INTO payments (user_id, amount, currency, razorpay_payment_id, status, created_at)
 VALUES (2, 49.99, 'USD', 'pay_sample123', 'captured', NOW());
+
+-- 18. Sample Testimonials
+INSERT INTO testimonials (customer_name, business_name, business_type, rating, testimonial_text, plan_type, is_featured, is_active, created_at, updated_at)
+VALUES ('John Doe', 'Coffee Haven', 'Restaurant', 5, 'The POS system transformed how we manage orders during rush hours. Highly recommended!', 'BUSINESS', TRUE, TRUE, NOW(), NOW());
+
+INSERT INTO testimonials (customer_name, business_name, business_type, rating, testimonial_text, plan_type, is_featured, is_active, created_at, updated_at)
+VALUES ('Sarah Smith', 'Boutique Trends', 'Retail', 4, 'Great inventory management features. Customer support is also very responsive.', 'STARTER', TRUE, TRUE, NOW(), NOW());
+
+INSERT INTO testimonials (customer_name, business_name, business_type, rating, testimonial_text, plan_type, is_featured, is_active, created_at, updated_at)
+VALUES ('Mike Johnson', 'Tech Fix', 'Service', 5, 'Best value for money. The reporting tools are fantastic.', 'ENTERPRISE', FALSE, TRUE, NOW(), NOW());
