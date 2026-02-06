@@ -32,6 +32,69 @@ const Testimonials = () => {
       content: "Customer support is excellent. They helped me set up the entire system in just one day.",
       rating: 4,
       image: "https://randomuser.me/api/portraits/men/85.jpg"
+    },
+    {
+      id: 4,
+      name: "Anita Desai",
+      role: "Cafe Owner",
+      company: "Brew & Bites",
+      content: "The table management feature is a lifesaver during rush hours. Billing is seamless now.",
+      rating: 5,
+      image: "https://randomuser.me/api/portraits/women/65.jpg"
+    },
+    {
+      id: 5,
+      name: "Arjun Mehta",
+      role: "Franchise Manager",
+      company: "Burger King (Local)",
+      content: "Managing multiple branches was a headache until we switched to POS Pro. The centralized dashboard is amazing.",
+      rating: 5,
+      image: "https://randomuser.me/api/portraits/men/22.jpg"
+    },
+    {
+      id: 6,
+      name: "Sneha Reddy",
+      role: "Supermarket Owner",
+      company: "Daily Needs Mart",
+      content: "Inventory tracking is precise. I get alerts before stock runs out, which has saved me so much trouble.",
+      rating: 4,
+      image: "https://randomuser.me/api/portraits/women/29.jpg"
+    },
+    {
+      id: 7,
+      name: "Mohammed Ali",
+      role: "Pharmacy Owner",
+      company: "Health Plus",
+      content: "Expiry management for medicines is crucial for us, and this system handles it perfectly.",
+      rating: 5,
+      image: "https://randomuser.me/api/portraits/men/54.jpg"
+    },
+    {
+      id: 8,
+      name: "Kavita Iyer",
+      role: "Boutique Owner",
+      company: "Ethnic Weaves",
+      content: "The customer loyalty program feature helped me retain so many regular clients. Love it!",
+      rating: 5,
+      image: "https://randomuser.me/api/portraits/women/12.jpg"
+    },
+    {
+      id: 9,
+      name: "Rajesh Kumar",
+      role: "Restaurant Manager",
+      company: "Spicy Treat",
+      content: "KOT (Kitchen Order Ticket) printing is instant. No more confusion between waiters and chefs.",
+      rating: 4,
+      image: "https://randomuser.me/api/portraits/men/76.jpg"
+    },
+    {
+      id: 10,
+      name: "Linda D'Souza",
+      role: "Bakery Owner",
+      company: "Sweet Cravings",
+      content: "Simple interface. My staff learned how to use it in just 10 minutes. Very user-friendly.",
+      rating: 5,
+      image: "https://randomuser.me/api/portraits/women/33.jpg"
     }
   ];
 
@@ -62,13 +125,13 @@ const Testimonials = () => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-12 px-4 sm:px-6 lg:px-8 transition-colors duration-200">
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-12">
-          <h1 className="text-3xl font-extrabold text-gray-900 sm:text-4xl">
+          <h1 className="text-3xl font-extrabold text-gray-900 dark:text-white sm:text-4xl">
             Testimonials
           </h1>
-          <p className="mt-4 text-xl text-gray-500">
+          <p className="mt-4 text-xl text-gray-500 dark:text-gray-400">
             See what our customers say about us.
           </p>
         </div>
@@ -82,19 +145,19 @@ const Testimonials = () => {
             {testimonials.map((testimonial) => (
               <div 
                 key={testimonial.id} 
-                className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300 p-6 flex flex-col"
+                className="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-all duration-300 p-6 flex flex-col border border-gray-100 dark:border-gray-700"
               >
                 <div className="flex items-center mb-4">
                   <div className="flex-shrink-0">
                     <img 
-                      className="h-12 w-12 rounded-full object-cover border border-gray-200" 
+                      className="h-12 w-12 rounded-full object-cover border border-gray-200 dark:border-gray-600" 
                       src={testimonial.image || `https://ui-avatars.com/api/?name=${encodeURIComponent(testimonial.name)}&background=random`} 
                       alt={testimonial.name} 
                     />
                   </div>
                   <div className="ml-4">
-                    <h3 className="text-lg font-medium text-gray-900">{testimonial.name}</h3>
-                    <p className="text-sm text-gray-500">{testimonial.role || "Customer"} {testimonial.company && `at ${testimonial.company}`}</p>
+                    <h3 className="text-lg font-medium text-gray-900 dark:text-white">{testimonial.name}</h3>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">{testimonial.role || "Customer"} {testimonial.company && `at ${testimonial.company}`}</p>
                   </div>
                 </div>
                 
@@ -102,7 +165,7 @@ const Testimonials = () => {
                   {[...Array(5)].map((_, i) => (
                     <svg 
                       key={i} 
-                      className={`h-5 w-5 ${i < (testimonial.rating || 5) ? 'text-yellow-400' : 'text-gray-300'}`} 
+                      className={`h-5 w-5 ${i < (testimonial.rating || 5) ? 'text-yellow-400' : 'text-gray-300 dark:text-gray-600'}`} 
                       fill="currentColor" 
                       viewBox="0 0 20 20"
                     >
@@ -111,7 +174,7 @@ const Testimonials = () => {
                   ))}
                 </div>
 
-                <p className="text-gray-600 italic flex-grow">"{testimonial.content || testimonial.message}"</p>
+                <p className="text-gray-600 dark:text-gray-300 italic flex-grow">"{testimonial.content || testimonial.message}"</p>
               </div>
             ))}
           </div>
