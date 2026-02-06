@@ -30,6 +30,7 @@ public class JwtValidator extends OncePerRequestFilter {
                path.contains("/api/trial/signin") ||
                path.contains("/api/auth/") ||
                path.contains("/api/public/") ||
+               path.contains("/api/testimonials/public/") ||
                path.contains("/v3/api-docs") ||
                path.contains("/swagger-ui") ||
                path.equals("/error") ||
