@@ -29,7 +29,7 @@ import java.util.Collections;
 public class SecurityConfig {
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http, OAuth2SuccessHandler oAuth2SuccessHandler) throws Exception {
 
         http
             .sessionManagement(new Customizer<SessionManagementConfigurer<HttpSecurity>>() {
@@ -62,10 +62,12 @@ public class SecurityConfig {
                             "/api/public/**",
                             "/api/trial/signup",
                             "/api/trial/signin",
-                            "/api/testimonials/public/**",
+                            "/api/testimonials/public/**", 
                             "/v3/api-docs/**",
                             "/swagger-ui/**",
-                            "/swagger-ui.html"
+                            "/swagger-ui.html",
+                            "/oauth2/**",
+                            "/login/oauth2/**"
                         ).permitAll()
 
                         .requestMatchers(
@@ -79,6 +81,16 @@ public class SecurityConfig {
             })
 
             .addFilterBefore(new JwtValidator(), BasicAuthenticationFilter.class)
+
+            .oauth2Login(oauth2 -> oauth2
+                .authorizationEndpoint(authorization -> authorization
+                    .baseUri("/oauth2/authorization")
+                )
+                .redirectionEndpoint(redirection -> redirection
+                    .baseUri("/login/oauth2/code/*")
+                )
+                .successHandler(oAuth2SuccessHandler)
+            )
 
             .exceptionHandling(new Customizer<ExceptionHandlingConfigurer<HttpSecurity>>() {
                 @Override

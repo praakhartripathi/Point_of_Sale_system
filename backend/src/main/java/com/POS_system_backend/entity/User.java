@@ -53,6 +53,8 @@ public class User {
 
     private String razorpayCustomerId;
 
+    private String provider;
+
     private LocalDateTime createdAt;
 
     private LocalDateTime updatedAt;
