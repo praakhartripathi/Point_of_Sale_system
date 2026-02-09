@@ -19,7 +19,7 @@ services:
     build:
       context: backend
       target: build
-    container_name: pos-backend
+    container_name: backend
     restart: unless-stopped
     ports:
       - "5001:5001"
@@ -45,7 +45,7 @@ services:
     build:
       context: frontend
       target: dev
-    container_name: pos-frontend
+    container_name: frontend
     restart: always
     ports:
       - "3000:5173"
